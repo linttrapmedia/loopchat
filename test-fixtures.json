@@ -1,0 +1,33 @@
+{
+  "threads": [
+    {
+      "id": "thread1",
+      "title": "Thread 1",
+      "posts": [
+        {
+          "id": "post1",
+          "author": "user1",
+          "timestamp": "2023-10-01T12:00:00Z",
+          "payload": { "type": "call", "message": "@system show me what you can do" }
+        },
+        {
+          "id": "post2",
+          "author": "system",
+          "timestamp": "2023-10-01T12:01:00Z",
+          "payload": {
+            "type": "answer",
+            "recipients": ["user1"],
+            "message": "I can help you with various tasks. What do you need?",
+            "attachments": [
+              {
+                "type": "image",
+                "url": "https://example.com/image1.png",
+                "caption": "Example Image"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
