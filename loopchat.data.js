@@ -108,8 +108,8 @@
     if (!channel.posts) channel.posts = [];
     channel.posts.push(newPost);
 
-    // Update messages window content
-    this.updateMessagesWindowContent(this.activeChannel);
+    // Update the channel window
+    this.updateChannelWindow(this.activeChannel);
     
     // Clear the message input field 
     const messageInputField = document.getElementById("message__input_field");
@@ -161,14 +161,14 @@
     if (!channel.posts) channel.posts = [];
     channel.posts.push(responsePost);
 
-    // Update messages window content
-    this.updateMessagesWindowContent(this.activeChannel);
+    // Update the channel window
+    this.updateChannelWindow(this.activeChannel);
 
     return this;
   };
 
   /**
-   * Activates a channel and updates the UI to reflect the selection
+   * Activates a channel and opens a window for it
    * @param {string} channelId - The ID of the channel to activate
    * @returns {LoopChat} The LoopChat instance for chaining
    */
@@ -183,40 +183,9 @@
       return this;
     }
     
-    // Update active channel
-    this.activeChannel = channelId;
-
-    // Update UI to reflect the active channel in the channels window
-    const tabs = document.querySelectorAll(".channel__tab");
-    console.log("Available tabs:", Array.from(tabs).map(t => t.id));
+    // Open or focus the channel window
+    this.openChannelWindow(channelId);
     
-    tabs.forEach((tab) => {
-      const tabEl = /** @type {HTMLElement} */ (tab);
-      const tabChannelId = tabEl.dataset.channelId;
-      const tabId = tabEl.id;
-      
-      console.log("Checking tab:", tabId, "with data-channel-id:", tabChannelId, "against active:", channelId);
-      
-      // Match by either the data attribute or by the ID with prefix
-      if (tabChannelId === channelId || tabId === `channel__tab-${channelId}`) {
-        tabEl.style.backgroundColor = "#e0e0e0";
-        tabEl.style.borderLeft = "2px solid #000000";
-        console.log("Activated tab:", tabId);
-      } else {
-        tabEl.style.backgroundColor = "transparent";
-        tabEl.style.borderLeft = "2px solid transparent";
-      }
-    });
-
-    // Update messages window content for the selected channel
-    this.updateMessagesWindowContent(channelId);
-    
-    // Ensure the messages window is visible (not minimized)
-    const messagesWindowIndex = this.windows.findIndex(w => w.id === "window-messages");
-    if (messagesWindowIndex !== -1 && this.windows[messagesWindowIndex].minimized) {
-      this.windowRestore("window-messages");
-    }
-
     return this;
   };
 })(window.LoopChat);

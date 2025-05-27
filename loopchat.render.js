@@ -12,7 +12,7 @@
     this.root.style.fontSize = "12px";
     this.root.style.backgroundColor = "#f5f6fa";
     this.root.style.color = "#000000";
-    
+
     // Create a desktop container for all windows
     const desktop = document.createElement("div");
     desktop.id = "desktop";
@@ -20,7 +20,7 @@
     desktop.style.width = "100%";
     desktop.style.height = "100%";
     desktop.style.overflow = "hidden";
-    
+
     // Create a toolbar at the top
     const toolbar = document.createElement("div");
     toolbar.id = "desktop__toolbar";
@@ -35,56 +35,103 @@
     toolbar.style.alignItems = "center";
     toolbar.style.padding = "0 10px";
     toolbar.style.zIndex = "50";
-    
+
     // App title
     const title = document.createElement("div");
     title.innerText = "LOOPCHAT";
     title.style.fontWeight = "bold";
     title.style.fontSize = "12px";
     title.style.marginRight = "20px";
-    
-    // Window management buttons
-    const buttonContainer = document.createElement("div");
-    buttonContainer.style.display = "flex";
-    buttonContainer.style.gap = "10px";
-    
-    // Restore all windows button
-    const restoreAllButton = document.createElement("button");
-    restoreAllButton.innerText = "Show All Windows";
-    restoreAllButton.style.padding = "2px 6px";
-    restoreAllButton.style.backgroundColor = "transparent";
-    restoreAllButton.style.color = "#ffffff";
-    restoreAllButton.style.border = "1px solid #ffffff";
-    restoreAllButton.style.borderRadius = "3px";
-    restoreAllButton.style.cursor = "pointer";
-    restoreAllButton.style.fontSize = "11px";
-    
-    restoreAllButton.addEventListener("click", () => {
+
+    toolbar.appendChild(title);
+
+    // Spacer to push the dropdown to the right
+    const spacer = document.createElement("div");
+    spacer.style.flex = "1";
+    toolbar.appendChild(spacer);
+
+    // Window management dropdown container
+    const dropdownContainer = document.createElement("div");
+    dropdownContainer.style.position = "relative";
+
+    // Dropdown toggle button with hamburger icon
+    const dropdownToggle = document.createElement("button");
+    dropdownToggle.innerHTML = "&#9776;"; // Hamburger menu icon
+    dropdownToggle.style.padding = "2px 8px";
+    dropdownToggle.style.backgroundColor = "transparent";
+    dropdownToggle.style.color = "#ffffff";
+    dropdownToggle.style.border = "0";
+    dropdownToggle.style.borderRadius = "3px";
+    dropdownToggle.style.cursor = "pointer";
+    dropdownToggle.style.fontSize = "14px"; // Slightly larger font for the icon
+
+    // Dropdown menu
+    const dropdownMenu = document.createElement("div");
+    dropdownMenu.style.position = "absolute";
+    dropdownMenu.style.top = "100%";
+    dropdownMenu.style.right = "0";
+    dropdownMenu.style.backgroundColor = "#ffffff";
+    dropdownMenu.style.border = "1px solid #000000";
+    dropdownMenu.style.borderRadius = "3px";
+    dropdownMenu.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+    dropdownMenu.style.display = "none";
+    dropdownMenu.style.zIndex = "9999";
+    dropdownMenu.style.minWidth = "150px";
+
+    // Show all windows option
+    const showAllOption = document.createElement("div");
+    showAllOption.innerText = "Show All Windows";
+    showAllOption.style.padding = "6px 10px";
+    showAllOption.style.cursor = "pointer";
+    showAllOption.style.color = "#000000";
+    showAllOption.style.fontSize = "11px";
+    showAllOption.style.borderBottom = "1px solid #e0e0e0";
+
+    showAllOption.addEventListener("mouseover", () => {
+      showAllOption.style.backgroundColor = "#f0f0f0";
+    });
+
+    showAllOption.addEventListener("mouseout", () => {
+      showAllOption.style.backgroundColor = "transparent";
+    });
+
+    showAllOption.addEventListener("click", () => {
+      // Hide dropdown
+      dropdownMenu.style.display = "none";
+
       // Find all minimized windows and restore them
-      this.windows.forEach(window => {
+      this.windows.forEach((window) => {
         if (window.minimized) {
           this.windowRestore(window.id);
         }
       });
     });
-    
-    // Cascade windows button
-    const cascadeButton = document.createElement("button");
-    cascadeButton.innerText = "Cascade Windows";
-    cascadeButton.style.padding = "2px 6px";
-    cascadeButton.style.backgroundColor = "transparent";
-    cascadeButton.style.color = "#ffffff";
-    cascadeButton.style.border = "1px solid #ffffff";
-    cascadeButton.style.borderRadius = "3px";
-    cascadeButton.style.cursor = "pointer";
-    cascadeButton.style.fontSize = "11px";
-    
-    cascadeButton.addEventListener("click", () => {
+
+    // Cascade windows option
+    const cascadeOption = document.createElement("div");
+    cascadeOption.innerText = "Cascade Windows";
+    cascadeOption.style.padding = "6px 10px";
+    cascadeOption.style.cursor = "pointer";
+    cascadeOption.style.color = "#000000";
+    cascadeOption.style.fontSize = "11px";
+
+    cascadeOption.addEventListener("mouseover", () => {
+      cascadeOption.style.backgroundColor = "#f0f0f0";
+    });
+
+    cascadeOption.addEventListener("mouseout", () => {
+      cascadeOption.style.backgroundColor = "transparent";
+    });
+
+    cascadeOption.addEventListener("click", () => {
+      // Hide dropdown
+      dropdownMenu.style.display = "none";
+
       // Arrange all visible windows in a cascade pattern
       let offsetX = 20;
       let offsetY = 40; // Below toolbar
-      
-      this.windows.forEach(window => {
+
+      this.windows.forEach((window) => {
         if (!window.minimized) {
           const windowEl = document.getElementById(window.id);
           if (windowEl) {
@@ -96,16 +143,66 @@
         }
       });
     });
+
+    // Minimize all windows option
+    const minimizeAllOption = document.createElement("div");
+    minimizeAllOption.innerText = "Minimize All Windows";
+    minimizeAllOption.style.padding = "6px 10px";
+    minimizeAllOption.style.cursor = "pointer";
+    minimizeAllOption.style.color = "#000000";
+    minimizeAllOption.style.fontSize = "11px";
+    minimizeAllOption.style.borderBottom = "1px solid #e0e0e0";
     
-    buttonContainer.appendChild(restoreAllButton);
-    buttonContainer.appendChild(cascadeButton);
+    minimizeAllOption.addEventListener("mouseover", () => {
+      minimizeAllOption.style.backgroundColor = "#f0f0f0";
+    });
     
-    toolbar.appendChild(title);
-    toolbar.appendChild(buttonContainer);
+    minimizeAllOption.addEventListener("mouseout", () => {
+      minimizeAllOption.style.backgroundColor = "transparent";
+    });
     
+    minimizeAllOption.addEventListener("click", () => {
+      // Hide dropdown
+      dropdownMenu.style.display = "none";
+      
+      // Minimize all non-minimized windows
+      this.windows.forEach(window => {
+        if (!window.minimized) {
+          this.windowMinimize(window.id);
+        }
+      });
+    });
+    
+    // Add options to dropdown menu
+    dropdownMenu.appendChild(showAllOption);
+    dropdownMenu.appendChild(minimizeAllOption);
+    dropdownMenu.appendChild(cascadeOption);
+
+    // Toggle dropdown visibility
+    dropdownToggle.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent click from reaching document
+      if (dropdownMenu.style.display === "none") {
+        dropdownMenu.style.display = "block";
+      } else {
+        dropdownMenu.style.display = "none";
+      }
+    });
+
+    // Close dropdown when clicking elsewhere
+    document.addEventListener("click", () => {
+      dropdownMenu.style.display = "none";
+    });
+
+    // Add dropdown elements to container
+    dropdownContainer.appendChild(dropdownToggle);
+    dropdownContainer.appendChild(dropdownMenu);
+
+    // Add dropdown to toolbar
+    toolbar.appendChild(dropdownContainer);
+
     // Adjust desktop height to account for toolbar
     desktop.style.paddingTop = "30px";
-    
+
     this.root.appendChild(toolbar);
     this.root.appendChild(desktop);
 
@@ -133,7 +230,7 @@
     channelsWindow.style.border = "1px solid #000000";
     channelsWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
     channelsWindow.style.zIndex = "10";
-    
+
     // Add click handler to focus this window when clicked anywhere
     channelsWindow.addEventListener("mousedown", () => {
       this.windowFocus("window-channels");
@@ -172,20 +269,8 @@
       this.windowMinimize("window-channels");
     });
 
-    const closeButton = document.createElement("button");
-    closeButton.innerHTML = "&#10005;";
-    closeButton.style.background = "none";
-    closeButton.style.border = "none";
-    closeButton.style.color = "#ffffff";
-    closeButton.style.cursor = "pointer";
-    closeButton.style.fontSize = "12px";
-    closeButton.style.padding = "0 4px";
-    closeButton.addEventListener("click", () => {
-      this.windowClose("window-channels");
-    });
-
+    // Only add the minimize button (no close button)
     windowControls.appendChild(minimizeButton);
-    windowControls.appendChild(closeButton);
 
     windowHeader.appendChild(windowTitle);
     windowHeader.appendChild(windowControls);
@@ -238,7 +323,7 @@
 
     // Add to DOM
     document.getElementById("desktop").appendChild(channelsWindow);
-    
+
     // Add to windows array
     this.windows.push({
       id: "window-channels",
@@ -283,9 +368,11 @@
       tab.title = channel.description;
     }
 
+    // When a channel tab is clicked, open its window
     tab.addEventListener("click", () => {
       console.log("Channel tab clicked:", channel.id);
-      this.activateChannel(channel.id);
+      // Open or focus the channel's window
+      this.openChannelWindow(channel.id);
     });
 
     return tab;
@@ -312,7 +399,7 @@
     inputWindow.style.border = "1px solid #000000";
     inputWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
     inputWindow.style.zIndex = "20"; // Higher than messages window by default
-    
+
     // Add click handler to focus this window when clicked anywhere
     inputWindow.addEventListener("mousedown", () => {
       this.windowFocus("window-message-input");
@@ -377,7 +464,7 @@
     windowContent.style.padding = "8px";
     windowContent.style.display = "flex";
     windowContent.style.flexDirection = "column";
-    
+
     // Input container
     const inputContainer = document.createElement("div");
     inputContainer.style.position = "relative";
@@ -385,7 +472,7 @@
     inputContainer.style.flexDirection = "column";
     inputContainer.style.width = "100%";
     inputContainer.style.height = "100%";
-    
+
     // Textarea for multi-line input
     const messageTextarea = document.createElement("textarea");
     messageTextarea.id = "message__input_field";
@@ -412,7 +499,7 @@
         }
       }
     });
-    
+
     // Button container (positioned at bottom right of textarea)
     const buttonContainer = document.createElement("div");
     buttonContainer.style.position = "absolute";
@@ -420,7 +507,7 @@
     buttonContainer.style.right = "12px";
     buttonContainer.style.display = "flex";
     buttonContainer.style.gap = "4px";
-    
+
     // Send button
     const sendButton = document.createElement("button");
     sendButton.innerText = "Send";
@@ -443,7 +530,7 @@
     });
 
     buttonContainer.appendChild(sendButton);
-    
+
     inputContainer.appendChild(messageTextarea);
     inputContainer.appendChild(buttonContainer);
     windowContent.appendChild(inputContainer);
@@ -454,7 +541,7 @@
 
     // Add to DOM
     document.getElementById("desktop").appendChild(inputWindow);
-    
+
     // Add to windows array
     this.windows.push({
       id: "window-message-input",
@@ -466,30 +553,59 @@
   };
 
   /**
-   * Renders the messages window
+   * Opens a window for a specific channel
+   * @param {string} channelId - ID of the channel to open
    * @returns {LoopChat} The LoopChat instance for chaining
    */
-  LOOPCHAT.prototype.renderMessagesWindow = function () {
-    // Create a window for messages
-    const messagesWindow = document.createElement("div");
-    messagesWindow.id = "window-messages";
-    messagesWindow.className = "window";
-    messagesWindow.style.position = "absolute";
-    messagesWindow.style.width = "500px";
-    messagesWindow.style.height = "400px";
-    messagesWindow.style.top = "40px";
-    messagesWindow.style.left = "260px";
-    messagesWindow.style.display = "flex";
-    messagesWindow.style.flexDirection = "column";
-    messagesWindow.style.overflow = "hidden";
-    messagesWindow.style.backgroundColor = "#ffffff";
-    messagesWindow.style.border = "1px solid #000000";
-    messagesWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
-    messagesWindow.style.zIndex = "15"; // Higher than channels window by default
-    
+  LOOPCHAT.prototype.openChannelWindow = function (channelId) {
+    // Check if window for this channel already exists
+    const channelWindowId = `window-channel-${channelId}`;
+    let existingWindow = document.getElementById(channelWindowId);
+
+    if (existingWindow) {
+      // If the window exists but is minimized, restore it
+      const windowIndex = this.windows.findIndex((w) => w.id === channelWindowId);
+      if (windowIndex !== -1 && this.windows[windowIndex].minimized) {
+        this.windowRestore(channelWindowId);
+      }
+
+      // Focus the existing window
+      this.windowFocus(channelWindowId);
+      return this;
+    }
+
+    // Find the channel data
+    const channel = this.channels.find((c) => c.id === channelId);
+    if (!channel) {
+      console.error("Channel not found:", channelId);
+      return this;
+    }
+
+    // Create a window for this channel
+    const channelWindow = document.createElement("div");
+    channelWindow.id = channelWindowId;
+    channelWindow.className = "window";
+    channelWindow.style.position = "absolute";
+    channelWindow.style.width = "500px";
+    channelWindow.style.height = "400px";
+
+    // Calculate position (stagger windows)
+    const openWindows = this.windows.filter((w) => w.id.startsWith("window-channel-") && !w.minimized).length;
+
+    channelWindow.style.top = `${40 + openWindows * 20}px`;
+    channelWindow.style.left = `${260 + openWindows * 20}px`;
+
+    channelWindow.style.display = "flex";
+    channelWindow.style.flexDirection = "column";
+    channelWindow.style.overflow = "hidden";
+    channelWindow.style.backgroundColor = "#ffffff";
+    channelWindow.style.border = "1px solid #000000";
+    channelWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
+    channelWindow.style.zIndex = "15"; // Higher than channels window by default
+
     // Add click handler to focus this window when clicked anywhere
-    messagesWindow.addEventListener("mousedown", () => {
-      this.windowFocus("window-messages");
+    channelWindow.addEventListener("mousedown", () => {
+      this.windowFocus(channelWindowId);
     });
 
     // Window header
@@ -505,8 +621,7 @@
     windowHeader.style.userSelect = "none";
 
     const windowTitle = document.createElement("div");
-    windowTitle.id = "messages__window_title";
-    windowTitle.innerText = "Messages";
+    windowTitle.innerText = `# ${channel.title || channel.id}`;
     windowTitle.style.fontSize = "11px";
     windowTitle.style.fontWeight = "bold";
 
@@ -523,7 +638,7 @@
     minimizeButton.style.fontSize = "12px";
     minimizeButton.style.padding = "0 4px";
     minimizeButton.addEventListener("click", () => {
-      this.windowMinimize("window-messages");
+      this.windowMinimize(channelWindowId);
     });
 
     const closeButton = document.createElement("button");
@@ -535,7 +650,7 @@
     closeButton.style.fontSize = "12px";
     closeButton.style.padding = "0 4px";
     closeButton.addEventListener("click", () => {
-      this.windowClose("window-messages");
+      this.windowClose(channelWindowId);
     });
 
     windowControls.appendChild(minimizeButton);
@@ -543,63 +658,14 @@
 
     windowHeader.appendChild(windowTitle);
     windowHeader.appendChild(windowControls);
-    messagesWindow.appendChild(windowHeader);
+    channelWindow.appendChild(windowHeader);
 
     // Window content
     const windowContent = document.createElement("div");
     windowContent.className = "window__content";
-    windowContent.id = "messages__content";
     windowContent.style.flex = "1";
     windowContent.style.overflow = "auto";
     windowContent.style.padding = "8px";
-    messagesWindow.appendChild(windowContent);
-
-    // Make window draggable
-    this.makeWindowDraggable(messagesWindow, windowHeader);
-
-    // Add to DOM
-    document.getElementById("desktop").appendChild(messagesWindow);
-    
-    // Add to windows array
-    this.windows.push({
-      id: "window-messages",
-      type: "messages",
-      minimized: false,
-    });
-
-    return this;
-  };
-
-  /**
-   * Updates the content of the messages window for a specific channel
-   * @param {string} channelId - ID of the channel to render
-   * @returns {LoopChat} The LoopChat instance for chaining
-   */
-  LOOPCHAT.prototype.updateMessagesWindowContent = function (channelId) {
-    const messagesContent = document.getElementById("messages__content");
-    if (!messagesContent) return this;
-
-    // Clear existing content
-    messagesContent.innerHTML = "";
-
-    // Find the channel data - log for debugging
-    console.log("Looking for channel ID:", channelId);
-    console.log("Available channels:", this.channels);
-
-    // Find the channel data
-    const channel = this.channels.find((c) => c.id === channelId);
-    if (!channel) {
-      console.error("Channel not found:", channelId);
-      // Add fallback content for debugging
-      messagesContent.innerHTML = `<div style="padding: 10px;">Channel ID ${channelId} not found</div>`;
-      return this;
-    }
-
-    // Update window title
-    const windowTitle = document.getElementById("messages__window_title");
-    if (windowTitle) {
-      windowTitle.innerText = `Messages - ${channel.title || channel.id}`;
-    }
 
     // Channel info banner
     const channelInfoBanner = document.createElement("div");
@@ -628,18 +694,24 @@
       channelInfoBanner.appendChild(channelDesc);
     }
 
-    messagesContent.appendChild(channelInfoBanner);
+    windowContent.appendChild(channelInfoBanner);
 
-    // render messages
+    // Messages container
+    const messagesContainer = document.createElement("div");
+    messagesContainer.id = `messages-${channelId}`;
+    messagesContainer.style.display = "flex";
+    messagesContainer.style.flexDirection = "column";
+
+    // Render messages
     if (channel.posts && channel.posts.length > 0) {
       channel.posts.forEach((post) => {
         const envelope = this.renderEnvelope(post);
-        messagesContent.appendChild(envelope);
+        messagesContainer.appendChild(envelope);
       });
 
       // Scroll to bottom to show latest messages
       setTimeout(() => {
-        messagesContent.scrollTop = messagesContent.scrollHeight;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }, 0);
     } else {
       const emptyMessage = document.createElement("div");
@@ -647,8 +719,116 @@
       emptyMessage.style.padding = "12px";
       emptyMessage.style.color = "#808080";
       emptyMessage.innerText = "No messages yet";
-      messagesContent.appendChild(emptyMessage);
+      messagesContainer.appendChild(emptyMessage);
     }
+
+    windowContent.appendChild(messagesContainer);
+    channelWindow.appendChild(windowContent);
+
+    // Make window draggable
+    this.makeWindowDraggable(channelWindow, windowHeader);
+
+    // Add to DOM
+    document.getElementById("desktop").appendChild(channelWindow);
+
+    // Add to windows array
+    this.windows.push({
+      id: channelWindowId,
+      type: "channel",
+      channelId: channelId,
+      minimized: false,
+    });
+
+    // Update active channel
+    this.activeChannel = channelId;
+
+    // Update the channel tabs highlighting
+    this.updateChannelTabs();
+
+    return this;
+  };
+
+  /**
+   * Updates the channel window content for a specific channel
+   * @param {string} channelId - ID of the channel to update
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.updateChannelWindow = function (channelId) {
+    const windowId = `window-channel-${channelId}`;
+    const messagesContainer = document.getElementById(`messages-${channelId}`);
+
+    if (!messagesContainer) {
+      // Window doesn't exist, create it
+      return this.openChannelWindow(channelId);
+    }
+
+    // Clear existing content
+    messagesContainer.innerHTML = "";
+
+    // Find the channel data
+    const channel = this.channels.find((c) => c.id === channelId);
+    if (!channel) {
+      console.error("Channel not found:", channelId);
+      messagesContainer.innerHTML = `<div style="padding: 10px;">Channel ID ${channelId} not found</div>`;
+      return this;
+    }
+
+    // Render messages
+    if (channel.posts && channel.posts.length > 0) {
+      channel.posts.forEach((post) => {
+        const envelope = this.renderEnvelope(post);
+        messagesContainer.appendChild(envelope);
+      });
+
+      // Scroll to bottom to show latest messages
+      setTimeout(() => {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 0);
+    } else {
+      const emptyMessage = document.createElement("div");
+      emptyMessage.style.textAlign = "center";
+      emptyMessage.style.padding = "12px";
+      emptyMessage.style.color = "#808080";
+      emptyMessage.innerText = "No messages yet";
+      messagesContainer.appendChild(emptyMessage);
+    }
+
+    // Ensure the window is visible and in focus
+    const windowEl = document.getElementById(windowId);
+    if (windowEl) {
+      const windowIndex = this.windows.findIndex((w) => w.id === windowId);
+      if (windowIndex !== -1 && this.windows[windowIndex].minimized) {
+        this.windowRestore(windowId);
+      }
+      this.windowFocus(windowId);
+    }
+
+    return this;
+  };
+
+  /**
+   * Updates channel tabs to reflect the active channel
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.updateChannelTabs = function () {
+    // Update UI to reflect the active channel in the channels window
+    const tabs = document.querySelectorAll(".channel__tab");
+    if (!tabs.length) return this;
+
+    tabs.forEach((tab) => {
+      const tabEl = /** @type {HTMLElement} */ (tab);
+      const tabChannelId = tabEl.dataset.channelId;
+      const tabId = tabEl.id;
+
+      // Match by either the data attribute or by the ID with prefix
+      if (tabChannelId === this.activeChannel || tabId === `channel__tab-${this.activeChannel}`) {
+        tabEl.style.backgroundColor = "#e0e0e0";
+        tabEl.style.borderLeft = "2px solid #000000";
+      } else {
+        tabEl.style.backgroundColor = "transparent";
+        tabEl.style.borderLeft = "2px solid transparent";
+      }
+    });
 
     return this;
   };

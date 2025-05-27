@@ -1,10 +1,11 @@
 ((LOOPCHAT) => {
   /**
-   * Makes a window element draggable by its header
+   * Makes a window element draggable by its header and resizable
    * @param {HTMLElement} windowEl - The window element to make draggable
    * @param {HTMLElement} handle - The element to use as a drag handle (typically the header)
    */
   LOOPCHAT.prototype.makeWindowDraggable = function (windowEl, handle) {
+    // Dragging functionality
     let pos1 = 0,
       pos2 = 0,
       pos3 = 0,
@@ -43,6 +44,71 @@
       // Stop moving when mouse button is released
       document.onmouseup = null;
       document.onmousemove = null;
+    }
+    
+    // Add resizing functionality with a resize handle
+    const resizeHandle = document.createElement("div");
+    resizeHandle.className = "resize-handle";
+    resizeHandle.style.position = "absolute";
+    resizeHandle.style.width = "14px";
+    resizeHandle.style.height = "14px";
+    resizeHandle.style.bottom = "0";
+    resizeHandle.style.right = "0";
+    resizeHandle.style.cursor = "nwse-resize";
+    resizeHandle.style.background = "transparent";
+    
+    // Create small visual indicator in the corner
+    const resizeIndicator = document.createElement("div");
+    resizeIndicator.style.position = "absolute";
+    resizeIndicator.style.width = "8px";
+    resizeIndicator.style.height = "8px";
+    resizeIndicator.style.bottom = "3px";
+    resizeIndicator.style.right = "3px";
+    resizeIndicator.style.borderRight = "2px solid #888";
+    resizeIndicator.style.borderBottom = "2px solid #888";
+    resizeHandle.appendChild(resizeIndicator);
+    
+    windowEl.appendChild(resizeHandle);
+    
+    // Resizing logic
+    resizeHandle.onmousedown = resizeMouseDown;
+    
+    let startWidth, startHeight, startX, startY;
+    
+    function resizeMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Get initial positions
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = parseInt(document.defaultView.getComputedStyle(windowEl).width, 10);
+      startHeight = parseInt(document.defaultView.getComputedStyle(windowEl).height, 10);
+      
+      document.addEventListener("mousemove", resizeMouseMove);
+      document.addEventListener("mouseup", resizeMouseUp);
+      
+      // Bring window to front
+      windowEl.style.zIndex = "1000";
+    }
+    
+    function resizeMouseMove(e) {
+      e = e || window.event;
+      e.preventDefault();
+      
+      // Calculate new size
+      const newWidth = Math.max(200, startWidth + e.clientX - startX);
+      const newHeight = Math.max(150, startHeight + e.clientY - startY);
+      
+      // Apply new size
+      windowEl.style.width = newWidth + "px";
+      windowEl.style.height = newHeight + "px";
+    }
+    
+    function resizeMouseUp() {
+      document.removeEventListener("mousemove", resizeMouseMove);
+      document.removeEventListener("mouseup", resizeMouseUp);
     }
   };
 
@@ -88,20 +154,43 @@
     // render taskbar button if it doesn't exist
     let taskbarButton = document.getElementById(`taskbar-button-${windowId}`);
     if (!taskbarButton) {
-      // Get post data
-      const post = this.windows[windowIndex].post;
-
-      // Get author name
-      let authorName = post.author;
-      if (this.users && this.users[post.author]) {
-        authorName = this.users[post.author].name;
-      } else if (this.agents && this.agents[post.author]) {
-        authorName = this.agents[post.author].name;
+      let buttonLabel = "Window";
+      
+      // Get appropriate label based on window type
+      const windowData = this.windows[windowIndex];
+      
+      if (windowData.type === "channels") {
+        buttonLabel = "Channels";
+      } 
+      else if (windowData.type === "input") {
+        buttonLabel = "Message Input";
+      }
+      else if (windowData.type === "channel" && windowData.channelId) {
+        // For channel windows, use the channel name
+        const channel = this.channels.find(c => c.id === windowData.channelId);
+        if (channel) {
+          buttonLabel = `# ${channel.title || channel.id}`;
+        }
+      }
+      else if (windowData.post) {
+        // For message windows from the original implementation
+        const post = windowData.post;
+        
+        // Get author name if available
+        if (post.author) {
+          let authorName = post.author;
+          if (this.users && this.users[post.author]) {
+            authorName = this.users[post.author].name;
+          } else if (this.agents && this.agents[post.author]) {
+            authorName = this.agents[post.author].name;
+          }
+          buttonLabel = authorName;
+        }
       }
 
       taskbarButton = document.createElement("button");
       taskbarButton.id = `taskbar-button-${windowId}`;
-      taskbarButton.innerText = authorName;
+      taskbarButton.innerText = buttonLabel;
       taskbarButton.style.padding = "2px 6px";
       taskbarButton.style.marginRight = "4px";
       taskbarButton.style.backgroundColor = "#ffffff";
@@ -165,8 +254,15 @@
    * @returns {LoopChat} The LoopChat instance for chaining
    */
   LOOPCHAT.prototype.windowClose = function (windowId) {
+    // Prevent channels window from being closed
+    if (windowId === "window-channels") {
+      // Just minimize it instead
+      this.windowMinimize(windowId);
+      return this;
+    }
+    
     const windowEl = document.getElementById(windowId);
-    if (!windowEl) return;
+    if (!windowEl) return this;
 
     // Remove from DOM
     windowEl.remove();

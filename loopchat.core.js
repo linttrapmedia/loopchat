@@ -55,17 +55,17 @@ LoopChat.prototype.init = function (props) {
   // Load test data first
   this.loadTestData();
   
-  // Render the UI with all windows
+  // Render the UI with window structure
   this.renderRoot()
     .renderChannelsWindow()
-    .renderMessagesWindow()
     .renderMessageInputWindow();
   
   // Ensure a channel is activated after rendering if test data was loaded
   setTimeout(() => {
     if (this.channels && this.channels.length > 0 && this.activeChannel) {
       console.log("Initializing active channel:", this.activeChannel);
-      this.updateMessagesWindowContent(this.activeChannel);
+      // Open the initial channel in a window
+      this.openChannelWindow(this.activeChannel);
     }
   }, 100);
   
