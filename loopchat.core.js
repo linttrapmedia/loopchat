@@ -58,6 +58,7 @@ LoopChat.prototype.init = function (props) {
   // Render the UI with window structure
   this.renderRoot()
     .renderChannelsWindow()
+    .renderAgentsWindow()
     .renderMessageInputWindow();
   
   // Ensure a channel is activated after rendering if test data was loaded

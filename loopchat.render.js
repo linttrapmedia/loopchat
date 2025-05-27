@@ -333,6 +333,214 @@
 
     return this;
   };
+  
+  /**
+   * Renders the agents panel as a window
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.renderAgentsWindow = function () {
+    // Create a window for agents
+    const agentsWindow = document.createElement("div");
+    agentsWindow.id = "window-agents";
+    agentsWindow.className = "window";
+    agentsWindow.style.position = "absolute";
+    agentsWindow.style.width = "220px";
+    agentsWindow.style.height = "300px";
+    agentsWindow.style.top = "40px";
+    agentsWindow.style.right = "20px";
+    agentsWindow.style.display = "flex";
+    agentsWindow.style.flexDirection = "column";
+    agentsWindow.style.overflow = "hidden";
+    agentsWindow.style.backgroundColor = "#ffffff";
+    agentsWindow.style.border = "1px solid #000000";
+    agentsWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
+    agentsWindow.style.zIndex = "10";
+
+    // Add click handler to focus this window when clicked anywhere
+    agentsWindow.addEventListener("mousedown", () => {
+      this.windowFocus("window-agents");
+    });
+
+    // Window header
+    const windowHeader = document.createElement("div");
+    windowHeader.className = "window__header";
+    windowHeader.style.display = "flex";
+    windowHeader.style.justifyContent = "space-between";
+    windowHeader.style.alignItems = "center";
+    windowHeader.style.padding = "4px 6px";
+    windowHeader.style.backgroundColor = "#000000";
+    windowHeader.style.color = "#ffffff";
+    windowHeader.style.cursor = "move";
+    windowHeader.style.userSelect = "none";
+
+    const windowTitle = document.createElement("div");
+    windowTitle.innerText = "Agents";
+    windowTitle.style.fontSize = "11px";
+    windowTitle.style.fontWeight = "bold";
+
+    const windowControls = document.createElement("div");
+    windowControls.style.display = "flex";
+    windowControls.style.gap = "6px";
+
+    const minimizeButton = document.createElement("button");
+    minimizeButton.innerHTML = "&#8211;";
+    minimizeButton.style.background = "none";
+    minimizeButton.style.border = "none";
+    minimizeButton.style.color = "#ffffff";
+    minimizeButton.style.cursor = "pointer";
+    minimizeButton.style.fontSize = "12px";
+    minimizeButton.style.padding = "0 4px";
+    minimizeButton.addEventListener("click", () => {
+      this.windowMinimize("window-agents");
+    });
+
+    // Only add the minimize button (no close button)
+    windowControls.appendChild(minimizeButton);
+
+    windowHeader.appendChild(windowTitle);
+    windowHeader.appendChild(windowControls);
+    agentsWindow.appendChild(windowHeader);
+
+    // Window content
+    const windowContent = document.createElement("div");
+    windowContent.className = "window__content";
+    windowContent.style.flex = "1";
+    windowContent.style.overflow = "auto";
+    windowContent.style.backgroundColor = "#f0f0f0";
+
+    // Agents list container
+    const agentsList = document.createElement("div");
+    agentsList.id = "agents__list";
+    agentsList.style.display = "flex";
+    agentsList.style.flexDirection = "column";
+    agentsList.style.overflow = "hidden";
+    agentsList.style.height = "100%";
+
+    // Agents items
+    const agentsItems = document.createElement("div");
+    agentsItems.id = "agents__items";
+    agentsItems.style.display = "flex";
+    agentsItems.style.flexDirection = "column";
+    agentsItems.style.overflow = "auto";
+    agentsItems.style.flex = "1";
+
+    // Render agents from data if available
+    if (this.agents && Object.keys(this.agents).length > 0) {
+      console.log("Rendering agent items from data:", this.agents);
+      Object.values(this.agents).forEach((agent) => {
+        const agentItem = this.renderAgentItem(agent);
+        agentsItems.appendChild(agentItem);
+      });
+    } else {
+      // Default message if no agents
+      const noAgents = document.createElement("div");
+      noAgents.style.padding = "10px";
+      noAgents.style.textAlign = "center";
+      noAgents.style.color = "#808080";
+      noAgents.innerText = "No agents available";
+      agentsItems.appendChild(noAgents);
+    }
+
+    agentsList.appendChild(agentsItems);
+    windowContent.appendChild(agentsList);
+    agentsWindow.appendChild(windowContent);
+
+    // Make window draggable
+    this.makeWindowDraggable(agentsWindow, windowHeader);
+
+    // Add to DOM
+    document.getElementById("desktop").appendChild(agentsWindow);
+
+    // Add to windows array
+    this.windows.push({
+      id: "window-agents",
+      type: "agents",
+      minimized: false,
+    });
+
+    return this;
+  };
+  
+  /**
+   * Renders a single agent item in the agents panel
+   * @param {Object} agent - Agent data
+   * @param {string} agent.id - Agent ID
+   * @param {string} agent.name - Agent name
+   * @param {string} [agent.avatar] - Agent avatar
+   * @param {string} [agent.description] - Agent description
+   * @returns {HTMLElement} The rendered agent item element
+   */
+  LOOPCHAT.prototype.renderAgentItem = function (agent) {
+    const item = document.createElement("div");
+    item.id = `agent__item-${agent.id}`;
+    item.className = "agent__item";
+    item.style.padding = "8px";
+    item.style.display = "flex";
+    item.style.alignItems = "center";
+    item.style.borderBottom = "1px solid #e0e0e0";
+    item.style.transition = "background-color 0.1s";
+    item.style.cursor = "pointer";
+    
+    // Hover effect
+    item.addEventListener("mouseover", () => {
+      item.style.backgroundColor = "#e0e0e0";
+    });
+    
+    item.addEventListener("mouseout", () => {
+      item.style.backgroundColor = "transparent";
+    });
+
+    // Avatar element
+    const avatarEl = document.createElement("div");
+    avatarEl.className = "avatar";
+    avatarEl.style.width = "24px";
+    avatarEl.style.height = "24px";
+    avatarEl.style.borderRadius = "2px";
+    avatarEl.style.backgroundColor = "#000000";
+    avatarEl.style.color = "#ffffff";
+    avatarEl.style.display = "flex";
+    avatarEl.style.justifyContent = "center";
+    avatarEl.style.alignItems = "center";
+    avatarEl.style.marginRight = "8px";
+    avatarEl.style.fontWeight = "bold";
+    avatarEl.style.fontSize = "12px";
+    avatarEl.style.overflow = "hidden";
+
+    // Check if avatar is a URL or a character
+    if (agent.avatar && agent.avatar.startsWith && agent.avatar.startsWith("http")) {
+      avatarEl.style.backgroundImage = `url(${agent.avatar})`;
+      avatarEl.style.backgroundSize = "cover";
+      avatarEl.style.backgroundPosition = "center";
+    } else {
+      avatarEl.innerText = agent.avatar || agent.name.charAt(0).toUpperCase();
+    }
+
+    // Agent info container
+    const agentInfo = document.createElement("div");
+    agentInfo.style.flex = "1";
+    
+    // Agent name
+    const agentName = document.createElement("div");
+    agentName.style.fontWeight = "bold";
+    agentName.style.fontSize = "12px";
+    agentName.innerText = agent.name;
+    agentInfo.appendChild(agentName);
+    
+    // Agent description (if available)
+    if (agent.description) {
+      const agentDesc = document.createElement("div");
+      agentDesc.style.fontSize = "10px";
+      agentDesc.style.color = "#808080";
+      agentDesc.style.marginTop = "2px";
+      agentDesc.innerText = agent.description;
+      agentInfo.appendChild(agentDesc);
+    }
+
+    item.appendChild(avatarEl);
+    item.appendChild(agentInfo);
+
+    return item;
+  };
 
   /**
    * Renders a single channel tab in the channels panel

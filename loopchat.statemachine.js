@@ -162,6 +162,9 @@
       if (windowData.type === "channels") {
         buttonLabel = "Channels";
       } 
+      else if (windowData.type === "agents") {
+        buttonLabel = "Agents";
+      }
       else if (windowData.type === "input") {
         buttonLabel = "Message Input";
       }
@@ -254,8 +257,8 @@
    * @returns {LoopChat} The LoopChat instance for chaining
    */
   LOOPCHAT.prototype.windowClose = function (windowId) {
-    // Prevent channels window from being closed
-    if (windowId === "window-channels") {
+    // Prevent channels and agents windows from being closed
+    if (windowId === "window-channels" || windowId === "window-agents") {
       // Just minimize it instead
       this.windowMinimize(windowId);
       return this;
