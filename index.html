@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LoopChat</title>
     <style>
+      * {
+        box-sizing: border-box;
+      }
       body {
         margin: 0;
         font-family: Arial, sans-serif;
@@ -12,11 +15,17 @@
         color: #222;
       }
     </style>
-    <script src="loopchat.js" defer></script>
+    <script src="loopchat.core.js" defer></script>
+    <script src="loopchat.render.js" defer></script>
+    <script src="loopchat.data.js" defer></script>
+    <script src="loopchat.statemachine.js" defer></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const root = document.getElementById("root");
-        const loopchat = new LoopChat(root);
+        const loopchat = new LoopChat();
+        loopchat.init({
+          root: root,
+        });
       });
     </script>
   </head>
