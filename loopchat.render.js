@@ -152,27 +152,27 @@
     minimizeAllOption.style.color = "#000000";
     minimizeAllOption.style.fontSize = "11px";
     minimizeAllOption.style.borderBottom = "1px solid #e0e0e0";
-    
+
     minimizeAllOption.addEventListener("mouseover", () => {
       minimizeAllOption.style.backgroundColor = "#f0f0f0";
     });
-    
+
     minimizeAllOption.addEventListener("mouseout", () => {
       minimizeAllOption.style.backgroundColor = "transparent";
     });
-    
+
     minimizeAllOption.addEventListener("click", () => {
       // Hide dropdown
       dropdownMenu.style.display = "none";
-      
+
       // Minimize all non-minimized windows
-      this.windows.forEach(window => {
+      this.windows.forEach((window) => {
         if (!window.minimized) {
           this.windowMinimize(window.id);
         }
       });
     });
-    
+
     // Add options to dropdown menu
     dropdownMenu.appendChild(showAllOption);
     dropdownMenu.appendChild(minimizeAllOption);
@@ -210,30 +210,33 @@
   };
 
   /**
-   * Renders the channels panel as a window
+   * Renders the combined channels and agents panel as a window with accordions
    * @returns {LoopChat} The LoopChat instance for chaining
    */
   LOOPCHAT.prototype.renderChannelsWindow = function () {
-    // Create a window for channels
-    const channelsWindow = document.createElement("div");
-    channelsWindow.id = "window-channels";
-    channelsWindow.className = "window";
-    channelsWindow.style.position = "absolute";
-    channelsWindow.style.width = "220px";
-    channelsWindow.style.height = "400px";
-    channelsWindow.style.top = "40px";
-    channelsWindow.style.left = "20px";
-    channelsWindow.style.display = "flex";
-    channelsWindow.style.flexDirection = "column";
-    channelsWindow.style.overflow = "hidden";
-    channelsWindow.style.backgroundColor = "#ffffff";
-    channelsWindow.style.border = "1px solid #000000";
-    channelsWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
-    channelsWindow.style.zIndex = "10";
+    console.log("Rendering directory window with channels, agents, and users");
+    console.log("Agents data:", this.agents);
+    console.log("Users data:", this.users);
+    // Create a window for the navigation sidebar
+    const sidebarWindow = document.createElement("div");
+    sidebarWindow.id = "window-sidebar";
+    sidebarWindow.className = "window";
+    sidebarWindow.style.position = "absolute";
+    sidebarWindow.style.width = "250px";
+    sidebarWindow.style.height = "500px";
+    sidebarWindow.style.top = "40px";
+    sidebarWindow.style.left = "20px";
+    sidebarWindow.style.display = "flex";
+    sidebarWindow.style.flexDirection = "column";
+    sidebarWindow.style.overflow = "hidden";
+    sidebarWindow.style.backgroundColor = "#ffffff";
+    sidebarWindow.style.border = "1px solid #000000";
+    sidebarWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
+    sidebarWindow.style.zIndex = "10";
 
     // Add click handler to focus this window when clicked anywhere
-    channelsWindow.addEventListener("mousedown", () => {
-      this.windowFocus("window-channels");
+    sidebarWindow.addEventListener("mousedown", () => {
+      this.windowFocus("window-sidebar");
     });
 
     // Window header
@@ -249,7 +252,7 @@
     windowHeader.style.userSelect = "none";
 
     const windowTitle = document.createElement("div");
-    windowTitle.innerText = "Channels";
+    windowTitle.innerText = "Directory";
     windowTitle.style.fontSize = "11px";
     windowTitle.style.fontWeight = "bold";
 
@@ -266,7 +269,7 @@
     minimizeButton.style.fontSize = "12px";
     minimizeButton.style.padding = "0 4px";
     minimizeButton.addEventListener("click", () => {
-      this.windowMinimize("window-channels");
+      this.windowMinimize("window-sidebar");
     });
 
     // Only add the minimize button (no close button)
@@ -274,7 +277,7 @@
 
     windowHeader.appendChild(windowTitle);
     windowHeader.appendChild(windowControls);
-    channelsWindow.appendChild(windowHeader);
+    sidebarWindow.appendChild(windowHeader);
 
     // Window content
     const windowContent = document.createElement("div");
@@ -283,13 +286,49 @@
     windowContent.style.overflow = "auto";
     windowContent.style.backgroundColor = "#f0f0f0";
 
-    // Channel tabs container
-    const channelsList = document.createElement("div");
-    channelsList.id = "channels__list";
-    channelsList.style.display = "flex";
-    channelsList.style.flexDirection = "column";
-    channelsList.style.overflow = "hidden";
-    channelsList.style.height = "100%";
+    // Create accordion container
+    const accordion = document.createElement("div");
+    accordion.className = "accordion";
+    accordion.style.display = "flex";
+    accordion.style.flexDirection = "column";
+    accordion.style.width = "100%";
+
+    // ========== CHANNELS SECTION ==========
+    // Channels accordion header
+    const channelsHeader = document.createElement("div");
+    channelsHeader.className = "accordion__header";
+    channelsHeader.style.padding = "8px 10px";
+    channelsHeader.style.backgroundColor = "#222222";
+    channelsHeader.style.color = "#ffffff";
+    channelsHeader.style.fontWeight = "bold";
+    channelsHeader.style.fontSize = "12px";
+    channelsHeader.style.cursor = "pointer";
+    channelsHeader.style.display = "flex";
+    channelsHeader.style.justifyContent = "space-between";
+    channelsHeader.style.alignItems = "center";
+    channelsHeader.style.userSelect = "none";
+    channelsHeader.style.borderBottom = "1px solid #000000";
+
+    const channelsTitle = document.createElement("span");
+    channelsTitle.innerText = "Channels";
+
+    const channelsToggle = document.createElement("span");
+    channelsToggle.innerHTML = "&#9660;"; // Down arrow
+    channelsToggle.style.fontSize = "10px";
+    channelsToggle.style.transition = "transform 0.2s";
+
+    channelsHeader.appendChild(channelsTitle);
+    channelsHeader.appendChild(channelsToggle);
+
+    // Channels content
+    const channelsContent = document.createElement("div");
+    channelsContent.className = "accordion__content";
+    channelsContent.style.display = "flex";
+    channelsContent.style.flexDirection = "column";
+    channelsContent.style.overflow = "hidden";
+    channelsContent.style.maxHeight = "1000px"; // Start expanded
+    channelsContent.style.transition = "max-height 0.3s ease-in-out";
+    channelsContent.style.backgroundColor = "#f0f0f0";
 
     // Channel tabs
     const channelTabs = document.createElement("div");
@@ -297,7 +336,6 @@
     channelTabs.style.display = "flex";
     channelTabs.style.flexDirection = "column";
     channelTabs.style.overflow = "auto";
-    channelTabs.style.flex = "1";
 
     // Render tabs from test data if available
     if (this.channels && this.channels.length > 0) {
@@ -314,31 +352,210 @@
       channelTabs.appendChild(this.renderChannelTab({ id: "development", title: "Development" }));
     }
 
-    channelsList.appendChild(channelTabs);
-    windowContent.appendChild(channelsList);
-    channelsWindow.appendChild(windowContent);
+    // Toggle channels section
+    channelsHeader.addEventListener("click", () => {
+      if (channelsContent.style.maxHeight !== "0px") {
+        channelsContent.style.maxHeight = "0px";
+        channelsToggle.innerHTML = "&#9654;"; // Right arrow
+        channelsToggle.style.transform = "rotate(0deg)";
+      } else {
+        channelsContent.style.maxHeight = "1000px";
+        channelsToggle.innerHTML = "&#9660;"; // Down arrow
+        channelsToggle.style.transform = "rotate(0deg)";
+      }
+    });
+
+    channelsContent.appendChild(channelTabs);
+
+    // ========== AI AGENTS SECTION ==========
+    // Agents accordion header
+    const agentsHeader = document.createElement("div");
+    agentsHeader.className = "accordion__header";
+    agentsHeader.style.padding = "8px 10px";
+    agentsHeader.style.backgroundColor = "#222222";
+    agentsHeader.style.color = "#ffffff";
+    agentsHeader.style.fontWeight = "bold";
+    agentsHeader.style.fontSize = "12px";
+    agentsHeader.style.cursor = "pointer";
+    agentsHeader.style.display = "flex";
+    agentsHeader.style.justifyContent = "space-between";
+    agentsHeader.style.alignItems = "center";
+    agentsHeader.style.userSelect = "none";
+    agentsHeader.style.borderBottom = "1px solid #000000";
+
+    const agentsTitle = document.createElement("span");
+    agentsTitle.innerText = "Agents";
+
+    const agentsToggle = document.createElement("span");
+    agentsToggle.innerHTML = "&#9660;"; // Down arrow
+    agentsToggle.style.fontSize = "10px";
+    agentsToggle.style.transition = "transform 0.2s";
+
+    agentsHeader.appendChild(agentsTitle);
+    agentsHeader.appendChild(agentsToggle);
+
+    // Agents content
+    const agentsContent = document.createElement("div");
+    agentsContent.className = "accordion__content";
+    agentsContent.style.display = "flex";
+    agentsContent.style.flexDirection = "column";
+    agentsContent.style.overflow = "hidden";
+    agentsContent.style.maxHeight = "1000px"; // Start expanded
+    agentsContent.style.transition = "max-height 0.3s ease-in-out";
+    agentsContent.style.backgroundColor = "#f0f0f0";
+
+    // Render AI agents
+    let hasAgents = false;
+    if (this.agents && typeof this.agents === "object") {
+      const agentKeys = Object.keys(this.agents);
+      console.log("Rendering agent items, found keys:", agentKeys);
+
+      if (agentKeys.length > 0) {
+        agentKeys.forEach((agentId) => {
+          const agent = this.agents[agentId];
+          console.log("Rendering agent:", agent);
+          const agentItem = this.renderAgentItem(agent, true);
+          agentsContent.appendChild(agentItem);
+          hasAgents = true;
+        });
+      }
+    }
+
+    // If no agents, show message
+    if (!hasAgents) {
+      const noAgents = document.createElement("div");
+      noAgents.style.padding = "8px";
+      noAgents.style.textAlign = "center";
+      noAgents.style.color = "#808080";
+      noAgents.style.fontSize = "11px";
+      noAgents.innerText = "No AI agents available";
+      agentsContent.appendChild(noAgents);
+    }
+
+    // Toggle AI agents section
+    agentsHeader.addEventListener("click", () => {
+      if (agentsContent.style.maxHeight !== "0px") {
+        agentsContent.style.maxHeight = "0px";
+        agentsToggle.innerHTML = "&#9654;"; // Right arrow
+        agentsToggle.style.transform = "rotate(0deg)";
+      } else {
+        agentsContent.style.maxHeight = "1000px";
+        agentsToggle.innerHTML = "&#9660;"; // Down arrow
+        agentsToggle.style.transform = "rotate(0deg)";
+      }
+    });
+
+    // ========== PEOPLE SECTION ==========
+    // People accordion header
+    const peopleHeader = document.createElement("div");
+    peopleHeader.className = "accordion__header";
+    peopleHeader.style.padding = "8px 10px";
+    peopleHeader.style.backgroundColor = "#222222";
+    peopleHeader.style.color = "#ffffff";
+    peopleHeader.style.fontWeight = "bold";
+    peopleHeader.style.fontSize = "12px";
+    peopleHeader.style.cursor = "pointer";
+    peopleHeader.style.display = "flex";
+    peopleHeader.style.justifyContent = "space-between";
+    peopleHeader.style.alignItems = "center";
+    peopleHeader.style.userSelect = "none";
+    peopleHeader.style.borderBottom = "1px solid #000000";
+
+    const peopleTitle = document.createElement("span");
+    peopleTitle.innerText = "People";
+
+    const peopleToggle = document.createElement("span");
+    peopleToggle.innerHTML = "&#9660;"; // Down arrow
+    peopleToggle.style.fontSize = "10px";
+    peopleToggle.style.transition = "transform 0.2s";
+
+    peopleHeader.appendChild(peopleTitle);
+    peopleHeader.appendChild(peopleToggle);
+
+    // People content
+    const peopleContent = document.createElement("div");
+    peopleContent.className = "accordion__content";
+    peopleContent.style.display = "flex";
+    peopleContent.style.flexDirection = "column";
+    peopleContent.style.overflow = "hidden";
+    peopleContent.style.maxHeight = "1000px"; // Start expanded
+    peopleContent.style.transition = "max-height 0.3s ease-in-out";
+    peopleContent.style.backgroundColor = "#f0f0f0";
+
+    // Render users
+    let hasUsers = false;
+    if (this.users && typeof this.users === "object") {
+      const userKeys = Object.keys(this.users);
+      console.log("Rendering user items, found keys:", userKeys);
+
+      if (userKeys.length > 0) {
+        userKeys.forEach((userId) => {
+          const user = this.users[userId];
+          console.log("Rendering user:", user);
+          const userItem = this.renderAgentItem(user, false);
+          peopleContent.appendChild(userItem);
+          hasUsers = true;
+        });
+      }
+    }
+
+    // If no users, show message
+    if (!hasUsers) {
+      const noUsers = document.createElement("div");
+      noUsers.style.padding = "8px";
+      noUsers.style.textAlign = "center";
+      noUsers.style.color = "#808080";
+      noUsers.style.fontSize = "11px";
+      noUsers.innerText = "No users available";
+      peopleContent.appendChild(noUsers);
+    }
+
+    // Toggle people section
+    peopleHeader.addEventListener("click", () => {
+      if (peopleContent.style.maxHeight !== "0px") {
+        peopleContent.style.maxHeight = "0px";
+        peopleToggle.innerHTML = "&#9654;"; // Right arrow
+        peopleToggle.style.transform = "rotate(0deg)";
+      } else {
+        peopleContent.style.maxHeight = "1000px";
+        peopleToggle.innerHTML = "&#9660;"; // Down arrow
+        peopleToggle.style.transform = "rotate(0deg)";
+      }
+    });
+
+    // Assemble the accordion
+    accordion.appendChild(channelsHeader);
+    accordion.appendChild(channelsContent);
+    accordion.appendChild(agentsHeader);
+    accordion.appendChild(agentsContent);
+    accordion.appendChild(peopleHeader);
+    accordion.appendChild(peopleContent);
+
+    windowContent.appendChild(accordion);
+    sidebarWindow.appendChild(windowContent);
 
     // Make window draggable
-    this.makeWindowDraggable(channelsWindow, windowHeader);
+    this.makeWindowDraggable(sidebarWindow, windowHeader);
 
     // Add to DOM
-    document.getElementById("desktop").appendChild(channelsWindow);
+    document.getElementById("desktop").appendChild(sidebarWindow);
 
     // Add to windows array
     this.windows.push({
-      id: "window-channels",
-      type: "channels",
+      id: "window-sidebar",
+      type: "sidebar",
       minimized: false,
     });
 
     return this;
   };
-  
+
   /**
    * Renders the agents panel as a window
    * @returns {LoopChat} The LoopChat instance for chaining
    */
   LOOPCHAT.prototype.renderAgentsWindow = function () {
+    console.log("Rendering agents window with agents:", this.agents, "and users:", this.users);
     // Create a window for agents
     const agentsWindow = document.createElement("div");
     agentsWindow.id = "window-agents";
@@ -374,7 +591,7 @@
     windowHeader.style.userSelect = "none";
 
     const windowTitle = document.createElement("div");
-    windowTitle.innerText = "Agents";
+    windowTitle.innerText = "Agents & Users";
     windowTitle.style.fontSize = "11px";
     windowTitle.style.fontWeight = "bold";
 
@@ -424,21 +641,69 @@
     agentsItems.style.overflow = "auto";
     agentsItems.style.flex = "1";
 
-    // Render agents from data if available
+    // Section header for Agents
+    const agentHeader = document.createElement("div");
+    agentHeader.style.padding = "6px 8px";
+    agentHeader.style.backgroundColor = "#e0e0e0";
+    agentHeader.style.fontWeight = "bold";
+    agentHeader.style.fontSize = "11px";
+    agentHeader.style.borderBottom = "1px solid #c0c0c0";
+    agentHeader.innerText = "Agents";
+    agentsItems.appendChild(agentHeader);
+
+    // Render AI agents first
+    let hasAgents = false;
     if (this.agents && Object.keys(this.agents).length > 0) {
       console.log("Rendering agent items from data:", this.agents);
       Object.values(this.agents).forEach((agent) => {
-        const agentItem = this.renderAgentItem(agent);
+        const agentItem = this.renderAgentItem(agent, true);
         agentsItems.appendChild(agentItem);
       });
-    } else {
-      // Default message if no agents
+      hasAgents = true;
+    }
+
+    // If no agents, show message in the agents section
+    if (!hasAgents) {
       const noAgents = document.createElement("div");
-      noAgents.style.padding = "10px";
+      noAgents.style.padding = "8px";
       noAgents.style.textAlign = "center";
       noAgents.style.color = "#808080";
-      noAgents.innerText = "No agents available";
+      noAgents.style.fontSize = "11px";
+      noAgents.innerText = "No AI agents available";
       agentsItems.appendChild(noAgents);
+    }
+
+    // Section header for People/Users
+    const userHeader = document.createElement("div");
+    userHeader.style.padding = "6px 8px";
+    userHeader.style.backgroundColor = "#e0e0e0";
+    userHeader.style.fontWeight = "bold";
+    userHeader.style.fontSize = "11px";
+    userHeader.style.borderBottom = "1px solid #c0c0c0";
+    userHeader.style.marginTop = "8px";
+    userHeader.innerText = "People";
+    agentsItems.appendChild(userHeader);
+
+    // Render human users
+    let hasUsers = false;
+    if (this.users && Object.keys(this.users).length > 0) {
+      console.log("Rendering user items from data:", this.users);
+      Object.values(this.users).forEach((user) => {
+        const userItem = this.renderAgentItem(user, false);
+        agentsItems.appendChild(userItem);
+      });
+      hasUsers = true;
+    }
+
+    // If no users, show message in the users section
+    if (!hasUsers) {
+      const noUsers = document.createElement("div");
+      noUsers.style.padding = "8px";
+      noUsers.style.textAlign = "center";
+      noUsers.style.color = "#808080";
+      noUsers.style.fontSize = "11px";
+      noUsers.innerText = "No users available";
+      agentsItems.appendChild(noUsers);
     }
 
     agentsList.appendChild(agentsItems);
@@ -460,17 +725,19 @@
 
     return this;
   };
-  
+
   /**
-   * Renders a single agent item in the agents panel
-   * @param {Object} agent - Agent data
-   * @param {string} agent.id - Agent ID
-   * @param {string} agent.name - Agent name
-   * @param {string} [agent.avatar] - Agent avatar
+   * Renders a single agent or user item in the agents panel
+   * @param {Object} agent - Agent or user data
+   * @param {string} agent.id - Agent/user ID
+   * @param {string} agent.name - Agent/user name
+   * @param {string} [agent.avatar] - Agent/user avatar
    * @param {string} [agent.description] - Agent description
-   * @returns {HTMLElement} The rendered agent item element
+   * @param {string} [agent.role] - User role
+   * @param {boolean} isAgent - Whether this is an AI agent (true) or human user (false)
+   * @returns {HTMLElement} The rendered agent/user item element
    */
-  LOOPCHAT.prototype.renderAgentItem = function (agent) {
+  LOOPCHAT.prototype.renderAgentItem = function (agent, isAgent) {
     const item = document.createElement("div");
     item.id = `agent__item-${agent.id}`;
     item.className = "agent__item";
@@ -480,12 +747,12 @@
     item.style.borderBottom = "1px solid #e0e0e0";
     item.style.transition = "background-color 0.1s";
     item.style.cursor = "pointer";
-    
+
     // Hover effect
     item.addEventListener("mouseover", () => {
       item.style.backgroundColor = "#e0e0e0";
     });
-    
+
     item.addEventListener("mouseout", () => {
       item.style.backgroundColor = "transparent";
     });
@@ -495,8 +762,8 @@
     avatarEl.className = "avatar";
     avatarEl.style.width = "24px";
     avatarEl.style.height = "24px";
-    avatarEl.style.borderRadius = "2px";
-    avatarEl.style.backgroundColor = "#000000";
+    avatarEl.style.borderRadius = isAgent ? "2px" : "50%"; // Square for agents, circle for users
+    avatarEl.style.backgroundColor = isAgent ? "#000000" : "#4A6DA7"; // Black for agents, blue for users
     avatarEl.style.color = "#ffffff";
     avatarEl.style.display = "flex";
     avatarEl.style.justifyContent = "center";
@@ -518,21 +785,21 @@
     // Agent info container
     const agentInfo = document.createElement("div");
     agentInfo.style.flex = "1";
-    
+
     // Agent name
     const agentName = document.createElement("div");
     agentName.style.fontWeight = "bold";
     agentName.style.fontSize = "12px";
     agentName.innerText = agent.name;
     agentInfo.appendChild(agentName);
-    
-    // Agent description (if available)
-    if (agent.description) {
+
+    // Agent description or user role (if available)
+    if (agent.description || agent.role) {
       const agentDesc = document.createElement("div");
       agentDesc.style.fontSize = "10px";
       agentDesc.style.color = "#808080";
       agentDesc.style.marginTop = "2px";
-      agentDesc.innerText = agent.description;
+      agentDesc.innerText = isAgent ? agent.description : agent.role;
       agentInfo.appendChild(agentDesc);
     }
 
@@ -1092,7 +1359,7 @@
    * @param {string} post.id - Post ID
    * @param {string} post.author - Author ID
    * @param {string} post.timestamp - ISO timestamp
-   * @param {Object} post.payload - Message payload
+   * @param {Object} post.envelope - Message envelope
    * @returns {HTMLElement} The rendered envelope element
    */
   LOOPCHAT.prototype.renderEnvelope = function (post) {
@@ -1176,24 +1443,24 @@
     messageContent.className = "envelope__message";
     messageContent.style.padding = "4px 0";
 
-    if (post.payload) {
-      if (post.payload.message) {
+    if (post.envelope) {
+      if (post.envelope.message) {
         // Convert newlines to <br> tags
-        messageContent.innerHTML = post.payload.message.replace(/\n/g, "<br>");
-      } else if (post.payload.type === "call" && post.payload.message) {
-        messageContent.innerHTML = post.payload.message.replace(/\n/g, "<br>");
+        messageContent.innerHTML = post.envelope.message.replace(/\n/g, "<br>");
+      } else if (post.envelope.type === "call" && post.envelope.message) {
+        messageContent.innerHTML = post.envelope.message.replace(/\n/g, "<br>");
       }
     }
 
     envelope.appendChild(messageContent);
 
     // Attachments
-    if (post.payload && post.payload.attachments && post.payload.attachments.length > 0) {
+    if (post.envelope && post.envelope.attachments && post.envelope.attachments.length > 0) {
       const attachmentsContainer = document.createElement("div");
       attachmentsContainer.className = "envelope__attachments";
       attachmentsContainer.style.marginTop = "6px";
 
-      post.payload.attachments.forEach((attachment) => {
+      post.envelope.attachments.forEach((attachment) => {
         const attachmentEl = this.renderAttachment(attachment);
         attachmentsContainer.appendChild(attachmentEl);
       });
@@ -1202,7 +1469,7 @@
     }
 
     // Action buttons
-    if (post.payload && post.payload.type === "answer") {
+    if (post.envelope && post.envelope.type === "answer") {
       const actionsContainer = document.createElement("div");
       actionsContainer.className = "envelope__actions";
       actionsContainer.style.marginTop = "6px";
@@ -1513,18 +1780,18 @@
     const messageContent = document.createElement("div");
     messageContent.style.marginBottom = "8px";
 
-    if (post.payload && post.payload.message) {
-      messageContent.innerHTML = post.payload.message.replace(/\n/g, "<br>");
+    if (post.envelope && post.envelope.message) {
+      messageContent.innerHTML = post.envelope.message.replace(/\n/g, "<br>");
     }
 
     windowContent.appendChild(messageContent);
 
     // Add attachments if any
-    if (post.payload && post.payload.attachments && post.payload.attachments.length > 0) {
+    if (post.envelope && post.envelope.attachments && post.envelope.attachments.length > 0) {
       const attachmentsContainer = document.createElement("div");
       attachmentsContainer.style.marginTop = "8px";
 
-      post.payload.attachments.forEach((attachment) => {
+      post.envelope.attachments.forEach((attachment) => {
         const attachmentEl = this.renderAttachment(attachment);
         attachmentsContainer.appendChild(attachmentEl);
       });

@@ -55,11 +55,15 @@ LoopChat.prototype.init = function (props) {
   // Load test data first
   this.loadTestData();
   
-  // Render the UI with window structure
-  this.renderRoot()
-    .renderChannelsWindow()
-    .renderAgentsWindow()
-    .renderMessageInputWindow();
+  // Wait for data to load before rendering windows with a small delay
+  setTimeout(() => {
+    // Render the UI with window structure
+    this.renderRoot()
+      .renderChannelsWindow()
+      .renderMessageInputWindow();
+    
+    console.log("Windows rendered with data. Agents:", Object.keys(this.agents).length, "Users:", Object.keys(this.users).length);
+  }, 300);
   
   // Ensure a channel is activated after rendering if test data was loaded
   setTimeout(() => {

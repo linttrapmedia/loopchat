@@ -16,16 +16,22 @@
 
         // Process users data
         if (data.users && Array.isArray(data.users)) {
+          console.log("Loading users data:", data.users);
+          this.users = {}; // Reset users map
           data.users.forEach((user) => {
             this.users[user.id] = user;
           });
+          console.log("Users loaded:", Object.keys(this.users).length);
         }
 
         // Process agents data
         if (data.agents && Array.isArray(data.agents)) {
+          console.log("Loading agents data:", data.agents);
+          this.agents = {}; // Reset agents map
           data.agents.forEach((agent) => {
             this.agents[agent.id] = agent;
           });
+          console.log("Agents loaded:", Object.keys(this.agents).length);
         }
 
         // Process channels (threads)
@@ -98,7 +104,7 @@
       id: `post${Date.now()}`,
       author: authorId,
       timestamp: new Date().toISOString(),
-      payload: {
+      envelope: {
         type: "call",
         message: message,
       },
@@ -149,7 +155,7 @@
       id: `post${Date.now()}`,
       author: authorId,
       timestamp: new Date().toISOString(),
-      payload: {
+      envelope: {
         type: "answer",
         recipients: ["user1"],
         message: `This is an automated response to: "${message}"`,

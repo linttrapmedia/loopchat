@@ -9,7 +9,7 @@
           "id": "post1",
           "author": "system",
           "timestamp": "2023-10-01T09:00:00Z",
-          "payload": {
+          "envelope": {
             "type": "answer",
             "recipients": ["all"],
             "message": "Welcome to the General channel! This is where team discussions happen.",
@@ -20,7 +20,7 @@
           "id": "post2",
           "author": "user1",
           "timestamp": "2023-10-01T09:05:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "Good morning everyone! What's on the agenda for today?"
           }
@@ -29,7 +29,7 @@
           "id": "post3",
           "author": "agent_assist",
           "timestamp": "2023-10-01T09:06:00Z",
-          "payload": {
+          "envelope": {
             "type": "answer",
             "recipients": ["user1", "all"],
             "message": "Here's today's agenda:\n1. Project status updates (10:00 AM)\n2. Client presentation review (11:30 AM)\n3. Team lunch (12:30 PM)\n4. Sprint planning (2:00 PM)",
@@ -53,7 +53,7 @@
           "id": "support1",
           "author": "customer1",
           "timestamp": "2023-10-01T10:15:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "Hi there, I'm having trouble accessing my account. I keep getting an error message when I try to login."
           }
@@ -62,7 +62,7 @@
           "id": "support2",
           "author": "support_agent",
           "timestamp": "2023-10-01T10:17:00Z",
-          "payload": {
+          "envelope": {
             "type": "answer",
             "recipients": ["customer1"],
             "message": "I'm sorry to hear that. Could you please tell me what error message you're seeing? Also, have you tried resetting your password?",
@@ -73,7 +73,7 @@
           "id": "support3",
           "author": "customer1",
           "timestamp": "2023-10-01T10:20:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "The error says 'Account temporarily locked'. I haven't tried resetting my password yet."
           }
@@ -82,7 +82,7 @@
           "id": "support4",
           "author": "support_agent",
           "timestamp": "2023-10-01T10:22:00Z",
-          "payload": {
+          "envelope": {
             "type": "answer",
             "recipients": ["customer1"],
             "message": "Thanks for the details. It looks like your account was locked after multiple failed login attempts. I've unlocked it for you. Please try logging in again, and if you continue to have issues, here's a guide on how to reset your password.",
@@ -106,7 +106,7 @@
           "id": "dev1",
           "author": "dev_lead",
           "timestamp": "2023-10-01T11:30:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "Team, I've pushed the latest API changes to the develop branch. Please pull the latest changes and let me know if you encounter any issues."
           }
@@ -115,7 +115,7 @@
           "id": "dev2",
           "author": "dev2",
           "timestamp": "2023-10-01T11:35:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "Just pulled the changes. I'm seeing an error in the authentication module. Getting a 'TypeError: Cannot read property 'token' of undefined' when trying to authenticate."
           }
@@ -124,7 +124,7 @@
           "id": "dev3",
           "author": "agent_coder",
           "timestamp": "2023-10-01T11:38:00Z",
-          "payload": {
+          "envelope": {
             "type": "answer",
             "recipients": ["dev2", "dev_lead"],
             "message": "I've analyzed the issue. The problem is in auth.js line 42. The response object isn't being properly checked for null before accessing the token property. Here's a suggested fix:",
@@ -142,7 +142,7 @@
           "id": "dev4",
           "author": "dev_lead",
           "timestamp": "2023-10-01T11:45:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "Good catch! I'll apply that fix and push an update. In the meantime, you can use this workaround in your local build."
           }
@@ -158,7 +158,7 @@
           "id": "alpha1",
           "author": "pm_jane",
           "timestamp": "2023-10-02T09:00:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "Morning team! Here's the latest project timeline for Alpha. We're on track for the Phase 2 delivery next week."
           }
@@ -167,7 +167,7 @@
           "id": "alpha2",
           "author": "agent_scheduler",
           "timestamp": "2023-10-02T09:02:00Z",
-          "payload": {
+          "envelope": {
             "type": "answer",
             "recipients": ["all"],
             "message": "Project Alpha Timeline Summary:\n\nPhase 1: Completed ✓\nPhase 2: In progress (87% complete)\nPhase 3: Starting Oct 15\nFinal Delivery: Oct 30\n\nCritical path tasks for this week:\n- API Integration Testing\n- User Dashboard Refinements\n- Documentation Updates",
@@ -185,7 +185,7 @@
           "id": "alpha3",
           "author": "designer_sam",
           "timestamp": "2023-10-02T09:15:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "I've completed the UI refinements for the dashboard. You can preview them at the staging link. @dev_team Could someone help me with implementing the dark mode toggle?"
           }
@@ -194,7 +194,7 @@
           "id": "alpha4",
           "author": "dev_alex",
           "timestamp": "2023-10-02T09:20:00Z",
-          "payload": {
+          "envelope": {
             "type": "call",
             "message": "The dashboard looks great! I can help with the dark mode toggle. I'll set up a pair programming session for us this afternoon."
           }
@@ -203,6 +203,12 @@
     }
   ],
   "agents": [
+    {
+      "id": "system",
+      "name": "System",
+      "avatar": "S",
+      "description": "System notifications and messages"
+    },
     {
       "id": "agent_assist",
       "name": "Assistant",
@@ -220,6 +226,12 @@
       "name": "Scheduler",
       "avatar": "S",
       "description": "Project timelines and scheduling"
+    },
+    {
+      "id": "support_agent",
+      "name": "Support Agent",
+      "avatar": "SA",
+      "description": "Customer support agent"
     }
   ],
   "users": [
@@ -246,12 +258,6 @@
       "name": "Jordan Reed",
       "avatar": "https://example.com/avatars/jordan.jpg",
       "role": "Customer"
-    },
-    {
-      "id": "support_agent",
-      "name": "Riley Kim",
-      "avatar": "https://example.com/avatars/riley.jpg",
-      "role": "Support Agent"
     },
     {
       "id": "pm_jane",

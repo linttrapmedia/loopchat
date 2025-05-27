@@ -8,7 +8,7 @@ LoopChat is an all-in-one JavaScript library for creating rich AI-powered chat o
 
 ## Key Concepts
 
-- **Agent**: An autonomous entity that processes messages, makes decisions, and performs actions
+- **Agent**: An entity (person or bot) that can send and receive messages. Agents are the senders and recipients of messages in the system. Users are a type of agent, while bots are another type.
 - **Channel**: A medium through which messages are sent and received
 - **Desktop**: The main interactive area where users manage multiple "windows"
 - **Window**: Individual, resizable interface elements within the Desktop
