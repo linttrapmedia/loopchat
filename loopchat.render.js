@@ -1094,18 +1094,20 @@
     const tasksWindow = document.createElement("div");
     tasksWindow.id = "window-tasks";
     tasksWindow.className = "window";
-    tasksWindow.style.position = "absolute";
-    tasksWindow.style.width = "600px";
-    tasksWindow.style.height = "300px";
-    tasksWindow.style.top = "100px";
-    tasksWindow.style.left = "300px";
-    tasksWindow.style.display = "flex";
-    tasksWindow.style.flexDirection = "column";
-    tasksWindow.style.overflow = "hidden";
-    tasksWindow.style.backgroundColor = "#ffffff";
-    tasksWindow.style.border = "1px solid #000000";
-    tasksWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
-    tasksWindow.style.zIndex = "25"; // Higher than other windows by default
+    this.applyStyles(tasksWindow, {
+      position: "absolute",
+      width: this.design.windows.defaultWidth.large,
+      height: this.design.windows.defaultHeight.medium,
+      top: "100px",
+      left: "300px",
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+      backgroundColor: this.design.colors.ui.surface,
+      border: `${this.design.borders.width.thin} solid ${this.design.colors.primary.main}`,
+      boxShadow: this.design.shadows.md,
+      zIndex: this.design.zIndex.windowFocus // Higher than other windows by default
+    });
 
     // Add click handler to focus this window when clicked anywhere
     tasksWindow.addEventListener("mousedown", () => {
@@ -1115,32 +1117,40 @@
     // Window header
     const windowHeader = document.createElement("div");
     windowHeader.className = "window__header";
-    windowHeader.style.display = "flex";
-    windowHeader.style.justifyContent = "space-between";
-    windowHeader.style.alignItems = "center";
-    windowHeader.style.padding = "4px 6px";
-    windowHeader.style.backgroundColor = "#000000";
-    windowHeader.style.color = "#ffffff";
-    windowHeader.style.cursor = "move";
-    windowHeader.style.userSelect = "none";
+    this.applyStyles(windowHeader, {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: `${this.design.components.window.header.paddingY} ${this.design.components.window.header.paddingX}`,
+      backgroundColor: this.design.components.window.header.background,
+      color: this.design.components.window.header.color,
+      cursor: "move",
+      userSelect: "none"
+    });
 
     const windowTitle = document.createElement("div");
     windowTitle.innerText = "Tasks";
-    windowTitle.style.fontSize = "11px";
-    windowTitle.style.fontWeight = "bold";
+    this.applyStyles(windowTitle, {
+      fontSize: this.design.components.window.header.fontSize,
+      fontWeight: this.design.typography.fontWeight.bold
+    });
 
     const windowControls = document.createElement("div");
-    windowControls.style.display = "flex";
-    windowControls.style.gap = "6px";
+    this.applyStyles(windowControls, {
+      display: "flex",
+      gap: this.design.spacing.sm
+    });
 
     const minimizeButton = document.createElement("button");
     minimizeButton.innerHTML = "&#8211;";
-    minimizeButton.style.background = "none";
-    minimizeButton.style.border = "none";
-    minimizeButton.style.color = "#ffffff";
-    minimizeButton.style.cursor = "pointer";
-    minimizeButton.style.fontSize = "12px";
-    minimizeButton.style.padding = "0 4px";
+    this.applyStyles(minimizeButton, {
+      background: "none",
+      border: "none",
+      color: this.design.colors.text.inverted,
+      cursor: "pointer",
+      fontSize: this.design.typography.fontSize.base,
+      padding: `0 ${this.design.spacing.xs}`
+    });
     minimizeButton.addEventListener("click", () => {
       this.windowMinimize("window-tasks");
     });
@@ -1155,40 +1165,50 @@
     // Window content
     const windowContent = document.createElement("div");
     windowContent.className = "window__content";
-    windowContent.style.flex = "1";
-    windowContent.style.display = "flex";
-    windowContent.style.flexDirection = "column";
-    windowContent.style.overflow = "hidden";
-    windowContent.style.backgroundColor = "#f5f5f5";
+    this.applyStyles(windowContent, {
+      flex: "1",
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+      backgroundColor: this.design.colors.ui.background
+    });
 
     // Tasks toolbar (filters, search, actions)
     const toolbarEl = document.createElement("div");
     toolbarEl.className = "tasks__toolbar";
-    toolbarEl.style.display = "flex";
-    toolbarEl.style.justifyContent = "space-between";
-    toolbarEl.style.alignItems = "center";
-    toolbarEl.style.padding = "8px";
-    toolbarEl.style.borderBottom = "1px solid #e0e0e0";
-    toolbarEl.style.backgroundColor = "#f0f0f0";
+    this.applyStyles(toolbarEl, {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: this.design.spacing.md,
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
+      backgroundColor: this.design.colors.ui.hover
+    });
 
     // Left side - filters
     const filtersContainer = document.createElement("div");
-    filtersContainer.style.display = "flex";
-    filtersContainer.style.gap = "8px";
-    filtersContainer.style.alignItems = "center";
+    this.applyStyles(filtersContainer, {
+      display: "flex",
+      gap: this.design.spacing.md,
+      alignItems: "center"
+    });
 
     // Filter label
     const filterLabel = document.createElement("span");
     filterLabel.innerText = "Filter:";
-    filterLabel.style.fontSize = "12px";
+    this.applyStyles(filterLabel, {
+      fontSize: this.design.typography.fontSize.base
+    });
     filtersContainer.appendChild(filterLabel);
 
     // Status filter
     const statusSelect = document.createElement("select");
-    statusSelect.style.padding = "2px 4px";
-    statusSelect.style.fontSize = "12px";
-    statusSelect.style.border = "1px solid #ccc";
-    statusSelect.style.borderRadius = "3px";
+    this.applyStyles(statusSelect, {
+      padding: `${this.design.spacing.xxs} ${this.design.spacing.xs}`,
+      fontSize: this.design.typography.fontSize.base,
+      border: `${this.design.borders.width.thin} solid ${this.design.colors.ui.border}`,
+      borderRadius: this.design.borders.radius.sm
+    });
     
     const statusOptions = [
       { value: "", text: "All Statuses" },
@@ -1213,10 +1233,12 @@
 
     // Priority filter
     const prioritySelect = document.createElement("select");
-    prioritySelect.style.padding = "2px 4px";
-    prioritySelect.style.fontSize = "12px";
-    prioritySelect.style.border = "1px solid #ccc";
-    prioritySelect.style.borderRadius = "3px";
+    this.applyStyles(prioritySelect, {
+      padding: `${this.design.spacing.xxs} ${this.design.spacing.xs}`,
+      fontSize: this.design.typography.fontSize.base,
+      border: `${this.design.borders.width.thin} solid ${this.design.colors.ui.border}`,
+      borderRadius: this.design.borders.radius.sm
+    });
     
     const priorityOptions = [
       { value: "", text: "All Priorities" },
@@ -1240,43 +1262,26 @@
 
     // Right side - actions
     const actionsContainer = document.createElement("div");
-    actionsContainer.style.display = "flex";
-    actionsContainer.style.gap = "8px";
-    actionsContainer.style.alignItems = "center";
-
-    // New task button
-    const newTaskButton = document.createElement("button");
-    newTaskButton.innerText = "New Task";
-    newTaskButton.style.padding = "3px 8px";
-    newTaskButton.style.backgroundColor = "#000000";
-    newTaskButton.style.color = "#ffffff";
-    newTaskButton.style.border = "none";
-    newTaskButton.style.borderRadius = "3px";
-    newTaskButton.style.cursor = "pointer";
-    newTaskButton.style.fontSize = "11px";
-    
-    newTaskButton.addEventListener("click", () => {
-      // Show new task dialog
-      this.showNewTaskDialog();
+    this.applyStyles(actionsContainer, {
+      display: "flex",
+      gap: this.design.spacing.md,
+      alignItems: "center"
     });
-    
+
+    // Use the createButton helper instead of manual styling
+    const newTaskButton = this.createButton("New Task", "primary", {
+      onClick: () => {
+        this.showNewTaskDialog();
+      }
+    });
     actionsContainer.appendChild(newTaskButton);
 
-    // Refresh button
-    const refreshButton = document.createElement("button");
-    refreshButton.innerText = "Refresh";
-    refreshButton.style.padding = "3px 8px";
-    refreshButton.style.backgroundColor = "transparent";
-    refreshButton.style.color = "#000000";
-    refreshButton.style.border = "1px solid #000000";
-    refreshButton.style.borderRadius = "3px";
-    refreshButton.style.cursor = "pointer";
-    refreshButton.style.fontSize = "11px";
-    
-    refreshButton.addEventListener("click", () => {
-      this.updateTasksWindow();
+    // Use the createButton helper for refresh button
+    const refreshButton = this.createButton("Refresh", "secondary", {
+      onClick: () => {
+        this.updateTasksWindow();
+      }
     });
-    
     actionsContainer.appendChild(refreshButton);
 
     // Add filter and action containers to toolbar
@@ -1287,24 +1292,30 @@
     // Tasks list container
     const tasksListContainer = document.createElement("div");
     tasksListContainer.id = "tasks__list";
-    tasksListContainer.style.flex = "1";
-    tasksListContainer.style.overflow = "auto";
-    tasksListContainer.style.padding = "0";
+    this.applyStyles(tasksListContainer, {
+      flex: "1",
+      overflow: "auto",
+      padding: "0"
+    });
 
     // Tasks table
     const tasksTable = document.createElement("table");
     tasksTable.id = "tasks__table";
-    tasksTable.style.width = "100%";
-    tasksTable.style.borderCollapse = "collapse";
-    tasksTable.style.fontSize = "12px";
-    tasksTable.style.tableLayout = "fixed";
+    this.applyStyles(tasksTable, {
+      width: "100%",
+      borderCollapse: "collapse",
+      fontSize: this.design.typography.fontSize.base,
+      tableLayout: "fixed"
+    });
     
     // Table header
     const tableHeader = document.createElement("thead");
-    tableHeader.style.position = "sticky";
-    tableHeader.style.top = "0";
-    tableHeader.style.backgroundColor = "#e0e0e0";
-    tableHeader.style.zIndex = "1";
+    this.applyStyles(tableHeader, {
+      position: "sticky",
+      top: "0",
+      backgroundColor: this.design.components.table.headerBackground,
+      zIndex: "1"
+    });
     
     const headerRow = document.createElement("tr");
     
@@ -1320,11 +1331,13 @@
     columns.forEach(column => {
       const th = document.createElement("th");
       th.innerText = column.label;
-      th.style.padding = "8px";
-      th.style.textAlign = "left";
-      th.style.fontWeight = "bold";
-      th.style.borderBottom = "1px solid #ccc";
-      th.style.width = column.width;
+      this.applyStyles(th, {
+        padding: this.design.spacing.md,
+        textAlign: "left",
+        fontWeight: this.design.typography.fontWeight.bold,
+        borderBottom: `${this.design.borders.width.thin} solid ${this.design.components.table.borderColor}`,
+        width: column.width
+      });
       headerRow.appendChild(th);
     });
     
@@ -1389,9 +1402,11 @@
       const noTasksRow = document.createElement("tr");
       const noTasksCell = document.createElement("td");
       noTasksCell.colSpan = 6;
-      noTasksCell.style.padding = "20px";
-      noTasksCell.style.textAlign = "center";
-      noTasksCell.style.color = "#808080";
+      this.applyStyles(noTasksCell, {
+        padding: this.design.spacing.xxl,
+        textAlign: "center",
+        color: this.design.colors.text.tertiary
+      });
       noTasksCell.innerText = "No tasks found";
       noTasksRow.appendChild(noTasksCell);
       tableBody.appendChild(noTasksRow);
@@ -1400,53 +1415,36 @@
       tasks.forEach(task => {
         const taskRow = document.createElement("tr");
         taskRow.id = `task-row-${task.id}`;
-        taskRow.style.borderBottom = "1px solid #e0e0e0";
+        this.applyStyles(taskRow, {
+          borderBottom: `${this.design.borders.width.thin} solid ${this.design.components.table.borderColor}`
+        });
         
         // Alternate row background
         if (tasks.indexOf(task) % 2 === 0) {
-          taskRow.style.backgroundColor = "#f9f9f9";
+          taskRow.style.backgroundColor = this.design.components.table.rowEvenBackground;
+        } else {
+          taskRow.style.backgroundColor = this.design.components.table.rowOddBackground;
         }
         
         // Hover effect
         taskRow.addEventListener("mouseover", () => {
-          taskRow.style.backgroundColor = "#f0f0f0";
+          taskRow.style.backgroundColor = this.design.components.table.rowHoverBackground;
         });
         
         taskRow.addEventListener("mouseout", () => {
-          taskRow.style.backgroundColor = tasks.indexOf(task) % 2 === 0 ? "#f9f9f9" : "#ffffff";
+          taskRow.style.backgroundColor = tasks.indexOf(task) % 2 === 0 
+            ? this.design.components.table.rowEvenBackground 
+            : this.design.components.table.rowOddBackground;
         });
         
         // Status cell
         const statusCell = document.createElement("td");
-        statusCell.style.padding = "8px";
+        this.applyStyles(statusCell, {
+          padding: this.design.spacing.md
+        });
         
-        const statusBadge = document.createElement("span");
-        statusBadge.innerText = task.status;
-        statusBadge.style.padding = "2px 6px";
-        statusBadge.style.borderRadius = "12px";
-        statusBadge.style.fontSize = "10px";
-        statusBadge.style.fontWeight = "bold";
-        statusBadge.style.textTransform = "uppercase";
-        
-        // Status color
-        switch (task.status) {
-          case "pending":
-            statusBadge.style.backgroundColor = "#e0e0e0";
-            statusBadge.style.color = "#606060";
-            break;
-          case "in_progress":
-            statusBadge.style.backgroundColor = "#b3e0ff";
-            statusBadge.style.color = "#0066cc";
-            break;
-          case "completed":
-            statusBadge.style.backgroundColor = "#c6f0c6";
-            statusBadge.style.color = "#2e7d32";
-            break;
-          case "cancelled":
-            statusBadge.style.backgroundColor = "#ffcccc";
-            statusBadge.style.color = "#c62828";
-            break;
-        }
+        // Use the createStatusBadge helper function
+        const statusBadge = this.createStatusBadge(task.status);
         
         statusCell.appendChild(statusBadge);
         taskRow.appendChild(statusCell);
