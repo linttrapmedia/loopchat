@@ -231,10 +231,37 @@
       });
     });
 
+    // Tile windows option
+    const tileOption = document.createElement("div");
+    tileOption.innerText = "Tile Windows";
+    this.applyStyles(tileOption, {
+      padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
+      cursor: "pointer",
+      color: this.design.colors.text.primary,
+      fontSize: this.design.typography.fontSize.sm
+    });
+
+    tileOption.addEventListener("mouseover", () => {
+      tileOption.style.backgroundColor = this.design.colors.ui.hover;
+    });
+
+    tileOption.addEventListener("mouseout", () => {
+      tileOption.style.backgroundColor = "transparent";
+    });
+
+    tileOption.addEventListener("click", () => {
+      // Hide dropdown
+      dropdownMenu.style.display = "none";
+
+      // Tile all visible windows
+      this.tileWindows();
+    });
+
     // Add options to dropdown menu
     dropdownMenu.appendChild(showAllOption);
     dropdownMenu.appendChild(minimizeAllOption);
     dropdownMenu.appendChild(cascadeOption);
+    dropdownMenu.appendChild(tileOption);
 
     // Toggle dropdown visibility
     dropdownToggle.addEventListener("click", (e) => {

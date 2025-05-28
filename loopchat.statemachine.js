@@ -519,4 +519,64 @@
     this.windowMinimize("window-messages");
     return this;
   };
+  
+  /**
+   * Tiles all visible windows in a grid layout so they're all visible
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.tileWindows = function () {
+    // Get desktop dimensions
+    const desktop = document.getElementById("desktop");
+    if (!desktop) return this;
+    
+    // Account for toolbar height
+    const toolbarHeight = parseInt(this.design.components.toolbar.height || "30px");
+    const desktopRect = desktop.getBoundingClientRect();
+    const availableWidth = desktopRect.width;
+    const availableHeight = desktopRect.height - toolbarHeight;
+    
+    // Get all visible windows
+    const visibleWindows = this.windows.filter(window => !window.minimized)
+      .map(window => document.getElementById(window.id))
+      .filter(el => el !== null);
+    
+    if (visibleWindows.length === 0) return this;
+    
+    // Calculate grid dimensions
+    let columns, rows;
+    if (visibleWindows.length <= 2) {
+      columns = visibleWindows.length;
+      rows = 1;
+    } else if (visibleWindows.length <= 4) {
+      columns = 2;
+      rows = Math.ceil(visibleWindows.length / 2);
+    } else {
+      // Calculate the square root and round to find a reasonable grid size
+      const sqrt = Math.sqrt(visibleWindows.length);
+      columns = Math.ceil(sqrt);
+      rows = Math.ceil(visibleWindows.length / columns);
+    }
+    
+    // Calculate window dimensions
+    const width = Math.floor(availableWidth / columns);
+    const height = Math.floor(availableHeight / rows);
+    
+    // Position each window
+    visibleWindows.forEach((windowEl, index) => {
+      const row = Math.floor(index / columns);
+      const col = index % columns;
+      
+      // Position
+      const top = (row * height) + toolbarHeight;
+      const left = col * width;
+      
+      // Apply position and size
+      windowEl.style.top = `${top}px`;
+      windowEl.style.left = `${left}px`;
+      windowEl.style.width = `${width - 10}px`; // Slight margin
+      windowEl.style.height = `${height - 10}px`; // Slight margin
+    });
+    
+    return this;
+  };
 })(window.LoopChat);
