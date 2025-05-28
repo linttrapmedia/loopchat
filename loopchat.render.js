@@ -4,44 +4,92 @@
    * @returns {LoopChat} The LoopChat instance for chaining
    */
   LOOPCHAT.prototype.renderRoot = function () {
-    this.root.style.width = "100%";
-    this.root.style.height = "100%";
-    this.root.style.position = "absolute";
-    this.root.style.top = "0";
-    this.root.style.fontFamily = "monospace";
-    this.root.style.fontSize = "12px";
-    this.root.style.backgroundColor = "#f5f6fa";
-    this.root.style.color = "#000000";
+    // Define applyStyles helper if it doesn't exist
+    if (typeof this.applyStyles !== 'function') {
+      this.applyStyles = function(element, styles) {
+        if (!element || !styles) return element;
+        
+        Object.keys(styles).forEach(key => {
+          element.style[key] = styles[key];
+        });
+        
+        return element;
+      };
+    }
+    
+    // Ensure design is loaded, if not, use fallback values
+    if (!this.design) {
+      console.warn("Design system not loaded, using fallback values");
+      this.design = {
+        typography: {
+          fontFamily: { primary: "monospace" },
+          fontSize: { base: "12px" }
+        },
+        colors: {
+          ui: { background: "#f5f6fa" },
+          text: { primary: "#000000", inverted: "#ffffff" },
+          primary: { main: "#000000", light: "#222222" }
+        },
+        spacing: {
+          xxs: "2px", xs: "4px", sm: "6px", md: "8px", 
+          lg: "12px", xl: "16px", xxl: "20px", xxxl: "24px"
+        },
+        borders: { radius: { sm: "3px" }, width: { thin: "1px" } },
+        shadows: { md: "0 2px 5px rgba(0,0,0,0.2)" },
+        zIndex: { toolbar: "50", dropdown: "9999" },
+        components: {
+          toolbar: { height: "30px", background: "#000000", color: "#ffffff" }
+        }
+      };
+    }
+    
+    // Apply design tokens to root element
+    this.applyStyles(this.root, {
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      top: "0",
+      fontFamily: this.design.typography.fontFamily.primary,
+      fontSize: this.design.typography.fontSize.base,
+      backgroundColor: this.design.colors.ui.background,
+      color: this.design.colors.text.primary
+    });
 
     // Create a desktop container for all windows
     const desktop = document.createElement("div");
     desktop.id = "desktop";
-    desktop.style.position = "relative";
-    desktop.style.width = "100%";
-    desktop.style.height = "100%";
-    desktop.style.overflow = "hidden";
+    this.applyStyles(desktop, {
+      position: "relative",
+      width: "100%",
+      height: "100%",
+      overflow: "hidden"
+    });
 
     // Create a toolbar at the top
     const toolbar = document.createElement("div");
     toolbar.id = "desktop__toolbar";
-    toolbar.style.position = "fixed";
-    toolbar.style.top = "0";
-    toolbar.style.left = "0";
-    toolbar.style.right = "0";
-    toolbar.style.height = "30px";
-    toolbar.style.backgroundColor = "#000000";
-    toolbar.style.color = "#ffffff";
-    toolbar.style.display = "flex";
-    toolbar.style.alignItems = "center";
-    toolbar.style.padding = "0 10px";
-    toolbar.style.zIndex = "50";
+    this.applyStyles(toolbar, {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      right: "0",
+      height: this.design.components.toolbar.height,
+      backgroundColor: this.design.components.toolbar.background,
+      color: this.design.components.toolbar.color,
+      display: "flex",
+      alignItems: "center",
+      padding: `0 ${this.design.spacing.lg}`,
+      zIndex: this.design.zIndex.toolbar
+    });
 
     // App title
     const title = document.createElement("div");
     title.innerText = "LOOPCHAT";
-    title.style.fontWeight = "bold";
-    title.style.fontSize = "12px";
-    title.style.marginRight = "20px";
+    this.applyStyles(title, {
+      fontWeight: this.design.typography.fontWeight.bold,
+      fontSize: this.design.typography.fontSize.base,
+      marginRight: this.design.spacing.xxl
+    });
 
     toolbar.appendChild(title);
 
@@ -57,38 +105,44 @@
     // Dropdown toggle button with hamburger icon
     const dropdownToggle = document.createElement("button");
     dropdownToggle.innerHTML = "&#9776;"; // Hamburger menu icon
-    dropdownToggle.style.padding = "2px 8px";
-    dropdownToggle.style.backgroundColor = "transparent";
-    dropdownToggle.style.color = "#ffffff";
-    dropdownToggle.style.border = "0";
-    dropdownToggle.style.borderRadius = "3px";
-    dropdownToggle.style.cursor = "pointer";
-    dropdownToggle.style.fontSize = "14px"; // Slightly larger font for the icon
+    this.applyStyles(dropdownToggle, {
+      padding: `${this.design.spacing.xxs} ${this.design.spacing.md}`,
+      backgroundColor: "transparent",
+      color: this.design.colors.text.inverted,
+      border: "0",
+      borderRadius: this.design.borders.radius.sm,
+      cursor: "pointer",
+      fontSize: this.design.typography.fontSize.md
+    });
 
     // Dropdown menu
     const dropdownMenu = document.createElement("div");
-    dropdownMenu.style.position = "absolute";
-    dropdownMenu.style.top = "100%";
-    dropdownMenu.style.right = "0";
-    dropdownMenu.style.backgroundColor = "#ffffff";
-    dropdownMenu.style.border = "1px solid #000000";
-    dropdownMenu.style.borderRadius = "3px";
-    dropdownMenu.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-    dropdownMenu.style.display = "none";
-    dropdownMenu.style.zIndex = "9999";
-    dropdownMenu.style.minWidth = "150px";
+    this.applyStyles(dropdownMenu, {
+      position: "absolute",
+      top: "100%",
+      right: "0",
+      backgroundColor: this.design.colors.ui.surface,
+      border: `${this.design.borders.width.thin} solid ${this.design.colors.primary.main}`,
+      borderRadius: this.design.borders.radius.sm,
+      boxShadow: this.design.shadows.md,
+      display: "none",
+      zIndex: this.design.zIndex.dropdown,
+      minWidth: "150px"
+    });
 
     // Show all windows option
     const showAllOption = document.createElement("div");
     showAllOption.innerText = "Show All Windows";
-    showAllOption.style.padding = "6px 10px";
-    showAllOption.style.cursor = "pointer";
-    showAllOption.style.color = "#000000";
-    showAllOption.style.fontSize = "11px";
-    showAllOption.style.borderBottom = "1px solid #e0e0e0";
+    this.applyStyles(showAllOption, {
+      padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
+      cursor: "pointer",
+      color: this.design.colors.text.primary,
+      fontSize: this.design.typography.fontSize.sm,
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+    });
 
     showAllOption.addEventListener("mouseover", () => {
-      showAllOption.style.backgroundColor = "#f0f0f0";
+      showAllOption.style.backgroundColor = this.design.colors.ui.hover;
     });
 
     showAllOption.addEventListener("mouseout", () => {
@@ -110,13 +164,15 @@
     // Cascade windows option
     const cascadeOption = document.createElement("div");
     cascadeOption.innerText = "Cascade Windows";
-    cascadeOption.style.padding = "6px 10px";
-    cascadeOption.style.cursor = "pointer";
-    cascadeOption.style.color = "#000000";
-    cascadeOption.style.fontSize = "11px";
+    this.applyStyles(cascadeOption, {
+      padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
+      cursor: "pointer",
+      color: this.design.colors.text.primary,
+      fontSize: this.design.typography.fontSize.sm
+    });
 
     cascadeOption.addEventListener("mouseover", () => {
-      cascadeOption.style.backgroundColor = "#f0f0f0";
+      cascadeOption.style.backgroundColor = this.design.colors.ui.hover;
     });
 
     cascadeOption.addEventListener("mouseout", () => {
@@ -147,14 +203,16 @@
     // Minimize all windows option
     const minimizeAllOption = document.createElement("div");
     minimizeAllOption.innerText = "Minimize All Windows";
-    minimizeAllOption.style.padding = "6px 10px";
-    minimizeAllOption.style.cursor = "pointer";
-    minimizeAllOption.style.color = "#000000";
-    minimizeAllOption.style.fontSize = "11px";
-    minimizeAllOption.style.borderBottom = "1px solid #e0e0e0";
+    this.applyStyles(minimizeAllOption, {
+      padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
+      cursor: "pointer",
+      color: this.design.colors.text.primary,
+      fontSize: this.design.typography.fontSize.sm,
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+    });
 
     minimizeAllOption.addEventListener("mouseover", () => {
-      minimizeAllOption.style.backgroundColor = "#f0f0f0";
+      minimizeAllOption.style.backgroundColor = this.design.colors.ui.hover;
     });
 
     minimizeAllOption.addEventListener("mouseout", () => {
@@ -201,7 +259,7 @@
     toolbar.appendChild(dropdownContainer);
 
     // Adjust desktop height to account for toolbar
-    desktop.style.paddingTop = "30px";
+    desktop.style.paddingTop = this.design.components.toolbar.height;
 
     this.root.appendChild(toolbar);
     this.root.appendChild(desktop);
@@ -1948,60 +2006,88 @@
     badgesContainer.style.gap = "8px";
     badgesContainer.style.marginBottom = "12px";
     
-    // Status badge
-    const statusBadge = document.createElement("span");
-    statusBadge.innerText = task.status;
-    statusBadge.style.padding = "2px 6px";
-    statusBadge.style.borderRadius = "12px";
-    statusBadge.style.fontSize = "10px";
-    statusBadge.style.fontWeight = "bold";
-    statusBadge.style.textTransform = "uppercase";
-    
-    // Status color
-    switch (task.status) {
-      case "pending":
-        statusBadge.style.backgroundColor = "#e0e0e0";
-        statusBadge.style.color = "#606060";
-        break;
-      case "in_progress":
-        statusBadge.style.backgroundColor = "#b3e0ff";
-        statusBadge.style.color = "#0066cc";
-        break;
-      case "completed":
-        statusBadge.style.backgroundColor = "#c6f0c6";
-        statusBadge.style.color = "#2e7d32";
-        break;
-      case "cancelled":
-        statusBadge.style.backgroundColor = "#ffcccc";
-        statusBadge.style.color = "#c62828";
-        break;
+    // Fallback implementation for createStatusBadge if it's not available
+    if (typeof this.createStatusBadge !== 'function') {
+      this.createStatusBadge = function(status) {
+        const badge = document.createElement('span');
+        badge.innerText = status;
+        
+        // Apply styles based on status
+        badge.style.padding = "2px 6px";
+        badge.style.borderRadius = "12px";
+        badge.style.fontSize = "10px";
+        badge.style.fontWeight = "bold";
+        badge.style.textTransform = "uppercase";
+        
+        switch (status) {
+          case "pending":
+            badge.style.backgroundColor = "#e0e0e0";
+            badge.style.color = "#606060";
+            break;
+          case "in_progress":
+            badge.style.backgroundColor = "#b3e0ff";
+            badge.style.color = "#0066cc";
+            break;
+          case "completed":
+            badge.style.backgroundColor = "#c6f0c6";
+            badge.style.color = "#2e7d32";
+            break;
+          case "cancelled":
+            badge.style.backgroundColor = "#ffcccc";
+            badge.style.color = "#c62828";
+            break;
+          default:
+            badge.style.backgroundColor = "#e0e0e0";
+            badge.style.color = "#606060";
+        }
+        
+        return badge;
+      };
     }
     
+    // Fallback implementation for createPriorityBadge if it's not available
+    if (typeof this.createPriorityBadge !== 'function') {
+      this.createPriorityBadge = function(priority) {
+        const badge = document.createElement('span');
+        badge.innerText = priority;
+        
+        // Apply styles based on priority
+        badge.style.padding = "2px 6px";
+        badge.style.borderRadius = "12px";
+        badge.style.fontSize = "10px";
+        badge.style.fontWeight = "bold";
+        badge.style.textTransform = "uppercase";
+        
+        switch (priority) {
+          case "high":
+            badge.style.backgroundColor = "#ffcccc";
+            badge.style.color = "#c62828";
+            break;
+          case "medium":
+            badge.style.backgroundColor = "#fff0b3";
+            badge.style.color = "#a67c00";
+            break;
+          case "low":
+            badge.style.backgroundColor = "#e0e0e0";
+            badge.style.color = "#606060";
+            break;
+          default:
+            badge.style.backgroundColor = "#fff0b3";
+            badge.style.color = "#a67c00";
+        }
+        
+        return badge;
+      };
+    }
+    
+    // Status badge - using the design system helper
+    const statusBadge = this.createStatusBadge(task.status);
     badgesContainer.appendChild(statusBadge);
     
-    // Priority badge
-    const priorityBadge = document.createElement("span");
+    // Priority badge - using the design system helper
+    const priorityBadge = this.createPriorityBadge(task.priority);
+    // Add "Priority: " prefix to the text
     priorityBadge.innerText = `Priority: ${task.priority}`;
-    priorityBadge.style.padding = "2px 6px";
-    priorityBadge.style.borderRadius = "12px";
-    priorityBadge.style.fontSize = "10px";
-    priorityBadge.style.textTransform = "uppercase";
-    
-    // Priority color
-    switch (task.priority) {
-      case "high":
-        priorityBadge.style.backgroundColor = "#ffcccc";
-        priorityBadge.style.color = "#c62828";
-        break;
-      case "medium":
-        priorityBadge.style.backgroundColor = "#fff0b3";
-        priorityBadge.style.color = "#a67c00";
-        break;
-      case "low":
-        priorityBadge.style.backgroundColor = "#e0e0e0";
-        priorityBadge.style.color = "#606060";
-        break;
-    }
     
     badgesContainer.appendChild(priorityBadge);
     detailsContainer.appendChild(badgesContainer);
@@ -2079,120 +2165,138 @@
     
     // Actions buttons
     const actionsContainer = document.createElement("div");
-    actionsContainer.style.display = "flex";
-    actionsContainer.style.gap = "8px";
-    actionsContainer.style.marginBottom = "24px";
+    this.applyStyles(actionsContainer, {
+      display: "flex",
+      gap: this.design.spacing.md,
+      marginBottom: this.design.spacing.xxxl
+    });
     
     // Actions based on current status
     if (task.status === "pending" || task.status === "in_progress") {
-      // Complete button
-      const completeBtn = document.createElement("button");
-      completeBtn.innerText = "Complete Task";
-      completeBtn.style.padding = "6px 12px";
-      completeBtn.style.backgroundColor = "#c6f0c6";
-      completeBtn.style.color = "#2e7d32";
-      completeBtn.style.border = "none";
-      completeBtn.style.borderRadius = "3px";
-      completeBtn.style.cursor = "pointer";
-      completeBtn.style.fontSize = "12px";
+      // Fallback implementation for createButton if it's not available
+      if (typeof this.createButton !== 'function') {
+        this.createButton = function(text, type = 'primary', options = {}) {
+          const button = document.createElement('button');
+          button.innerText = text;
+          
+          // Apply base styles based on button type
+          switch (type) {
+            case "primary":
+              button.style.backgroundColor = "#000000";
+              button.style.color = "#ffffff";
+              button.style.border = "none";
+              break;
+            case "secondary":
+              button.style.backgroundColor = "transparent";
+              button.style.color = "#000000";
+              button.style.border = "1px solid #000000";
+              break;
+            case "success":
+              button.style.backgroundColor = "#c6f0c6";
+              button.style.color = "#2e7d32";
+              button.style.border = "none";
+              break;
+            case "danger":
+              button.style.backgroundColor = "#ffcccc";
+              button.style.color = "#c62828";
+              button.style.border = "none";
+              break;
+            case "info":
+              button.style.backgroundColor = "#b3e0ff";
+              button.style.color = "#0066cc";
+              button.style.border = "none";
+              break;
+            default:
+              button.style.backgroundColor = "#000000";
+              button.style.color = "#ffffff";
+              button.style.border = "none";
+          }
+          
+          // Common styles
+          button.style.padding = "6px 12px";
+          button.style.borderRadius = "3px";
+          button.style.cursor = "pointer";
+          button.style.fontSize = "12px";
+          
+          // Add click handler if provided
+          if (options.onClick) {
+            button.addEventListener('click', options.onClick);
+          }
+          
+          return button;
+        };
+      }
       
-      completeBtn.addEventListener("click", () => {
-        this.updateTask(task.id, {
-          status: "completed",
-          updatedBy: "user1" // Default to first user for now
-        });
-        
-        // Update window title and status badge
-        windowTitle.innerText = `Task: ${task.title} (Completed)`;
-        statusBadge.innerText = "completed";
-        statusBadge.style.backgroundColor = "#c6f0c6";
-        statusBadge.style.color = "#2e7d32";
-        
-        // Remove action buttons
-        actionsContainer.innerHTML = "";
-        
-        // Add rerun button
-        const rerunBtn = document.createElement("button");
-        rerunBtn.innerText = "Rerun Task";
-        rerunBtn.style.padding = "6px 12px";
-        rerunBtn.style.backgroundColor = "#b3e0ff";
-        rerunBtn.style.color = "#0066cc";
-        rerunBtn.style.border = "none";
-        rerunBtn.style.borderRadius = "3px";
-        rerunBtn.style.cursor = "pointer";
-        rerunBtn.style.fontSize = "12px";
-        
-        rerunBtn.addEventListener("click", () => {
-          this.rerunTask(task.id, "user1");
-          // Close this window
-          this.windowClose(windowId);
-        });
-        
-        actionsContainer.appendChild(rerunBtn);
+      // Complete button using design system helper
+      const completeBtn = this.createButton("Complete Task", "success", {
+        onClick: () => {
+          this.updateTask(task.id, {
+            status: "completed",
+            updatedBy: "user1" // Default to first user for now
+          });
+          
+          // Update window title and status badge
+          windowTitle.innerText = `Task: ${task.title} (Completed)`;
+          
+          // Replace the status badge
+          const newStatusBadge = this.createStatusBadge("completed");
+          badgesContainer.replaceChild(newStatusBadge, statusBadge);
+          
+          // Remove action buttons
+          actionsContainer.innerHTML = "";
+          
+          // Add rerun button
+          const rerunBtn = this.createButton("Rerun Task", "info", {
+            onClick: () => {
+              this.rerunTask(task.id, "user1");
+              // Close this window
+              this.windowClose(windowId);
+            }
+          });
+          
+          actionsContainer.appendChild(rerunBtn);
+        }
       });
       
       actionsContainer.appendChild(completeBtn);
       
-      // Cancel button
-      const cancelBtn = document.createElement("button");
-      cancelBtn.innerText = "Cancel Task";
-      cancelBtn.style.padding = "6px 12px";
-      cancelBtn.style.backgroundColor = "#ffcccc";
-      cancelBtn.style.color = "#c62828";
-      cancelBtn.style.border = "none";
-      cancelBtn.style.borderRadius = "3px";
-      cancelBtn.style.cursor = "pointer";
-      cancelBtn.style.fontSize = "12px";
-      
-      cancelBtn.addEventListener("click", () => {
-        this.cancelTask(task.id, "user1");
-        
-        // Update window title and status badge
-        windowTitle.innerText = `Task: ${task.title} (Cancelled)`;
-        statusBadge.innerText = "cancelled";
-        statusBadge.style.backgroundColor = "#ffcccc";
-        statusBadge.style.color = "#c62828";
-        
-        // Remove action buttons
-        actionsContainer.innerHTML = "";
-        
-        // Add rerun button
-        const rerunBtn = document.createElement("button");
-        rerunBtn.innerText = "Rerun Task";
-        rerunBtn.style.padding = "6px 12px";
-        rerunBtn.style.backgroundColor = "#b3e0ff";
-        rerunBtn.style.color = "#0066cc";
-        rerunBtn.style.border = "none";
-        rerunBtn.style.borderRadius = "3px";
-        rerunBtn.style.cursor = "pointer";
-        rerunBtn.style.fontSize = "12px";
-        
-        rerunBtn.addEventListener("click", () => {
-          this.rerunTask(task.id, "user1");
-          // Close this window
-          this.windowClose(windowId);
-        });
-        
-        actionsContainer.appendChild(rerunBtn);
+      // Cancel button using design system helper
+      const cancelBtn = this.createButton("Cancel Task", "danger", {
+        onClick: () => {
+          this.cancelTask(task.id, "user1");
+          
+          // Update window title and status badge
+          windowTitle.innerText = `Task: ${task.title} (Cancelled)`;
+          
+          // Replace the status badge
+          const newStatusBadge = this.createStatusBadge("cancelled");
+          badgesContainer.replaceChild(newStatusBadge, statusBadge);
+          
+          // Remove action buttons
+          actionsContainer.innerHTML = "";
+          
+          // Add rerun button
+          const rerunBtn = this.createButton("Rerun Task", "info", {
+            onClick: () => {
+              this.rerunTask(task.id, "user1");
+              // Close this window
+              this.windowClose(windowId);
+            }
+          });
+          
+          actionsContainer.appendChild(rerunBtn);
+        }
       });
       
       actionsContainer.appendChild(cancelBtn);
     } else if (task.status === "completed" || task.status === "cancelled") {
-      // Rerun button
-      const rerunBtn = document.createElement("button");
-      rerunBtn.innerText = "Rerun Task";
-      rerunBtn.style.padding = "6px 12px";
-      rerunBtn.style.backgroundColor = "#b3e0ff";
-      rerunBtn.style.color = "#0066cc";
-      rerunBtn.style.border = "none";
-      rerunBtn.style.borderRadius = "3px";
-      rerunBtn.style.cursor = "pointer";
-      rerunBtn.style.fontSize = "12px";
-      
-      rerunBtn.addEventListener("click", () => {
-        this.rerunTask(task.id, "user1");
-        // Close this window
-        this.windowClose(windowId);
+      // Rerun button using design system helper
+      const rerunBtn = this.createButton("Rerun Task", "info", {
+        onClick: () => {
+          this.rerunTask(task.id, "user1");
+          // Close this window
+          this.windowClose(windowId);
+        }
       });
       
       actionsContainer.appendChild(rerunBtn);

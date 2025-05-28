@@ -75,10 +75,15 @@ LoopChat.prototype.init = function (props) {
   setTimeout(() => {
     if (this.channels && this.channels.length > 0 && this.activeChannel) {
       console.log("Initializing active channel:", this.activeChannel);
-      // Open the initial channel in a window
-      this.openChannelWindow(this.activeChannel);
+      // Open the initial channel in a window - but make sure desktop exists first
+      const desktop = document.getElementById("desktop");
+      if (desktop) {
+        this.openChannelWindow(this.activeChannel);
+      } else {
+        console.warn("Desktop element not found, cannot open channel window");
+      }
     }
-  }, 100);
+  }, 300); // Increased timeout to ensure DOM is ready
   
   return this;
 };
