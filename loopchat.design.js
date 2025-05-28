@@ -133,14 +133,31 @@
       lg: "0 4px 10px rgba(0,0,0,0.3)"
     },
     
-    // Z-index
+    // Z-index levels - organized hierarchically for better management
     zIndex: {
+      // Base layers
       base: "1",
-      window: "10",
-      windowFocus: "100",
-      modal: "1000",
-      dropdown: "9999",
-      toolbar: "50"
+      desktop: "5",
+      
+      // Window levels
+      window: {
+        default: "100",
+        focused: "200"
+      },
+      
+      // UI layers
+      toolbar: "500",
+      tooltip: "600",
+      dropdown: "700",
+      
+      // Highest layers
+      modal: "900",
+      overlay: "950",
+      toast: "980",
+      popup: "990",
+      
+      // Maximum layer (for critical UI elements)
+      maximum: "9999"
     },
     
     // Animation

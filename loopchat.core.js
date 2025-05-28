@@ -46,6 +46,52 @@ window.LoopChat = function LoopChat() {
  * @param {Array} [props.tasks] - Initial tasks
  * @returns {LoopChat} The LoopChat instance for chaining
  */
+/**
+ * Gets the appropriate z-index value from the design system
+ * @param {string} level - The z-index level to retrieve (e.g., 'dropdown', 'window.focused')
+ * @returns {string} The z-index value
+ */
+LoopChat.prototype.getZIndex = function (level) {
+  // Make sure design system is loaded
+  if (!this.design || !this.design.zIndex) {
+    console.warn("Design system z-index not loaded, using fallback values");
+    // Fallback values
+    const fallbacks = {
+      'base': '1',
+      'desktop': '5',
+      'window.default': '100',
+      'window.focused': '200',
+      'toolbar': '500',
+      'tooltip': '600',
+      'dropdown': '700',
+      'modal': '900',
+      'overlay': '950',
+      'toast': '980',
+      'popup': '990',
+      'maximum': '9999'
+    };
+    return fallbacks[level] || '100';
+  }
+  
+  // Handle nested properties with dot notation
+  if (level.includes('.')) {
+    const parts = level.split('.');
+    let value = this.design.zIndex;
+    for (const part of parts) {
+      if (value && value[part] !== undefined) {
+        value = value[part];
+      } else {
+        console.warn(`Z-index level '${level}' not found, using fallback`);
+        return '100';
+      }
+    }
+    return value;
+  }
+  
+  // Handle direct properties
+  return this.design.zIndex[level] || '100';
+};
+
 LoopChat.prototype.init = function (props) {
   if (props.root) this.root = props.root;
   if (props.state) this.state = props.state;

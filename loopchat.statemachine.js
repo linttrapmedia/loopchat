@@ -174,154 +174,25 @@
       }
     }
 
-    // Create or update the header windows dropdown
-    this.updateHeaderWindowsDropdown();
-
-    // Add this window to the dropdown
-    const windowsDropdown = document.getElementById("header__windows-dropdown-menu");
-    if (windowsDropdown) {
-      // Check if window is already in dropdown
-      let windowItem = document.getElementById(`header-window-item-${windowId}`);
-
-      if (!windowItem) {
-        // Create new window item in dropdown
-        windowItem = document.createElement("div");
-        windowItem.id = `header-window-item-${windowId}`;
-        windowItem.innerText = buttonLabel;
-        windowItem.style.padding = "6px 10px";
-        windowItem.style.cursor = "pointer";
-        windowItem.style.color = "#000000";
-        windowItem.style.fontSize = "11px";
-        windowItem.style.borderBottom = "1px solid #e0e0e0";
-
-        windowItem.addEventListener("mouseover", () => {
-          windowItem.style.backgroundColor = "#f0f0f0";
-        });
-
-        windowItem.addEventListener("mouseout", () => {
-          windowItem.style.backgroundColor = "transparent";
-        });
-
-        windowItem.addEventListener("click", () => {
-          // Hide dropdown
-          windowsDropdown.style.display = "none";
-
-          // Restore window
-          this.windowRestore(windowId);
-        });
-
-        windowsDropdown.appendChild(windowItem);
-      }
+    // Update the main menu's minimized windows section
+    if (typeof this.updateMainMenuMinimizedWindows === 'function') {
+      this.updateMainMenuMinimizedWindows();
     }
-
-    return this;
-  };
-
-  /**
-   * Creates or updates the Windows dropdown menu in the header
-   * @returns {LoopChat} The LoopChat instance for chaining
-   */
-  LOOPCHAT.prototype.updateHeaderWindowsDropdown = function () {
-    // Get the toolbar
-    const toolbar = document.getElementById("desktop__toolbar");
-    if (!toolbar) return this;
-
-    // Check if windows dropdown already exists
-    let windowsDropdownContainer = document.getElementById("header__windows-dropdown");
-
-    if (!windowsDropdownContainer) {
-      // Create the dropdown container
-      windowsDropdownContainer = document.createElement("div");
-      windowsDropdownContainer.id = "header__windows-dropdown";
-      windowsDropdownContainer.style.position = "relative";
-      windowsDropdownContainer.style.marginRight = "10px";
-
-      // Windows dropdown toggle button with windows icon
-      const dropdownToggle = document.createElement("button");
-      dropdownToggle.id = "header__windows-dropdown-toggle";
-      dropdownToggle.innerHTML = "⊞"; // Windows icon
-      dropdownToggle.style.padding = "2px 8px";
-      dropdownToggle.style.backgroundColor = "transparent";
-      dropdownToggle.style.color = "#ffffff";
-      dropdownToggle.style.border = "0";
-      dropdownToggle.style.borderRadius = "3px";
-      dropdownToggle.style.cursor = "pointer";
-      dropdownToggle.style.fontSize = "14px";
-
-      // Windows dropdown menu
-      const dropdownMenu = document.createElement("div");
-      dropdownMenu.id = "header__windows-dropdown-menu";
-      dropdownMenu.style.position = "absolute";
-      dropdownMenu.style.top = "100%";
-      dropdownMenu.style.right = "0";
-      dropdownMenu.style.backgroundColor = "#ffffff";
-      dropdownMenu.style.border = "1px solid #000000";
-      dropdownMenu.style.borderRadius = "3px";
-      dropdownMenu.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-      dropdownMenu.style.display = "none";
-      dropdownMenu.style.zIndex = "9999";
-      dropdownMenu.style.minWidth = "180px";
-      dropdownMenu.style.maxHeight = "300px";
-      dropdownMenu.style.overflowY = "auto";
-
-      // No windows message (shown when empty)
-      const noWindowsMessage = document.createElement("div");
-      noWindowsMessage.id = "header__no-windows-message";
-      noWindowsMessage.innerText = "No minimized windows";
-      noWindowsMessage.style.padding = "8px 10px";
-      noWindowsMessage.style.color = "#808080";
-      noWindowsMessage.style.fontStyle = "italic";
-      noWindowsMessage.style.fontSize = "11px";
-      noWindowsMessage.style.textAlign = "center";
-
-      dropdownMenu.appendChild(noWindowsMessage);
-
-      // Toggle dropdown visibility
-      dropdownToggle.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent click from reaching document
-        const hasMinimizedWindows = this.windows.some((w) => w.minimized);
-
-        // Update the no windows message visibility
-        const noWindowsMsg = document.getElementById("header__no-windows-message");
-        if (noWindowsMsg) {
-          noWindowsMsg.style.display = hasMinimizedWindows ? "none" : "block";
-        }
-
-        if (dropdownMenu.style.display === "none") {
-          dropdownMenu.style.display = "block";
-        } else {
-          dropdownMenu.style.display = "none";
-        }
-      });
-
-      // Close dropdown when clicking elsewhere
-      document.addEventListener("click", () => {
-        dropdownMenu.style.display = "none";
-      });
-
-      // Add dropdown elements to container
-      windowsDropdownContainer.appendChild(dropdownToggle);
-      windowsDropdownContainer.appendChild(dropdownMenu);
-
-      // Insert before the hamburger menu (which should be the last item)
-      const hamburgerContainer = toolbar.querySelector("div:last-child");
-      toolbar.insertBefore(windowsDropdownContainer, hamburgerContainer);
-    }
-
-    // Check if any windows are minimized and update the dropdown toggle style
-    const hasMinimizedWindows = this.windows.some((w) => w.minimized);
-    const dropdownToggle = document.getElementById("header__windows-dropdown-toggle");
-
+    
+    // Keep dropdown button highlighted when windows are minimized
+    const dropdownToggle = document.getElementById("main-menu-toggle");
     if (dropdownToggle) {
+      // Check if any windows are minimized
+      const hasMinimizedWindows = this.windows.some(w => w.minimized);
       if (hasMinimizedWindows) {
-        dropdownToggle.style.backgroundColor = "#1a1a1a"; // Highlight when windows are minimized
-      } else {
-        dropdownToggle.style.backgroundColor = "transparent";
+        dropdownToggle.style.backgroundColor = this.design.colors.primary.light;
       }
     }
 
     return this;
   };
+
+  // The updateHeaderWindowsDropdown function has been replaced by updateMainMenuMinimizedWindows
 
   /**
    * Restores a minimized window from the header dropdown
@@ -345,26 +216,19 @@
     // Focus the window
     this.windowFocus(windowId);
 
-    // Remove the window item from the dropdown
-    const windowItem = document.getElementById(`header-window-item-${windowId}`);
-    if (windowItem) {
-      windowItem.remove();
+    // Update the main menu's minimized windows section
+    if (typeof this.updateMainMenuMinimizedWindows === 'function') {
+      this.updateMainMenuMinimizedWindows();
     }
-
-    // Check if any windows are still minimized and update the dropdown
+    
+    // Check if any windows are still minimized
     const hasMinimizedWindows = this.windows.some((w) => w.minimized);
-
-    // Update the no windows message visibility
-    const noWindowsMsg = document.getElementById("header__no-windows-message");
-    if (noWindowsMsg) {
-      noWindowsMsg.style.display = hasMinimizedWindows ? "none" : "block";
-    }
-
+    
     // Update dropdown toggle style
-    const dropdownToggle = document.getElementById("header__windows-dropdown-toggle");
+    const dropdownToggle = document.getElementById("main-menu-toggle");
     if (dropdownToggle) {
       if (hasMinimizedWindows) {
-        dropdownToggle.style.backgroundColor = "#4A6DA7";
+        dropdownToggle.style.backgroundColor = this.design.colors.primary.light;
       } else {
         dropdownToggle.style.backgroundColor = "transparent";
       }
@@ -420,7 +284,7 @@
     const dropdownToggle = document.getElementById("header__windows-dropdown-toggle");
     if (dropdownToggle) {
       if (hasMinimizedWindows) {
-        dropdownToggle.style.backgroundColor = "#4A6DA7";
+        dropdownToggle.style.backgroundColor = this.design.colors.primary.accent;
       } else {
         dropdownToggle.style.backgroundColor = "transparent";
       }
@@ -449,25 +313,25 @@
     windows.forEach((win) => {
       if (win.id !== windowId) {
         // Lower all other windows
-        win.style.zIndex = "10";
+        win.style.zIndex = this.getZIndex("window.default");
       }
     });
 
     // Set this window to the highest z-index
-    windowEl.style.zIndex = "1000";
+    windowEl.style.zIndex = this.getZIndex("window.focused");
 
     // If the window has a title element, you could add a visual indication
     const windowTitle = windowEl.querySelector(".window__header");
     if (windowTitle) {
       // Add subtle highlight to focused window header
-      windowTitle.style.backgroundColor = "#222222";
+      windowTitle.style.backgroundColor = this.design.components.window.header.backgroundFocus || "#222222";
 
       // Reset other window headers
       windows.forEach((win) => {
         if (win.id !== windowId) {
           const title = win.querySelector(".window__header");
           if (title) {
-            title.style.backgroundColor = "#000000";
+            title.style.backgroundColor = this.design.components.window.header.background || "#000000";
           }
         }
       });

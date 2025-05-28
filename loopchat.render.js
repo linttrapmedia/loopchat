@@ -98,12 +98,14 @@
     spacer.style.flex = "1";
     toolbar.appendChild(spacer);
 
-    // Window management dropdown container
+    // Combined window management dropdown container
     const dropdownContainer = document.createElement("div");
+    dropdownContainer.id = "main-menu-dropdown";
     dropdownContainer.style.position = "relative";
 
     // Dropdown toggle button with hamburger icon
     const dropdownToggle = document.createElement("button");
+    dropdownToggle.id = "main-menu-toggle";
     dropdownToggle.innerHTML = "&#9776;"; // Hamburger menu icon
     this.applyStyles(dropdownToggle, {
       padding: `${this.design.spacing.xxs} ${this.design.spacing.md}`,
@@ -117,6 +119,7 @@
 
     // Dropdown menu
     const dropdownMenu = document.createElement("div");
+    dropdownMenu.id = "main-menu-content";
     this.applyStyles(dropdownMenu, {
       position: "absolute",
       top: "100%",
@@ -126,9 +129,26 @@
       borderRadius: this.design.borders.radius.sm,
       boxShadow: this.design.shadows.md,
       display: "none",
-      zIndex: this.design.zIndex.dropdown,
-      minWidth: "150px"
+      zIndex: this.getZIndex("dropdown"),
+      minWidth: "200px",
+      maxHeight: "400px",
+      overflow: "auto"
     });
+    
+    // Window Management section header
+    const windowManagementHeader = document.createElement("div");
+    windowManagementHeader.innerText = "WINDOW MANAGEMENT";
+    this.applyStyles(windowManagementHeader, {
+      padding: `${this.design.spacing.xs} ${this.design.spacing.md}`,
+      backgroundColor: this.design.colors.ui.hover,
+      color: this.design.colors.text.secondary,
+      fontSize: this.design.typography.fontSize.xs,
+      fontWeight: this.design.typography.fontWeight.bold,
+      textTransform: "uppercase",
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+    });
+    
+    dropdownMenu.appendChild(windowManagementHeader);
 
     // Show all windows option
     const showAllOption = document.createElement("div");
@@ -257,15 +277,55 @@
       this.tileWindows();
     });
 
-    // Add options to dropdown menu
+    // Add window management options to dropdown menu
     dropdownMenu.appendChild(showAllOption);
     dropdownMenu.appendChild(minimizeAllOption);
     dropdownMenu.appendChild(cascadeOption);
     dropdownMenu.appendChild(tileOption);
+    
+    // Add minimized windows section
+    const minimizedWindowsHeader = document.createElement("div");
+    minimizedWindowsHeader.id = "minimized-windows-header";
+    minimizedWindowsHeader.innerText = "MINIMIZED WINDOWS";
+    this.applyStyles(minimizedWindowsHeader, {
+      padding: `${this.design.spacing.xs} ${this.design.spacing.md}`,
+      backgroundColor: this.design.colors.ui.hover,
+      color: this.design.colors.text.secondary,
+      fontSize: this.design.typography.fontSize.xs,
+      fontWeight: this.design.typography.fontWeight.bold,
+      textTransform: "uppercase",
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
+      marginTop: this.design.spacing.sm
+    });
+    
+    dropdownMenu.appendChild(minimizedWindowsHeader);
+    
+    // Container for minimized windows
+    const minimizedWindowsContainer = document.createElement("div");
+    minimizedWindowsContainer.id = "minimized-windows-container";
+    
+    // No windows message (shown when empty)
+    const noWindowsMessage = document.createElement("div");
+    noWindowsMessage.id = "no-minimized-windows-message";
+    noWindowsMessage.innerText = "No minimized windows";
+    this.applyStyles(noWindowsMessage, {
+      padding: `${this.design.spacing.sm} ${this.design.spacing.md}`,
+      color: this.design.colors.text.tertiary,
+      fontStyle: "italic",
+      fontSize: this.design.typography.fontSize.sm,
+      textAlign: "center"
+    });
+    
+    minimizedWindowsContainer.appendChild(noWindowsMessage);
+    dropdownMenu.appendChild(minimizedWindowsContainer);
 
     // Toggle dropdown visibility
     dropdownToggle.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent click from reaching document
+      
+      // Update the minimized windows section
+      this.updateMainMenuMinimizedWindows();
+      
       if (dropdownMenu.style.display === "none") {
         dropdownMenu.style.display = "block";
       } else {
@@ -291,6 +351,111 @@
     this.root.appendChild(toolbar);
     this.root.appendChild(desktop);
 
+    return this;
+  };
+  
+  /**
+   * Updates the minimized windows section in the main menu dropdown
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.updateMainMenuMinimizedWindows = function () {
+    const container = document.getElementById("minimized-windows-container");
+    const noWindowsMessage = document.getElementById("no-minimized-windows-message");
+    
+    if (!container) return this;
+    
+    // Clear existing window items (except the no windows message)
+    Array.from(container.children).forEach(child => {
+      if (child.id !== "no-minimized-windows-message") {
+        child.remove();
+      }
+    });
+    
+    // Get all minimized windows
+    const minimizedWindows = this.windows.filter(window => window.minimized);
+    
+    // Show/hide no windows message
+    if (noWindowsMessage) {
+      noWindowsMessage.style.display = minimizedWindows.length > 0 ? "none" : "block";
+    }
+    
+    // Add items for each minimized window
+    minimizedWindows.forEach(window => {
+      // Get appropriate label based on window type
+      let windowLabel = "Window";
+      
+      if (window.type === "channels") {
+        windowLabel = "Channels";
+      } else if (window.type === "agents") {
+        windowLabel = "Agents";
+      } else if (window.type === "sidebar") {
+        windowLabel = "Directory";
+      } else if (window.type === "input") {
+        windowLabel = "Message Input";
+      } else if (window.type === "tasks") {
+        windowLabel = "Tasks";
+      } else if (window.type === "task_details" && window.taskId) {
+        const task = this.getTask(window.taskId);
+        if (task) {
+          windowLabel = `Task: ${task.title.substring(0, 15)}${task.title.length > 15 ? "..." : ""}`;
+        } else {
+          windowLabel = "Task Details";
+        }
+      } else if (window.type === "channel" && window.channelId) {
+        // For channel windows, use the channel name
+        const channel = this.channels.find((c) => c.id === window.channelId);
+        if (channel) {
+          windowLabel = `# ${channel.title || channel.id}`;
+        }
+      } else if (window.post) {
+        // For message windows from the original implementation
+        const post = window.post;
+        
+        // Get author name if available
+        if (post.author) {
+          let authorName = post.author;
+          if (this.users && this.users[post.author]) {
+            authorName = this.users[post.author].name;
+          } else if (this.agents && this.agents[post.author]) {
+            authorName = this.agents[post.author].name;
+          }
+          windowLabel = authorName;
+        }
+      }
+      
+      // Create window item
+      const windowItem = document.createElement("div");
+      windowItem.id = `menu-window-item-${window.id}`;
+      windowItem.innerText = windowLabel;
+      
+      this.applyStyles(windowItem, {
+        padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
+        cursor: "pointer",
+        color: this.design.colors.text.primary,
+        fontSize: this.design.typography.fontSize.sm,
+        borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+      });
+      
+      windowItem.addEventListener("mouseover", () => {
+        windowItem.style.backgroundColor = this.design.colors.ui.hover;
+      });
+      
+      windowItem.addEventListener("mouseout", () => {
+        windowItem.style.backgroundColor = "transparent";
+      });
+      
+      windowItem.addEventListener("click", () => {
+        // Hide dropdown
+        document.getElementById("main-menu-content").style.display = "none";
+        
+        // Restore window
+        this.windowRestore(window.id);
+      });
+      
+      // Add item to container
+      container.appendChild(windowItem);
+    });
+    
     return this;
   };
 
@@ -1944,8 +2109,8 @@
     taskWindow.style.overflow = "hidden";
     taskWindow.style.backgroundColor = "#ffffff";
     taskWindow.style.border = "1px solid #000000";
-    taskWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
-    taskWindow.style.zIndex = "30";
+    taskWindow.style.boxShadow = this.design.shadows.md;
+    taskWindow.style.zIndex = this.getZIndex("window.default"); // Default window z-index
     
     // Add click handler to focus this window
     taskWindow.addEventListener("mousedown", () => {
@@ -2482,8 +2647,8 @@
     channelWindow.style.overflow = "hidden";
     channelWindow.style.backgroundColor = "#ffffff";
     channelWindow.style.border = "1px solid #000000";
-    channelWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
-    channelWindow.style.zIndex = "15"; // Higher than channels window by default
+    channelWindow.style.boxShadow = this.design.shadows.md;
+    channelWindow.style.zIndex = this.getZIndex("window.default"); // Default window z-index
 
     // Add click handler to focus this window when clicked anywhere
     channelWindow.addEventListener("mousedown", () => {
