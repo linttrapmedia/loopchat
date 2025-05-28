@@ -2428,6 +2428,9 @@
       minimized: false
     });
     
+    // Focus the newly created window to bring it to the top of the z-index stack
+    this.windowFocus(windowId);
+    
     return this;
   };
 
@@ -2617,6 +2620,9 @@
       channelId: channelId,
       minimized: false,
     });
+    
+    // Focus the newly created window to bring it to the top of the z-index stack
+    this.windowFocus(channelWindowId);
 
     // Update active channel
     this.activeChannel = channelId;

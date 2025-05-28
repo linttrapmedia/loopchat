@@ -532,6 +532,8 @@
     // Account for toolbar height
     const toolbarHeight = parseInt(this.design.components.toolbar.height || "30px");
     const desktopRect = desktop.getBoundingClientRect();
+    
+    // Use full available space
     const availableWidth = desktopRect.width;
     const availableHeight = desktopRect.height - toolbarHeight;
     
@@ -557,24 +559,24 @@
       rows = Math.ceil(visibleWindows.length / columns);
     }
     
-    // Calculate window dimensions
-    const width = Math.floor(availableWidth / columns);
-    const height = Math.floor(availableHeight / rows);
+    // Calculate window dimensions - use full available space
+    const windowWidth = Math.floor(availableWidth / columns);
+    const windowHeight = Math.floor(availableHeight / rows);
     
     // Position each window
     visibleWindows.forEach((windowEl, index) => {
       const row = Math.floor(index / columns);
       const col = index % columns;
       
-      // Position
-      const top = (row * height) + toolbarHeight;
-      const left = col * width;
+      // Position - exact fit without gaps
+      const top = (row * windowHeight) + toolbarHeight;
+      const left = col * windowWidth;
       
-      // Apply position and size
+      // Apply position and size - exact dimensions
       windowEl.style.top = `${top}px`;
       windowEl.style.left = `${left}px`;
-      windowEl.style.width = `${width - 10}px`; // Slight margin
-      windowEl.style.height = `${height - 10}px`; // Slight margin
+      windowEl.style.width = `${windowWidth}px`;
+      windowEl.style.height = `${windowHeight}px`;
     });
     
     return this;

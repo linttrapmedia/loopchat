@@ -79,9 +79,20 @@ LoopChat.prototype.init = function (props) {
       const desktop = document.getElementById("desktop");
       if (desktop) {
         this.openChannelWindow(this.activeChannel);
+        
+        // Add a slight delay to ensure all windows are open before tiling
+        setTimeout(() => {
+          // Tile all windows by default
+          this.tileWindows();
+        }, 100);
       } else {
         console.warn("Desktop element not found, cannot open channel window");
       }
+    } else {
+      // If no channel to open, still tile the existing windows
+      setTimeout(() => {
+        this.tileWindows();
+      }, 100);
     }
   }, 300); // Increased timeout to ensure DOM is ready
   
