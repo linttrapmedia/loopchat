@@ -27,6 +27,9 @@ window.LoopChat = function LoopChat() {
   
   /** @type {Object} Map of agent IDs to agent data */
   this.agents = {};
+  
+  /** @type {Array<Object>} List of tasks */
+  this.tasks = [];
 };
 
 /**
@@ -40,6 +43,7 @@ window.LoopChat = function LoopChat() {
  * @param {Object} [props.testData] - Test data
  * @param {Object} [props.users] - Users data
  * @param {Object} [props.agents] - Agents data
+ * @param {Array} [props.tasks] - Initial tasks
  * @returns {LoopChat} The LoopChat instance for chaining
  */
 LoopChat.prototype.init = function (props) {
@@ -51,6 +55,7 @@ LoopChat.prototype.init = function (props) {
   if (props.testData) this.testData = props.testData;
   if (props.users) this.users = props.users;
   if (props.agents) this.agents = props.agents;
+  if (props.tasks) this.tasks = props.tasks;
   
   // Load test data first
   this.loadTestData();
@@ -60,7 +65,8 @@ LoopChat.prototype.init = function (props) {
     // Render the UI with window structure
     this.renderRoot()
       .renderChannelsWindow()
-      .renderMessageInputWindow();
+      .renderMessageInputWindow()
+      .renderTasksWindow(); // Add tasks window
     
     console.log("Windows rendered with data. Agents:", Object.keys(this.agents).length, "Users:", Object.keys(this.users).length);
   }, 300);

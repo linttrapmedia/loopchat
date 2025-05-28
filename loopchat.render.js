@@ -1026,6 +1026,1281 @@
 
     return this;
   };
+  
+  /**
+   * Renders the tasks window - uncloseable, displays all tasks
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.renderTasksWindow = function () {
+    // Create a window for tasks
+    const tasksWindow = document.createElement("div");
+    tasksWindow.id = "window-tasks";
+    tasksWindow.className = "window";
+    tasksWindow.style.position = "absolute";
+    tasksWindow.style.width = "600px";
+    tasksWindow.style.height = "300px";
+    tasksWindow.style.top = "100px";
+    tasksWindow.style.left = "300px";
+    tasksWindow.style.display = "flex";
+    tasksWindow.style.flexDirection = "column";
+    tasksWindow.style.overflow = "hidden";
+    tasksWindow.style.backgroundColor = "#ffffff";
+    tasksWindow.style.border = "1px solid #000000";
+    tasksWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
+    tasksWindow.style.zIndex = "25"; // Higher than other windows by default
+
+    // Add click handler to focus this window when clicked anywhere
+    tasksWindow.addEventListener("mousedown", () => {
+      this.windowFocus("window-tasks");
+    });
+
+    // Window header
+    const windowHeader = document.createElement("div");
+    windowHeader.className = "window__header";
+    windowHeader.style.display = "flex";
+    windowHeader.style.justifyContent = "space-between";
+    windowHeader.style.alignItems = "center";
+    windowHeader.style.padding = "4px 6px";
+    windowHeader.style.backgroundColor = "#000000";
+    windowHeader.style.color = "#ffffff";
+    windowHeader.style.cursor = "move";
+    windowHeader.style.userSelect = "none";
+
+    const windowTitle = document.createElement("div");
+    windowTitle.innerText = "Tasks";
+    windowTitle.style.fontSize = "11px";
+    windowTitle.style.fontWeight = "bold";
+
+    const windowControls = document.createElement("div");
+    windowControls.style.display = "flex";
+    windowControls.style.gap = "6px";
+
+    const minimizeButton = document.createElement("button");
+    minimizeButton.innerHTML = "&#8211;";
+    minimizeButton.style.background = "none";
+    minimizeButton.style.border = "none";
+    minimizeButton.style.color = "#ffffff";
+    minimizeButton.style.cursor = "pointer";
+    minimizeButton.style.fontSize = "12px";
+    minimizeButton.style.padding = "0 4px";
+    minimizeButton.addEventListener("click", () => {
+      this.windowMinimize("window-tasks");
+    });
+
+    // No close button for tasks window - it's uncloseable
+    windowControls.appendChild(minimizeButton);
+
+    windowHeader.appendChild(windowTitle);
+    windowHeader.appendChild(windowControls);
+    tasksWindow.appendChild(windowHeader);
+
+    // Window content
+    const windowContent = document.createElement("div");
+    windowContent.className = "window__content";
+    windowContent.style.flex = "1";
+    windowContent.style.display = "flex";
+    windowContent.style.flexDirection = "column";
+    windowContent.style.overflow = "hidden";
+    windowContent.style.backgroundColor = "#f5f5f5";
+
+    // Tasks toolbar (filters, search, actions)
+    const toolbarEl = document.createElement("div");
+    toolbarEl.className = "tasks__toolbar";
+    toolbarEl.style.display = "flex";
+    toolbarEl.style.justifyContent = "space-between";
+    toolbarEl.style.alignItems = "center";
+    toolbarEl.style.padding = "8px";
+    toolbarEl.style.borderBottom = "1px solid #e0e0e0";
+    toolbarEl.style.backgroundColor = "#f0f0f0";
+
+    // Left side - filters
+    const filtersContainer = document.createElement("div");
+    filtersContainer.style.display = "flex";
+    filtersContainer.style.gap = "8px";
+    filtersContainer.style.alignItems = "center";
+
+    // Filter label
+    const filterLabel = document.createElement("span");
+    filterLabel.innerText = "Filter:";
+    filterLabel.style.fontSize = "12px";
+    filtersContainer.appendChild(filterLabel);
+
+    // Status filter
+    const statusSelect = document.createElement("select");
+    statusSelect.style.padding = "2px 4px";
+    statusSelect.style.fontSize = "12px";
+    statusSelect.style.border = "1px solid #ccc";
+    statusSelect.style.borderRadius = "3px";
+    
+    const statusOptions = [
+      { value: "", text: "All Statuses" },
+      { value: "pending", text: "Pending" },
+      { value: "in_progress", text: "In Progress" },
+      { value: "completed", text: "Completed" },
+      { value: "cancelled", text: "Cancelled" }
+    ];
+    
+    statusOptions.forEach(option => {
+      const optionEl = document.createElement("option");
+      optionEl.value = option.value;
+      optionEl.text = option.text;
+      statusSelect.appendChild(optionEl);
+    });
+    
+    statusSelect.addEventListener("change", () => {
+      this.updateTasksWindow();
+    });
+    
+    filtersContainer.appendChild(statusSelect);
+
+    // Priority filter
+    const prioritySelect = document.createElement("select");
+    prioritySelect.style.padding = "2px 4px";
+    prioritySelect.style.fontSize = "12px";
+    prioritySelect.style.border = "1px solid #ccc";
+    prioritySelect.style.borderRadius = "3px";
+    
+    const priorityOptions = [
+      { value: "", text: "All Priorities" },
+      { value: "high", text: "High" },
+      { value: "medium", text: "Medium" },
+      { value: "low", text: "Low" }
+    ];
+    
+    priorityOptions.forEach(option => {
+      const optionEl = document.createElement("option");
+      optionEl.value = option.value;
+      optionEl.text = option.text;
+      prioritySelect.appendChild(optionEl);
+    });
+    
+    prioritySelect.addEventListener("change", () => {
+      this.updateTasksWindow();
+    });
+    
+    filtersContainer.appendChild(prioritySelect);
+
+    // Right side - actions
+    const actionsContainer = document.createElement("div");
+    actionsContainer.style.display = "flex";
+    actionsContainer.style.gap = "8px";
+    actionsContainer.style.alignItems = "center";
+
+    // New task button
+    const newTaskButton = document.createElement("button");
+    newTaskButton.innerText = "New Task";
+    newTaskButton.style.padding = "3px 8px";
+    newTaskButton.style.backgroundColor = "#000000";
+    newTaskButton.style.color = "#ffffff";
+    newTaskButton.style.border = "none";
+    newTaskButton.style.borderRadius = "3px";
+    newTaskButton.style.cursor = "pointer";
+    newTaskButton.style.fontSize = "11px";
+    
+    newTaskButton.addEventListener("click", () => {
+      // Show new task dialog
+      this.showNewTaskDialog();
+    });
+    
+    actionsContainer.appendChild(newTaskButton);
+
+    // Refresh button
+    const refreshButton = document.createElement("button");
+    refreshButton.innerText = "Refresh";
+    refreshButton.style.padding = "3px 8px";
+    refreshButton.style.backgroundColor = "transparent";
+    refreshButton.style.color = "#000000";
+    refreshButton.style.border = "1px solid #000000";
+    refreshButton.style.borderRadius = "3px";
+    refreshButton.style.cursor = "pointer";
+    refreshButton.style.fontSize = "11px";
+    
+    refreshButton.addEventListener("click", () => {
+      this.updateTasksWindow();
+    });
+    
+    actionsContainer.appendChild(refreshButton);
+
+    // Add filter and action containers to toolbar
+    toolbarEl.appendChild(filtersContainer);
+    toolbarEl.appendChild(actionsContainer);
+    windowContent.appendChild(toolbarEl);
+
+    // Tasks list container
+    const tasksListContainer = document.createElement("div");
+    tasksListContainer.id = "tasks__list";
+    tasksListContainer.style.flex = "1";
+    tasksListContainer.style.overflow = "auto";
+    tasksListContainer.style.padding = "0";
+
+    // Tasks table
+    const tasksTable = document.createElement("table");
+    tasksTable.id = "tasks__table";
+    tasksTable.style.width = "100%";
+    tasksTable.style.borderCollapse = "collapse";
+    tasksTable.style.fontSize = "12px";
+    tasksTable.style.tableLayout = "fixed";
+    
+    // Table header
+    const tableHeader = document.createElement("thead");
+    tableHeader.style.position = "sticky";
+    tableHeader.style.top = "0";
+    tableHeader.style.backgroundColor = "#e0e0e0";
+    tableHeader.style.zIndex = "1";
+    
+    const headerRow = document.createElement("tr");
+    
+    const columns = [
+      { id: "status", label: "Status", width: "10%" },
+      { id: "title", label: "Title", width: "30%" },
+      { id: "agent", label: "Agent", width: "15%" },
+      { id: "priority", label: "Priority", width: "10%" },
+      { id: "created", label: "Created", width: "15%" },
+      { id: "actions", label: "Actions", width: "20%" }
+    ];
+    
+    columns.forEach(column => {
+      const th = document.createElement("th");
+      th.innerText = column.label;
+      th.style.padding = "8px";
+      th.style.textAlign = "left";
+      th.style.fontWeight = "bold";
+      th.style.borderBottom = "1px solid #ccc";
+      th.style.width = column.width;
+      headerRow.appendChild(th);
+    });
+    
+    tableHeader.appendChild(headerRow);
+    tasksTable.appendChild(tableHeader);
+    
+    // Table body - will be populated in updateTasksWindow
+    const tableBody = document.createElement("tbody");
+    tableBody.id = "tasks__table-body";
+    tasksTable.appendChild(tableBody);
+    
+    tasksListContainer.appendChild(tasksTable);
+    windowContent.appendChild(tasksListContainer);
+
+    // Add content to window
+    tasksWindow.appendChild(windowContent);
+
+    // Make window draggable
+    this.makeWindowDraggable(tasksWindow, windowHeader);
+
+    // Add to DOM
+    document.getElementById("desktop").appendChild(tasksWindow);
+
+    // Add to windows array
+    this.windows.push({
+      id: "window-tasks",
+      type: "tasks",
+      minimized: false,
+      uncloseable: true
+    });
+
+    // Populate with initial tasks
+    this.updateTasksWindow();
+
+    return this;
+  };
+  
+  /**
+   * Updates the tasks window with current tasks
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.updateTasksWindow = function () {
+    const tableBody = document.getElementById("tasks__table-body");
+    if (!tableBody) return this;
+    
+    // Clear current content
+    tableBody.innerHTML = "";
+    
+    // Get filters
+    const statusFilter = document.querySelector("#window-tasks select:first-of-type")?.value || "";
+    const priorityFilter = document.querySelector("#window-tasks select:last-of-type")?.value || "";
+    
+    // Get filtered tasks
+    const filters = {};
+    if (statusFilter) filters.status = statusFilter;
+    if (priorityFilter) filters.priority = priorityFilter;
+    
+    const tasks = this.getTasks(filters);
+    
+    if (tasks.length === 0) {
+      // No tasks message
+      const noTasksRow = document.createElement("tr");
+      const noTasksCell = document.createElement("td");
+      noTasksCell.colSpan = 6;
+      noTasksCell.style.padding = "20px";
+      noTasksCell.style.textAlign = "center";
+      noTasksCell.style.color = "#808080";
+      noTasksCell.innerText = "No tasks found";
+      noTasksRow.appendChild(noTasksCell);
+      tableBody.appendChild(noTasksRow);
+    } else {
+      // Render each task
+      tasks.forEach(task => {
+        const taskRow = document.createElement("tr");
+        taskRow.id = `task-row-${task.id}`;
+        taskRow.style.borderBottom = "1px solid #e0e0e0";
+        
+        // Alternate row background
+        if (tasks.indexOf(task) % 2 === 0) {
+          taskRow.style.backgroundColor = "#f9f9f9";
+        }
+        
+        // Hover effect
+        taskRow.addEventListener("mouseover", () => {
+          taskRow.style.backgroundColor = "#f0f0f0";
+        });
+        
+        taskRow.addEventListener("mouseout", () => {
+          taskRow.style.backgroundColor = tasks.indexOf(task) % 2 === 0 ? "#f9f9f9" : "#ffffff";
+        });
+        
+        // Status cell
+        const statusCell = document.createElement("td");
+        statusCell.style.padding = "8px";
+        
+        const statusBadge = document.createElement("span");
+        statusBadge.innerText = task.status;
+        statusBadge.style.padding = "2px 6px";
+        statusBadge.style.borderRadius = "12px";
+        statusBadge.style.fontSize = "10px";
+        statusBadge.style.fontWeight = "bold";
+        statusBadge.style.textTransform = "uppercase";
+        
+        // Status color
+        switch (task.status) {
+          case "pending":
+            statusBadge.style.backgroundColor = "#e0e0e0";
+            statusBadge.style.color = "#606060";
+            break;
+          case "in_progress":
+            statusBadge.style.backgroundColor = "#b3e0ff";
+            statusBadge.style.color = "#0066cc";
+            break;
+          case "completed":
+            statusBadge.style.backgroundColor = "#c6f0c6";
+            statusBadge.style.color = "#2e7d32";
+            break;
+          case "cancelled":
+            statusBadge.style.backgroundColor = "#ffcccc";
+            statusBadge.style.color = "#c62828";
+            break;
+        }
+        
+        statusCell.appendChild(statusBadge);
+        taskRow.appendChild(statusCell);
+        
+        // Title cell
+        const titleCell = document.createElement("td");
+        titleCell.style.padding = "8px";
+        titleCell.style.fontWeight = "bold";
+        titleCell.innerText = task.title;
+        
+        // Add description as tooltip if available
+        if (task.description) {
+          titleCell.title = task.description;
+        }
+        
+        taskRow.appendChild(titleCell);
+        
+        // Agent cell
+        const agentCell = document.createElement("td");
+        agentCell.style.padding = "8px";
+        
+        // Get agent name if available
+        let agentName = task.agentId || "Unassigned";
+        if (task.agentId && this.agents && this.agents[task.agentId]) {
+          agentName = this.agents[task.agentId].name;
+        } else if (task.agentId && this.users && this.users[task.agentId]) {
+          agentName = this.users[task.agentId].name;
+        }
+        
+        agentCell.innerText = agentName;
+        taskRow.appendChild(agentCell);
+        
+        // Priority cell
+        const priorityCell = document.createElement("td");
+        priorityCell.style.padding = "8px";
+        
+        const priorityBadge = document.createElement("span");
+        priorityBadge.innerText = task.priority;
+        priorityBadge.style.padding = "2px 6px";
+        priorityBadge.style.borderRadius = "12px";
+        priorityBadge.style.fontSize = "10px";
+        priorityBadge.style.textTransform = "uppercase";
+        
+        // Priority color
+        switch (task.priority) {
+          case "high":
+            priorityBadge.style.backgroundColor = "#ffcccc";
+            priorityBadge.style.color = "#c62828";
+            break;
+          case "medium":
+            priorityBadge.style.backgroundColor = "#fff0b3";
+            priorityBadge.style.color = "#a67c00";
+            break;
+          case "low":
+            priorityBadge.style.backgroundColor = "#e0e0e0";
+            priorityBadge.style.color = "#606060";
+            break;
+        }
+        
+        priorityCell.appendChild(priorityBadge);
+        taskRow.appendChild(priorityCell);
+        
+        // Created date cell
+        const createdCell = document.createElement("td");
+        createdCell.style.padding = "8px";
+        createdCell.innerText = new Date(task.createdAt).toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        taskRow.appendChild(createdCell);
+        
+        // Actions cell
+        const actionsCell = document.createElement("td");
+        actionsCell.style.padding = "8px";
+        actionsCell.style.display = "flex";
+        actionsCell.style.gap = "4px";
+        
+        // Actions based on current status
+        if (task.status === "pending" || task.status === "in_progress") {
+          // Complete button
+          const completeBtn = document.createElement("button");
+          completeBtn.innerText = "Complete";
+          completeBtn.style.padding = "2px 6px";
+          completeBtn.style.backgroundColor = "#c6f0c6";
+          completeBtn.style.color = "#2e7d32";
+          completeBtn.style.border = "none";
+          completeBtn.style.borderRadius = "3px";
+          completeBtn.style.cursor = "pointer";
+          completeBtn.style.fontSize = "11px";
+          
+          completeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            this.updateTask(task.id, {
+              status: "completed",
+              updatedBy: "user1" // Default to first user for now
+            });
+          });
+          
+          actionsCell.appendChild(completeBtn);
+          
+          // Cancel button
+          const cancelBtn = document.createElement("button");
+          cancelBtn.innerText = "Cancel";
+          cancelBtn.style.padding = "2px 6px";
+          cancelBtn.style.backgroundColor = "#ffcccc";
+          cancelBtn.style.color = "#c62828";
+          cancelBtn.style.border = "none";
+          cancelBtn.style.borderRadius = "3px";
+          cancelBtn.style.cursor = "pointer";
+          cancelBtn.style.fontSize = "11px";
+          
+          cancelBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            this.cancelTask(task.id, "user1");
+          });
+          
+          actionsCell.appendChild(cancelBtn);
+        } else if (task.status === "completed" || task.status === "cancelled") {
+          // Rerun button
+          const rerunBtn = document.createElement("button");
+          rerunBtn.innerText = "Rerun";
+          rerunBtn.style.padding = "2px 6px";
+          rerunBtn.style.backgroundColor = "#b3e0ff";
+          rerunBtn.style.color = "#0066cc";
+          rerunBtn.style.border = "none";
+          rerunBtn.style.borderRadius = "3px";
+          rerunBtn.style.cursor = "pointer";
+          rerunBtn.style.fontSize = "11px";
+          
+          rerunBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            this.rerunTask(task.id, "user1");
+          });
+          
+          actionsCell.appendChild(rerunBtn);
+        }
+        
+        // View details button (always available)
+        const viewBtn = document.createElement("button");
+        viewBtn.innerText = "Details";
+        viewBtn.style.padding = "2px 6px";
+        viewBtn.style.backgroundColor = "transparent";
+        viewBtn.style.color = "#000000";
+        viewBtn.style.border = "1px solid #ccc";
+        viewBtn.style.borderRadius = "3px";
+        viewBtn.style.cursor = "pointer";
+        viewBtn.style.fontSize = "11px";
+        
+        viewBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          this.showTaskDetailsWindow(task.id);
+        });
+        
+        actionsCell.appendChild(viewBtn);
+        taskRow.appendChild(actionsCell);
+        
+        // Add row to table body
+        tableBody.appendChild(taskRow);
+      });
+    }
+    
+    return this;
+  };
+  
+  /**
+   * Shows a dialog to create a new task
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.showNewTaskDialog = function () {
+    // Create a modal dialog
+    const modalOverlay = document.createElement("div");
+    modalOverlay.id = "modal-overlay";
+    modalOverlay.style.position = "fixed";
+    modalOverlay.style.top = "0";
+    modalOverlay.style.left = "0";
+    modalOverlay.style.width = "100%";
+    modalOverlay.style.height = "100%";
+    modalOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    modalOverlay.style.zIndex = "1000";
+    modalOverlay.style.display = "flex";
+    modalOverlay.style.justifyContent = "center";
+    modalOverlay.style.alignItems = "center";
+    
+    // Modal container
+    const modalContainer = document.createElement("div");
+    modalContainer.style.backgroundColor = "#ffffff";
+    modalContainer.style.borderRadius = "5px";
+    modalContainer.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.2)";
+    modalContainer.style.width = "400px";
+    modalContainer.style.maxWidth = "90%";
+    modalContainer.style.maxHeight = "90%";
+    modalContainer.style.overflow = "auto";
+    modalContainer.style.display = "flex";
+    modalContainer.style.flexDirection = "column";
+    
+    // Modal header
+    const modalHeader = document.createElement("div");
+    modalHeader.style.padding = "12px 16px";
+    modalHeader.style.borderBottom = "1px solid #e0e0e0";
+    modalHeader.style.display = "flex";
+    modalHeader.style.justifyContent = "space-between";
+    modalHeader.style.alignItems = "center";
+    
+    const modalTitle = document.createElement("h3");
+    modalTitle.innerText = "Create New Task";
+    modalTitle.style.margin = "0";
+    modalTitle.style.fontSize = "16px";
+    modalTitle.style.fontWeight = "bold";
+    
+    const closeButton = document.createElement("button");
+    closeButton.innerHTML = "&#10005;";
+    closeButton.style.background = "none";
+    closeButton.style.border = "none";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.fontSize = "16px";
+    closeButton.style.padding = "0";
+    
+    closeButton.addEventListener("click", () => {
+      document.body.removeChild(modalOverlay);
+    });
+    
+    modalHeader.appendChild(modalTitle);
+    modalHeader.appendChild(closeButton);
+    modalContainer.appendChild(modalHeader);
+    
+    // Modal content
+    const modalContent = document.createElement("div");
+    modalContent.style.padding = "16px";
+    
+    // Form
+    const form = document.createElement("form");
+    form.style.display = "flex";
+    form.style.flexDirection = "column";
+    form.style.gap = "12px";
+    
+    // Title field
+    const titleGroup = document.createElement("div");
+    
+    const titleLabel = document.createElement("label");
+    titleLabel.innerText = "Title:";
+    titleLabel.style.display = "block";
+    titleLabel.style.marginBottom = "4px";
+    titleLabel.style.fontSize = "12px";
+    titleLabel.style.fontWeight = "bold";
+    
+    const titleInput = document.createElement("input");
+    titleInput.type = "text";
+    titleInput.placeholder = "Enter task title";
+    titleInput.style.width = "100%";
+    titleInput.style.padding = "6px";
+    titleInput.style.boxSizing = "border-box";
+    titleInput.style.border = "1px solid #ccc";
+    titleInput.style.borderRadius = "3px";
+    titleInput.style.fontSize = "12px";
+    
+    titleGroup.appendChild(titleLabel);
+    titleGroup.appendChild(titleInput);
+    form.appendChild(titleGroup);
+    
+    // Description field
+    const descGroup = document.createElement("div");
+    
+    const descLabel = document.createElement("label");
+    descLabel.innerText = "Description:";
+    descLabel.style.display = "block";
+    descLabel.style.marginBottom = "4px";
+    descLabel.style.fontSize = "12px";
+    descLabel.style.fontWeight = "bold";
+    
+    const descInput = document.createElement("textarea");
+    descInput.placeholder = "Enter task description";
+    descInput.style.width = "100%";
+    descInput.style.padding = "6px";
+    descInput.style.boxSizing = "border-box";
+    descInput.style.border = "1px solid #ccc";
+    descInput.style.borderRadius = "3px";
+    descInput.style.fontSize = "12px";
+    descInput.style.minHeight = "80px";
+    descInput.style.resize = "vertical";
+    
+    descGroup.appendChild(descLabel);
+    descGroup.appendChild(descInput);
+    form.appendChild(descGroup);
+    
+    // Priority field
+    const priorityGroup = document.createElement("div");
+    
+    const priorityLabel = document.createElement("label");
+    priorityLabel.innerText = "Priority:";
+    priorityLabel.style.display = "block";
+    priorityLabel.style.marginBottom = "4px";
+    priorityLabel.style.fontSize = "12px";
+    priorityLabel.style.fontWeight = "bold";
+    
+    const prioritySelect = document.createElement("select");
+    prioritySelect.style.width = "100%";
+    prioritySelect.style.padding = "6px";
+    prioritySelect.style.boxSizing = "border-box";
+    prioritySelect.style.border = "1px solid #ccc";
+    prioritySelect.style.borderRadius = "3px";
+    prioritySelect.style.fontSize = "12px";
+    
+    const priorityOptions = [
+      { value: "high", text: "High" },
+      { value: "medium", text: "Medium" },
+      { value: "low", text: "Low" }
+    ];
+    
+    priorityOptions.forEach(option => {
+      const optionEl = document.createElement("option");
+      optionEl.value = option.value;
+      optionEl.text = option.text;
+      prioritySelect.appendChild(optionEl);
+    });
+    
+    priorityGroup.appendChild(priorityLabel);
+    priorityGroup.appendChild(prioritySelect);
+    form.appendChild(priorityGroup);
+    
+    // Agent field
+    const agentGroup = document.createElement("div");
+    
+    const agentLabel = document.createElement("label");
+    agentLabel.innerText = "Assigned Agent:";
+    agentLabel.style.display = "block";
+    agentLabel.style.marginBottom = "4px";
+    agentLabel.style.fontSize = "12px";
+    agentLabel.style.fontWeight = "bold";
+    
+    const agentSelect = document.createElement("select");
+    agentSelect.style.width = "100%";
+    agentSelect.style.padding = "6px";
+    agentSelect.style.boxSizing = "border-box";
+    agentSelect.style.border = "1px solid #ccc";
+    agentSelect.style.borderRadius = "3px";
+    agentSelect.style.fontSize = "12px";
+    
+    // Add unassigned option
+    const unassignedOption = document.createElement("option");
+    unassignedOption.value = "";
+    unassignedOption.text = "Unassigned";
+    agentSelect.appendChild(unassignedOption);
+    
+    // Add agents
+    if (this.agents && typeof this.agents === "object") {
+      Object.values(this.agents).forEach(agent => {
+        const option = document.createElement("option");
+        option.value = agent.id;
+        option.text = agent.name;
+        agentSelect.appendChild(option);
+      });
+    }
+    
+    agentGroup.appendChild(agentLabel);
+    agentGroup.appendChild(agentSelect);
+    form.appendChild(agentGroup);
+    
+    // Form actions
+    const formActions = document.createElement("div");
+    formActions.style.display = "flex";
+    formActions.style.justifyContent = "flex-end";
+    formActions.style.gap = "8px";
+    formActions.style.marginTop = "16px";
+    
+    const cancelBtn = document.createElement("button");
+    cancelBtn.type = "button";
+    cancelBtn.innerText = "Cancel";
+    cancelBtn.style.padding = "6px 12px";
+    cancelBtn.style.backgroundColor = "#f0f0f0";
+    cancelBtn.style.color = "#000000";
+    cancelBtn.style.border = "1px solid #ccc";
+    cancelBtn.style.borderRadius = "3px";
+    cancelBtn.style.cursor = "pointer";
+    cancelBtn.style.fontSize = "12px";
+    
+    cancelBtn.addEventListener("click", () => {
+      document.body.removeChild(modalOverlay);
+    });
+    
+    const createBtn = document.createElement("button");
+    createBtn.type = "button";
+    createBtn.innerText = "Create Task";
+    createBtn.style.padding = "6px 12px";
+    createBtn.style.backgroundColor = "#000000";
+    createBtn.style.color = "#ffffff";
+    createBtn.style.border = "none";
+    createBtn.style.borderRadius = "3px";
+    createBtn.style.cursor = "pointer";
+    createBtn.style.fontSize = "12px";
+    
+    createBtn.addEventListener("click", () => {
+      // Get form values
+      const title = titleInput.value.trim();
+      if (!title) {
+        alert("Task title is required");
+        return;
+      }
+      
+      const taskData = {
+        title: title,
+        description: descInput.value.trim(),
+        priority: prioritySelect.value,
+        agentId: agentSelect.value || null,
+        createdBy: "user1", // Default to first user for now
+        status: "pending"
+      };
+      
+      // Create task
+      this.createTask(taskData);
+      
+      // Close dialog
+      document.body.removeChild(modalOverlay);
+    });
+    
+    formActions.appendChild(cancelBtn);
+    formActions.appendChild(createBtn);
+    form.appendChild(formActions);
+    
+    modalContent.appendChild(form);
+    modalContainer.appendChild(modalContent);
+    modalOverlay.appendChild(modalContainer);
+    
+    document.body.appendChild(modalOverlay);
+    
+    // Focus title input
+    setTimeout(() => {
+      titleInput.focus();
+    }, 0);
+    
+    return this;
+  };
+  
+  /**
+   * Shows a task details window
+   * @param {string} taskId - ID of the task to show details for
+   * @returns {LoopChat} The LoopChat instance for chaining
+   */
+  LOOPCHAT.prototype.showTaskDetailsWindow = function (taskId) {
+    // Get the task
+    const task = this.getTask(taskId);
+    if (!task) {
+      console.error("Task not found:", taskId);
+      return this;
+    }
+    
+    // Check if window already exists
+    const windowId = `window-task-${taskId}`;
+    let taskWindow = document.getElementById(windowId);
+    
+    if (taskWindow) {
+      // Focus existing window
+      this.windowFocus(windowId);
+      return this;
+    }
+    
+    // Create a new window
+    taskWindow = document.createElement("div");
+    taskWindow.id = windowId;
+    taskWindow.className = "window";
+    taskWindow.style.position = "absolute";
+    taskWindow.style.width = "500px";
+    taskWindow.style.height = "400px";
+    taskWindow.style.top = "100px";
+    taskWindow.style.right = "100px";
+    taskWindow.style.display = "flex";
+    taskWindow.style.flexDirection = "column";
+    taskWindow.style.overflow = "hidden";
+    taskWindow.style.backgroundColor = "#ffffff";
+    taskWindow.style.border = "1px solid #000000";
+    taskWindow.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.2)";
+    taskWindow.style.zIndex = "30";
+    
+    // Add click handler to focus this window
+    taskWindow.addEventListener("mousedown", () => {
+      this.windowFocus(windowId);
+    });
+    
+    // Window header
+    const windowHeader = document.createElement("div");
+    windowHeader.className = "window__header";
+    windowHeader.style.display = "flex";
+    windowHeader.style.justifyContent = "space-between";
+    windowHeader.style.alignItems = "center";
+    windowHeader.style.padding = "4px 6px";
+    windowHeader.style.backgroundColor = "#000000";
+    windowHeader.style.color = "#ffffff";
+    windowHeader.style.cursor = "move";
+    windowHeader.style.userSelect = "none";
+    
+    const windowTitle = document.createElement("div");
+    windowTitle.innerText = `Task: ${task.title}`;
+    windowTitle.style.fontSize = "11px";
+    windowTitle.style.fontWeight = "bold";
+    
+    const windowControls = document.createElement("div");
+    windowControls.style.display = "flex";
+    windowControls.style.gap = "6px";
+    
+    const minimizeButton = document.createElement("button");
+    minimizeButton.innerHTML = "&#8211;";
+    minimizeButton.style.background = "none";
+    minimizeButton.style.border = "none";
+    minimizeButton.style.color = "#ffffff";
+    minimizeButton.style.cursor = "pointer";
+    minimizeButton.style.fontSize = "12px";
+    minimizeButton.style.padding = "0 4px";
+    minimizeButton.addEventListener("click", () => {
+      this.windowMinimize(windowId);
+    });
+    
+    const closeButton = document.createElement("button");
+    closeButton.innerHTML = "&#10005;";
+    closeButton.style.background = "none";
+    closeButton.style.border = "none";
+    closeButton.style.color = "#ffffff";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.fontSize = "12px";
+    closeButton.style.padding = "0 4px";
+    closeButton.addEventListener("click", () => {
+      this.windowClose(windowId);
+    });
+    
+    windowControls.appendChild(minimizeButton);
+    windowControls.appendChild(closeButton);
+    
+    windowHeader.appendChild(windowTitle);
+    windowHeader.appendChild(windowControls);
+    taskWindow.appendChild(windowHeader);
+    
+    // Window content
+    const windowContent = document.createElement("div");
+    windowContent.className = "window__content";
+    windowContent.style.flex = "1";
+    windowContent.style.display = "flex";
+    windowContent.style.flexDirection = "column";
+    windowContent.style.padding = "16px";
+    windowContent.style.overflow = "auto";
+    
+    // Task details
+    const detailsContainer = document.createElement("div");
+    detailsContainer.style.marginBottom = "16px";
+    
+    // Task title
+    const titleEl = document.createElement("h2");
+    titleEl.innerText = task.title;
+    titleEl.style.margin = "0 0 8px 0";
+    titleEl.style.fontSize = "16px";
+    titleEl.style.fontWeight = "bold";
+    detailsContainer.appendChild(titleEl);
+    
+    // Status and priority badges
+    const badgesContainer = document.createElement("div");
+    badgesContainer.style.display = "flex";
+    badgesContainer.style.gap = "8px";
+    badgesContainer.style.marginBottom = "12px";
+    
+    // Status badge
+    const statusBadge = document.createElement("span");
+    statusBadge.innerText = task.status;
+    statusBadge.style.padding = "2px 6px";
+    statusBadge.style.borderRadius = "12px";
+    statusBadge.style.fontSize = "10px";
+    statusBadge.style.fontWeight = "bold";
+    statusBadge.style.textTransform = "uppercase";
+    
+    // Status color
+    switch (task.status) {
+      case "pending":
+        statusBadge.style.backgroundColor = "#e0e0e0";
+        statusBadge.style.color = "#606060";
+        break;
+      case "in_progress":
+        statusBadge.style.backgroundColor = "#b3e0ff";
+        statusBadge.style.color = "#0066cc";
+        break;
+      case "completed":
+        statusBadge.style.backgroundColor = "#c6f0c6";
+        statusBadge.style.color = "#2e7d32";
+        break;
+      case "cancelled":
+        statusBadge.style.backgroundColor = "#ffcccc";
+        statusBadge.style.color = "#c62828";
+        break;
+    }
+    
+    badgesContainer.appendChild(statusBadge);
+    
+    // Priority badge
+    const priorityBadge = document.createElement("span");
+    priorityBadge.innerText = `Priority: ${task.priority}`;
+    priorityBadge.style.padding = "2px 6px";
+    priorityBadge.style.borderRadius = "12px";
+    priorityBadge.style.fontSize = "10px";
+    priorityBadge.style.textTransform = "uppercase";
+    
+    // Priority color
+    switch (task.priority) {
+      case "high":
+        priorityBadge.style.backgroundColor = "#ffcccc";
+        priorityBadge.style.color = "#c62828";
+        break;
+      case "medium":
+        priorityBadge.style.backgroundColor = "#fff0b3";
+        priorityBadge.style.color = "#a67c00";
+        break;
+      case "low":
+        priorityBadge.style.backgroundColor = "#e0e0e0";
+        priorityBadge.style.color = "#606060";
+        break;
+    }
+    
+    badgesContainer.appendChild(priorityBadge);
+    detailsContainer.appendChild(badgesContainer);
+    
+    // Task description
+    if (task.description) {
+      const descContainer = document.createElement("div");
+      descContainer.style.marginBottom = "16px";
+      
+      const descLabel = document.createElement("div");
+      descLabel.innerText = "Description";
+      descLabel.style.fontWeight = "bold";
+      descLabel.style.fontSize = "12px";
+      descLabel.style.marginBottom = "4px";
+      descContainer.appendChild(descLabel);
+      
+      const descText = document.createElement("div");
+      descText.style.whiteSpace = "pre-wrap";
+      descText.style.fontSize = "12px";
+      descText.style.lineHeight = "1.4";
+      descText.style.backgroundColor = "#f5f5f5";
+      descText.style.padding = "8px";
+      descText.style.borderRadius = "3px";
+      descText.innerText = task.description;
+      descContainer.appendChild(descText);
+      
+      detailsContainer.appendChild(descContainer);
+    }
+    
+    // Meta info
+    const metaContainer = document.createElement("div");
+    metaContainer.style.display = "grid";
+    metaContainer.style.gridTemplateColumns = "1fr 1fr";
+    metaContainer.style.gap = "8px";
+    metaContainer.style.marginBottom = "16px";
+    metaContainer.style.fontSize = "12px";
+    
+    // Created by
+    let createdByName = task.createdBy || "Unknown";
+    if (task.createdBy && this.users && this.users[task.createdBy]) {
+      createdByName = this.users[task.createdBy].name;
+    } else if (task.createdBy && this.agents && this.agents[task.createdBy]) {
+      createdByName = this.agents[task.createdBy].name;
+    }
+    
+    const createdByEl = document.createElement("div");
+    createdByEl.innerHTML = `<strong>Created by:</strong> ${createdByName}`;
+    metaContainer.appendChild(createdByEl);
+    
+    // Created at
+    const createdAtEl = document.createElement("div");
+    createdAtEl.innerHTML = `<strong>Created:</strong> ${new Date(task.createdAt).toLocaleString()}`;
+    metaContainer.appendChild(createdAtEl);
+    
+    // Assigned to
+    let assignedToName = task.agentId ? "Unassigned" : "Unassigned";
+    if (task.agentId && this.agents && this.agents[task.agentId]) {
+      assignedToName = this.agents[task.agentId].name;
+    } else if (task.agentId && this.users && this.users[task.agentId]) {
+      assignedToName = this.users[task.agentId].name;
+    }
+    
+    const assignedToEl = document.createElement("div");
+    assignedToEl.innerHTML = `<strong>Assigned to:</strong> ${assignedToName}`;
+    metaContainer.appendChild(assignedToEl);
+    
+    // Completed at (if applicable)
+    if (task.completedAt) {
+      const completedAtEl = document.createElement("div");
+      completedAtEl.innerHTML = `<strong>Completed:</strong> ${new Date(task.completedAt).toLocaleString()}`;
+      metaContainer.appendChild(completedAtEl);
+    }
+    
+    detailsContainer.appendChild(metaContainer);
+    
+    // Actions buttons
+    const actionsContainer = document.createElement("div");
+    actionsContainer.style.display = "flex";
+    actionsContainer.style.gap = "8px";
+    actionsContainer.style.marginBottom = "24px";
+    
+    // Actions based on current status
+    if (task.status === "pending" || task.status === "in_progress") {
+      // Complete button
+      const completeBtn = document.createElement("button");
+      completeBtn.innerText = "Complete Task";
+      completeBtn.style.padding = "6px 12px";
+      completeBtn.style.backgroundColor = "#c6f0c6";
+      completeBtn.style.color = "#2e7d32";
+      completeBtn.style.border = "none";
+      completeBtn.style.borderRadius = "3px";
+      completeBtn.style.cursor = "pointer";
+      completeBtn.style.fontSize = "12px";
+      
+      completeBtn.addEventListener("click", () => {
+        this.updateTask(task.id, {
+          status: "completed",
+          updatedBy: "user1" // Default to first user for now
+        });
+        
+        // Update window title and status badge
+        windowTitle.innerText = `Task: ${task.title} (Completed)`;
+        statusBadge.innerText = "completed";
+        statusBadge.style.backgroundColor = "#c6f0c6";
+        statusBadge.style.color = "#2e7d32";
+        
+        // Remove action buttons
+        actionsContainer.innerHTML = "";
+        
+        // Add rerun button
+        const rerunBtn = document.createElement("button");
+        rerunBtn.innerText = "Rerun Task";
+        rerunBtn.style.padding = "6px 12px";
+        rerunBtn.style.backgroundColor = "#b3e0ff";
+        rerunBtn.style.color = "#0066cc";
+        rerunBtn.style.border = "none";
+        rerunBtn.style.borderRadius = "3px";
+        rerunBtn.style.cursor = "pointer";
+        rerunBtn.style.fontSize = "12px";
+        
+        rerunBtn.addEventListener("click", () => {
+          this.rerunTask(task.id, "user1");
+          // Close this window
+          this.windowClose(windowId);
+        });
+        
+        actionsContainer.appendChild(rerunBtn);
+      });
+      
+      actionsContainer.appendChild(completeBtn);
+      
+      // Cancel button
+      const cancelBtn = document.createElement("button");
+      cancelBtn.innerText = "Cancel Task";
+      cancelBtn.style.padding = "6px 12px";
+      cancelBtn.style.backgroundColor = "#ffcccc";
+      cancelBtn.style.color = "#c62828";
+      cancelBtn.style.border = "none";
+      cancelBtn.style.borderRadius = "3px";
+      cancelBtn.style.cursor = "pointer";
+      cancelBtn.style.fontSize = "12px";
+      
+      cancelBtn.addEventListener("click", () => {
+        this.cancelTask(task.id, "user1");
+        
+        // Update window title and status badge
+        windowTitle.innerText = `Task: ${task.title} (Cancelled)`;
+        statusBadge.innerText = "cancelled";
+        statusBadge.style.backgroundColor = "#ffcccc";
+        statusBadge.style.color = "#c62828";
+        
+        // Remove action buttons
+        actionsContainer.innerHTML = "";
+        
+        // Add rerun button
+        const rerunBtn = document.createElement("button");
+        rerunBtn.innerText = "Rerun Task";
+        rerunBtn.style.padding = "6px 12px";
+        rerunBtn.style.backgroundColor = "#b3e0ff";
+        rerunBtn.style.color = "#0066cc";
+        rerunBtn.style.border = "none";
+        rerunBtn.style.borderRadius = "3px";
+        rerunBtn.style.cursor = "pointer";
+        rerunBtn.style.fontSize = "12px";
+        
+        rerunBtn.addEventListener("click", () => {
+          this.rerunTask(task.id, "user1");
+          // Close this window
+          this.windowClose(windowId);
+        });
+        
+        actionsContainer.appendChild(rerunBtn);
+      });
+      
+      actionsContainer.appendChild(cancelBtn);
+    } else if (task.status === "completed" || task.status === "cancelled") {
+      // Rerun button
+      const rerunBtn = document.createElement("button");
+      rerunBtn.innerText = "Rerun Task";
+      rerunBtn.style.padding = "6px 12px";
+      rerunBtn.style.backgroundColor = "#b3e0ff";
+      rerunBtn.style.color = "#0066cc";
+      rerunBtn.style.border = "none";
+      rerunBtn.style.borderRadius = "3px";
+      rerunBtn.style.cursor = "pointer";
+      rerunBtn.style.fontSize = "12px";
+      
+      rerunBtn.addEventListener("click", () => {
+        this.rerunTask(task.id, "user1");
+        // Close this window
+        this.windowClose(windowId);
+      });
+      
+      actionsContainer.appendChild(rerunBtn);
+    }
+    
+    detailsContainer.appendChild(actionsContainer);
+    windowContent.appendChild(detailsContainer);
+    
+    // Task history
+    const historyContainer = document.createElement("div");
+    
+    const historyTitle = document.createElement("h3");
+    historyTitle.innerText = "Task History";
+    historyTitle.style.margin = "0 0 8px 0";
+    historyTitle.style.fontSize = "14px";
+    historyTitle.style.fontWeight = "bold";
+    historyContainer.appendChild(historyTitle);
+    
+    const historyList = document.createElement("div");
+    historyList.style.fontSize = "12px";
+    historyList.style.border = "1px solid #e0e0e0";
+    historyList.style.borderRadius = "3px";
+    
+    if (task.history && task.history.length > 0) {
+      task.history.forEach((entry, index) => {
+        const entryEl = document.createElement("div");
+        entryEl.style.padding = "8px";
+        entryEl.style.borderBottom = index < task.history.length - 1 ? "1px solid #e0e0e0" : "none";
+        
+        // Alternate background colors
+        if (index % 2 === 0) {
+          entryEl.style.backgroundColor = "#f9f9f9";
+        }
+        
+        // Entry time
+        const timeEl = document.createElement("div");
+        timeEl.style.color = "#808080";
+        timeEl.style.marginBottom = "4px";
+        timeEl.innerText = new Date(entry.timestamp).toLocaleString();
+        entryEl.appendChild(timeEl);
+        
+        // Entry action and details
+        const actionEl = document.createElement("div");
+        
+        // Format the action
+        let actionText = entry.action;
+        if (entry.action === "created") {
+          actionText = "Task created";
+        } else if (entry.action === "updated") {
+          actionText = "Task updated";
+        } else if (entry.action === "cancelled") {
+          actionText = "Task cancelled";
+        } else if (entry.action.startsWith("status_changed_to_")) {
+          const newStatus = entry.action.replace("status_changed_to_", "");
+          actionText = `Status changed to ${newStatus}`;
+        }
+        
+        // Add agent name if available
+        let agentName = entry.agentId || "system";
+        if (entry.agentId && this.users && this.users[entry.agentId]) {
+          agentName = this.users[entry.agentId].name;
+        } else if (entry.agentId && this.agents && this.agents[entry.agentId]) {
+          agentName = this.agents[entry.agentId].name;
+        }
+        
+        actionEl.innerHTML = `<strong>${actionText}</strong> by ${agentName}`;
+        
+        // Add details if available
+        if (entry.details && entry.details !== actionText) {
+          const detailsEl = document.createElement("div");
+          detailsEl.style.marginTop = "4px";
+          detailsEl.innerText = entry.details;
+          actionEl.appendChild(detailsEl);
+        }
+        
+        entryEl.appendChild(actionEl);
+        historyList.appendChild(entryEl);
+      });
+    } else {
+      const noHistoryEl = document.createElement("div");
+      noHistoryEl.style.padding = "12px";
+      noHistoryEl.style.textAlign = "center";
+      noHistoryEl.style.color = "#808080";
+      noHistoryEl.innerText = "No history available";
+      historyList.appendChild(noHistoryEl);
+    }
+    
+    historyContainer.appendChild(historyList);
+    windowContent.appendChild(historyContainer);
+    
+    taskWindow.appendChild(windowContent);
+    
+    // Make window draggable
+    this.makeWindowDraggable(taskWindow, windowHeader);
+    
+    // Add to DOM
+    document.getElementById("desktop").appendChild(taskWindow);
+    
+    // Add to windows array
+    this.windows.push({
+      id: windowId,
+      type: "task_details",
+      taskId: taskId,
+      minimized: false
+    });
+    
+    return this;
+  };
 
   /**
    * Opens a window for a specific channel
@@ -1496,9 +2771,45 @@
       openButton.addEventListener("click", () => {
         this.openInWindow(post);
       });
+      
+      // Create task button
+      const createTaskButton = document.createElement("button");
+      createTaskButton.innerText = "Create Task";
+      createTaskButton.style.padding = "2px 6px";
+      createTaskButton.style.backgroundColor = "#4A6DA7";
+      createTaskButton.style.color = "#ffffff";
+      createTaskButton.style.border = "none";
+      createTaskButton.style.cursor = "pointer";
+      createTaskButton.style.fontSize = "12px";
+      
+      createTaskButton.addEventListener("click", () => {
+        // Extract channel info
+        const channelId = this.channels.find(c => 
+          c.posts && c.posts.some(p => p.id === post.id)
+        )?.id || this.activeChannel;
+        
+        // Create a new task for this post
+        const taskData = {
+          title: `Follow up on message from ${post.author}`,
+          description: post.envelope.message,
+          status: "pending",
+          priority: "medium",
+          agentId: null, // Unassigned initially
+          createdBy: "user1", // Default to first user
+          channelId: channelId,
+          postId: post.id
+        };
+        
+        // Create the task
+        const task = this.createTask(taskData);
+        
+        // Show the task details window
+        this.showTaskDetailsWindow(task.id);
+      });
 
       actionsContainer.appendChild(replyButton);
       actionsContainer.appendChild(openButton);
+      actionsContainer.appendChild(createTaskButton);
       envelope.appendChild(actionsContainer);
     }
 
