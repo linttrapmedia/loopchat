@@ -5,6 +5,9 @@
    * @param {HTMLElement} handle - The element to use as a drag handle (typically the header)
    */
   LOOPCHAT.prototype.makeWindowDraggable = function (windowEl, handle) {
+    // Store reference to the LoopChat instance for event handlers
+    const loopChat = this;
+    
     // Dragging functionality
     let pos1 = 0,
       pos2 = 0,
@@ -44,6 +47,13 @@
       // Stop moving when mouse button is released
       document.onmouseup = null;
       document.onmousemove = null;
+      
+      // If auto-tiling is enabled, re-tile windows after dragging
+      if (loopChat.autoTileWindows) {
+        console.log("Window manually dragged - auto-tiling windows");
+        // Add a small delay to ensure drag is complete
+        setTimeout(() => loopChat.tileWindows(), 50);
+      }
     }
 
     // Add resizing functionality with a resize handle
@@ -109,6 +119,13 @@
     function resizeMouseUp() {
       document.removeEventListener("mousemove", resizeMouseMove);
       document.removeEventListener("mouseup", resizeMouseUp);
+      
+      // If auto-tiling is enabled, re-tile windows after manual resize
+      if (loopChat.autoTileWindows) {
+        console.log("Window manually resized - auto-tiling windows");
+        // Add a small delay to ensure resize is complete
+        setTimeout(() => loopChat.tileWindows(), 50);
+      }
     }
   };
 

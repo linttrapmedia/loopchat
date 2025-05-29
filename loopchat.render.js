@@ -341,11 +341,11 @@
     autoTileToggle.appendChild(autoTileLabel);
     autoTileToggle.appendChild(toggleSwitch);
     
-    // Create a function to update window management options based on auto-tile state
-    const updateCascadeAndTileOptions = (isEnabled) => {
+    // Create a function to update window arrangement options based on auto-tile state
+    const updateWindowArrangementOptions = (isEnabled) => {
       console.log(`Updating cascade and tile options. Auto-tile is: ${isEnabled ? 'ON' : 'OFF'}`);
-      // For all three buttons (minimizeAllOption, cascadeOption, tileOption)
-      const buttons = [minimizeAllOption, cascadeOption, tileOption];
+      // Only disable cascade and tile options, not minimizeAllOption
+      const buttons = [cascadeOption, tileOption];
       
       // First ensure all buttons have the _disabled property defined
       buttons.forEach(button => {
@@ -398,7 +398,6 @@
             });
             
             // Replace the reference in our local scope
-            if (button === minimizeAllOption) minimizeAllOption = clone;
             if (button === cascadeOption) cascadeOption = clone;
             if (button === tileOption) tileOption = clone;
           }
@@ -424,7 +423,6 @@
               button.parentNode.replaceChild(button._originalButton, button);
               
               // Update our references
-              if (button === minimizeAllOption) minimizeAllOption = button._originalButton;
               if (button === cascadeOption) cascadeOption = button._originalButton;
               if (button === tileOption) tileOption = button._originalButton;
             } else {
@@ -443,8 +441,8 @@
       }
     };
     
-    // Set initial state of cascade and tile options
-    updateCascadeAndTileOptions(this.autoTileWindows);
+    // Set initial state of window arrangement options
+    updateWindowArrangementOptions(this.autoTileWindows);
     
     // Add click handler to the entire toggle container
     autoTileToggle.addEventListener("click", (e) => {
@@ -471,8 +469,8 @@
       // Update checkbox state
       toggleInput.checked = isOn;
       
-      // Update cascade and tile options
-      updateCascadeAndTileOptions(isOn);
+      // Update window arrangement options
+      updateWindowArrangementOptions(isOn);
       
       // If enabled, tile windows immediately
       if (isOn) {
@@ -545,8 +543,8 @@
         
         // Force an update of all button states whenever dropdown is opened
         // This ensures visual state is consistent with functionality
-        console.log("Dropdown opened, refreshing button states");
-        updateCascadeAndTileOptions(this.autoTileWindows);
+        console.log("Dropdown opened, refreshing window arrangement options");
+        updateWindowArrangementOptions(this.autoTileWindows);
       }
       
       if (dropdownMenu.style.display === "none") {

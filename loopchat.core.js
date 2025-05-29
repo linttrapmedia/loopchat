@@ -106,6 +106,20 @@ LoopChat.prototype.init = function (props) {
   if (props.agents) this.agents = props.agents;
   if (props.tasks) this.tasks = props.tasks;
   
+  // Setup window resize listener for auto-tiling
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    // Debounce the resize event to avoid excessive tiling
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      // Only auto-tile if enabled
+      if (this.autoTileWindows) {
+        console.log("Window resized - auto-tiling windows");
+        this.tileWindows();
+      }
+    }, 200); // 200ms debounce time
+  });
+  
   // Load test data first
   this.loadTestData();
   
