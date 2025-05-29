@@ -182,7 +182,7 @@
     });
 
     // Cascade windows option
-    const cascadeOption = document.createElement("div");
+    let cascadeOption = document.createElement("div");
     cascadeOption.innerText = "Cascade Windows";
     this.applyStyles(cascadeOption, {
       padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
@@ -221,7 +221,7 @@
     });
 
     // Minimize all windows option
-    const minimizeAllOption = document.createElement("div");
+    let minimizeAllOption = document.createElement("div");
     minimizeAllOption.innerText = "Minimize All Windows";
     this.applyStyles(minimizeAllOption, {
       padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
@@ -252,7 +252,7 @@
     });
 
     // Tile windows option
-    const tileOption = document.createElement("div");
+    let tileOption = document.createElement("div");
     tileOption.innerText = "Tile Windows";
     this.applyStyles(tileOption, {
       padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
@@ -341,6 +341,111 @@
     autoTileToggle.appendChild(autoTileLabel);
     autoTileToggle.appendChild(toggleSwitch);
     
+    // Create a function to update window management options based on auto-tile state
+    const updateCascadeAndTileOptions = (isEnabled) => {
+      console.log(`Updating cascade and tile options. Auto-tile is: ${isEnabled ? 'ON' : 'OFF'}`);
+      // For all three buttons (minimizeAllOption, cascadeOption, tileOption)
+      const buttons = [minimizeAllOption, cascadeOption, tileOption];
+      
+      // First ensure all buttons have the _disabled property defined
+      buttons.forEach(button => {
+        if (button._disabled === undefined) {
+          button._disabled = false;
+        }
+      });
+      
+      if (isEnabled) {
+        // Disable all buttons
+        buttons.forEach(button => {
+          // Visual disabling
+          button.style.opacity = "0.5";
+          button.style.color = this.design.colors.text.tertiary;
+          button.style.cursor = "not-allowed";
+          button.title = "Disabled when auto-tile is on";
+          
+          // Functional disabling - clone the node to remove all event listeners
+          if (!button._disabled) {
+            console.log(`Disabling button: ${button.innerText}`);
+            const clone = button.cloneNode(true);
+            
+            // Make sure the button has a parent before replacing it
+            if (button.parentNode) {
+              button.parentNode.replaceChild(clone, button);
+            } else {
+              console.warn(`Button ${button.innerText} has no parent node, cannot replace`);
+            }
+            
+            // Store reference to original button
+            clone._originalButton = button;
+            clone._disabled = true;
+            
+            // Add a click handler that does nothing but prevent event propagation
+            // Store button text before adding event listener to avoid scope issues
+            const buttonText = clone.innerText;
+            const self = this; // Store reference to 'this' for use in event handler
+            
+            clone.addEventListener("click", function(e) {
+              e.stopPropagation();
+              e.preventDefault();
+              console.log(`Button ${buttonText} disabled - auto-tile is on`);
+              // Add visual feedback to show that event was properly intercepted
+              this.style.backgroundColor = self.design.colors.ui.focus;
+              const btn = this; // Store reference to 'this' for the setTimeout
+              setTimeout(() => {
+                btn.style.backgroundColor = "transparent";
+              }, 300);
+              return false;
+            });
+            
+            // Replace the reference in our local scope
+            if (button === minimizeAllOption) minimizeAllOption = clone;
+            if (button === cascadeOption) cascadeOption = clone;
+            if (button === tileOption) tileOption = clone;
+          }
+        });
+      } else {
+        // Re-enable all buttons by restoring originals if they were disabled
+        buttons.forEach(button => {
+          // Get the button text for logging
+          const buttonText = button.innerText || "unknown";
+          console.log(`Re-enabling button: ${buttonText}`);
+          
+          if (button._disabled && button._originalButton) {
+            // We have the original button, so restore it with all event handlers
+            if (button.parentNode) {
+              // Before replacement, ensure original button has correct visual state
+              button._originalButton.style.opacity = "1";
+              button._originalButton.style.color = this.design.colors.text.primary;
+              button._originalButton.style.cursor = "pointer";
+              button._originalButton.style.backgroundColor = "transparent";
+              button._originalButton.title = "";
+              
+              // Now replace the node
+              button.parentNode.replaceChild(button._originalButton, button);
+              
+              // Update our references
+              if (button === minimizeAllOption) minimizeAllOption = button._originalButton;
+              if (button === cascadeOption) cascadeOption = button._originalButton;
+              if (button === tileOption) tileOption = button._originalButton;
+            } else {
+              console.warn(`Button ${buttonText} has no parent node, cannot replace`);
+            }
+          } else {
+            // Just restore visual state if we don't have the original or it's not disabled
+            button.style.opacity = "1";
+            button.style.color = this.design.colors.text.primary;
+            button.style.cursor = "pointer";
+            button.style.backgroundColor = "transparent";
+            button.title = "";
+            if (button._disabled) button._disabled = false;
+          }
+        });
+      }
+    };
+    
+    // Set initial state of cascade and tile options
+    updateCascadeAndTileOptions(this.autoTileWindows);
+    
     // Add click handler to the entire toggle container
     autoTileToggle.addEventListener("click", (e) => {
       // Prevent the event from closing the dropdown
@@ -365,6 +470,9 @@
       
       // Update checkbox state
       toggleInput.checked = isOn;
+      
+      // Update cascade and tile options
+      updateCascadeAndTileOptions(isOn);
       
       // If enabled, tile windows immediately
       if (isOn) {
@@ -434,6 +542,11 @@
         toggleInput.checked = this.autoTileWindows;
         toggleSlider.style.backgroundColor = this.autoTileWindows ? this.design.colors.primary.accent : "#ccc";
         toggleIndicator.style.left = this.autoTileWindows ? "18px" : "2px";
+        
+        // Force an update of all button states whenever dropdown is opened
+        // This ensures visual state is consistent with functionality
+        console.log("Dropdown opened, refreshing button states");
+        updateCascadeAndTileOptions(this.autoTileWindows);
       }
       
       if (dropdownMenu.style.display === "none") {
