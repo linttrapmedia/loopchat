@@ -179,6 +179,11 @@
       this.updateMainMenuMinimizedWindows();
     }
     
+    // Auto-tile remaining visible windows if enabled
+    if (this.autoTileWindows) {
+      setTimeout(() => this.tileWindows(), 10);
+    }
+    
     // Keep dropdown button highlighted when windows are minimized
     const dropdownToggle = document.getElementById("main-menu-toggle");
     if (dropdownToggle) {
@@ -215,6 +220,11 @@
 
     // Focus the window
     this.windowFocus(windowId);
+    
+    // Auto-tile windows if enabled
+    if (this.autoTileWindows) {
+      this.tileWindows();
+    }
 
     // Update the main menu's minimized windows section
     if (typeof this.updateMainMenuMinimizedWindows === 'function') {
@@ -263,28 +273,24 @@
     const windowIndex = this.windows.findIndex((w) => w.id === windowId);
     if (windowIndex !== -1) {
       this.windows.splice(windowIndex, 1);
+      
+      // Auto-tile windows if enabled
+      if (this.autoTileWindows) {
+        this.tileWindows();
+      }
     }
 
-    // Remove from header dropdown if it was minimized
-    const windowItem = document.getElementById(`header-window-item-${windowId}`);
-    if (windowItem) {
-      windowItem.remove();
+    // Update the main menu's minimized windows section
+    if (typeof this.updateMainMenuMinimizedWindows === 'function') {
+      this.updateMainMenuMinimizedWindows();
     }
-
-    // Check if any windows are still minimized and update the dropdown
-    const hasMinimizedWindows = this.windows.some((w) => w.minimized);
-
-    // Update the no windows message visibility
-    const noWindowsMsg = document.getElementById("header__no-windows-message");
-    if (noWindowsMsg) {
-      noWindowsMsg.style.display = hasMinimizedWindows ? "none" : "block";
-    }
-
+    
     // Update dropdown toggle style
-    const dropdownToggle = document.getElementById("header__windows-dropdown-toggle");
+    const dropdownToggle = document.getElementById("main-menu-toggle");
     if (dropdownToggle) {
+      const hasMinimizedWindows = this.windows.some((w) => w.minimized);
       if (hasMinimizedWindows) {
-        dropdownToggle.style.backgroundColor = this.design.colors.primary.accent;
+        dropdownToggle.style.backgroundColor = this.design.colors.primary.light;
       } else {
         dropdownToggle.style.backgroundColor = "transparent";
       }
@@ -319,6 +325,11 @@
 
     // Set this window to the highest z-index
     windowEl.style.zIndex = this.getZIndex("window.focused");
+    
+    // Auto-tile windows if enabled - with a small delay
+    if (this.autoTileWindows) {
+      setTimeout(() => this.tileWindows(), 10);
+    }
 
     // If the window has a title element, you could add a visual indication
     const windowTitle = windowEl.querySelector(".window__header");

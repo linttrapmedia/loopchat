@@ -277,11 +277,110 @@
       this.tileWindows();
     });
 
+    // Auto-tile toggle option
+    const autoTileToggle = document.createElement("div");
+    autoTileToggle.id = "auto-tile-toggle";
+    autoTileToggle.style.display = "flex";
+    autoTileToggle.style.alignItems = "center";
+    autoTileToggle.style.justifyContent = "space-between";
+    autoTileToggle.style.padding = `${this.design.spacing.sm} ${this.design.spacing.lg}`;
+    autoTileToggle.style.borderBottom = `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`;
+    
+    const autoTileLabel = document.createElement("span");
+    autoTileLabel.innerText = "Auto-tile Windows";
+    autoTileLabel.style.fontSize = this.design.typography.fontSize.sm;
+    autoTileLabel.style.color = this.design.colors.text.primary;
+    
+    const toggleSwitch = document.createElement("div");
+    toggleSwitch.className = "toggle-switch";
+    toggleSwitch.style.position = "relative";
+    toggleSwitch.style.display = "inline-block";
+    toggleSwitch.style.width = "36px";
+    toggleSwitch.style.height = "20px";
+    
+    const toggleInput = document.createElement("input");
+    toggleInput.type = "checkbox";
+    toggleInput.id = "auto-tile-checkbox";
+    toggleInput.checked = this.autoTileWindows;
+    toggleInput.style.opacity = "0";
+    toggleInput.style.width = "0";
+    toggleInput.style.height = "0";
+    
+    const toggleSlider = document.createElement("span");
+    toggleSlider.className = "toggle-slider";
+    toggleSlider.style.position = "absolute";
+    toggleSlider.style.cursor = "pointer";
+    toggleSlider.style.top = "0";
+    toggleSlider.style.left = "0";
+    toggleSlider.style.right = "0";
+    toggleSlider.style.bottom = "0";
+    toggleSlider.style.backgroundColor = this.autoTileWindows ? this.design.colors.primary.accent : "#ccc";
+    toggleSlider.style.borderRadius = "10px";
+    toggleSlider.style.transition = "all 0.2s ease";
+    
+    // Toggle indicator
+    const toggleIndicator = document.createElement("span");
+    toggleIndicator.style.position = "absolute";
+    toggleIndicator.style.content = "''";
+    toggleIndicator.style.height = "16px";
+    toggleIndicator.style.width = "16px";
+    toggleIndicator.style.left = this.autoTileWindows ? "18px" : "2px";
+    toggleIndicator.style.bottom = "2px";
+    toggleIndicator.style.backgroundColor = "#fff";
+    toggleIndicator.style.borderRadius = "50%";
+    toggleIndicator.style.transition = "all 0.2s ease";
+    
+    // We'll handle the toggle events through the container click handler only
+    // to avoid event propagation issues and ensure consistent behavior
+    
+    // Assemble toggle switch
+    toggleSlider.appendChild(toggleIndicator);
+    toggleSwitch.appendChild(toggleInput);
+    toggleSwitch.appendChild(toggleSlider);
+    
+    autoTileToggle.appendChild(autoTileLabel);
+    autoTileToggle.appendChild(toggleSwitch);
+    
+    // Add click handler to the entire toggle container
+    autoTileToggle.addEventListener("click", (e) => {
+      // Prevent the event from closing the dropdown
+      e.stopPropagation();
+      
+      // Toggle the state directly with immediate UI update
+      this.autoTileWindows = !this.autoTileWindows;
+      console.log("Auto-tile toggled to:", this.autoTileWindows);
+      
+      // Force immediate UI update
+      const isOn = this.autoTileWindows;
+      
+      // Set background color of slider
+      toggleSlider.style.backgroundColor = isOn 
+        ? this.design.colors.primary.accent 
+        : "#ccc";
+      
+      // Set position of indicator
+      toggleIndicator.style.left = isOn 
+        ? "18px" 
+        : "2px";
+      
+      // Update checkbox state
+      toggleInput.checked = isOn;
+      
+      // If enabled, tile windows immediately
+      if (isOn) {
+        setTimeout(() => this.tileWindows(), 50);
+      }
+      
+      // Don't hide dropdown - let user see the effect
+      return false;
+    });
+    
     // Add window management options to dropdown menu
     dropdownMenu.appendChild(showAllOption);
     dropdownMenu.appendChild(minimizeAllOption);
     dropdownMenu.appendChild(cascadeOption);
     dropdownMenu.appendChild(tileOption);
+    dropdownMenu.appendChild(autoTileToggle);
     
     // Add minimized windows section
     const minimizedWindowsHeader = document.createElement("div");
@@ -325,6 +424,17 @@
       
       // Update the minimized windows section
       this.updateMainMenuMinimizedWindows();
+      
+      // Update toggle state to reflect current setting
+      const toggleInput = document.getElementById("auto-tile-checkbox");
+      const toggleSlider = document.querySelector(".toggle-slider");
+      const toggleIndicator = toggleSlider?.querySelector("span");
+      
+      if (toggleInput && toggleSlider && toggleIndicator) {
+        toggleInput.checked = this.autoTileWindows;
+        toggleSlider.style.backgroundColor = this.autoTileWindows ? this.design.colors.primary.accent : "#ccc";
+        toggleIndicator.style.left = this.autoTileWindows ? "18px" : "2px";
+      }
       
       if (dropdownMenu.style.display === "none") {
         dropdownMenu.style.display = "block";
@@ -2596,6 +2706,11 @@
     // Focus the newly created window to bring it to the top of the z-index stack
     this.windowFocus(windowId);
     
+    // Auto-tile windows if enabled
+    if (this.autoTileWindows) {
+      this.tileWindows();
+    }
+    
     return this;
   };
 
@@ -2788,6 +2903,11 @@
     
     // Focus the newly created window to bring it to the top of the z-index stack
     this.windowFocus(channelWindowId);
+    
+    // Auto-tile windows if enabled
+    if (this.autoTileWindows) {
+      this.tileWindows();
+    }
 
     // Update active channel
     this.activeChannel = channelId;

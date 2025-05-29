@@ -30,6 +30,9 @@ window.LoopChat = function LoopChat() {
   
   /** @type {Array<Object>} List of tasks */
   this.tasks = [];
+  
+  /** @type {boolean} Whether to automatically tile windows */
+  this.autoTileWindows = false;
 };
 
 /**
