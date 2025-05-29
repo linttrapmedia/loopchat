@@ -455,20 +455,80 @@
     const windowWidth = Math.floor(availableWidth / columns);
     const windowHeight = Math.floor(availableHeight / rows);
     
+    // Calculate total grid spaces in the layout
+    const totalGridSpaces = columns * rows;
+    
     // Position each window
     visibleWindows.forEach((windowEl, index) => {
-      const row = Math.floor(index / columns);
-      const col = index % columns;
+      // Special handling for the last window if there are empty spaces
+      const isLastWindow = index === visibleWindows.length - 1;
+      const hasEmptySpaces = visibleWindows.length < totalGridSpaces;
       
-      // Position - exact fit without gaps
-      const top = (row * windowHeight) + toolbarHeight;
-      const left = col * windowWidth;
-      
-      // Apply position and size - exact dimensions
-      windowEl.style.top = `${top}px`;
-      windowEl.style.left = `${left}px`;
-      windowEl.style.width = `${windowWidth}px`;
-      windowEl.style.height = `${windowHeight}px`;
+      if (isLastWindow && hasEmptySpaces) {
+        // Calculate how many empty grid spaces remain
+        const emptySpaces = totalGridSpaces - visibleWindows.length;
+        
+        // Calculate the position and size based on the current grid cell
+        const row = Math.floor(index / columns);
+        const col = index % columns;
+        
+        // Position - exact fit without gaps
+        const top = (row * windowHeight) + toolbarHeight;
+        const left = col * windowWidth;
+        
+        // Determine the expansion strategy based on the grid layout and empty spaces
+        let expandStrategy = '';
+        let width = windowWidth;
+        let height = windowHeight;
+        
+        // Check if we can expand to the right (horizontal expansion)
+        const remainingColsInRow = columns - col;
+        const canExpandRight = remainingColsInRow > 1;
+        
+        // Check if we can expand downward (vertical expansion)
+        const remainingRows = rows - row - 1;
+        const canExpandDown = remainingRows > 0;
+        
+        if (canExpandRight && canExpandDown) {
+          // Can expand both horizontally and vertically - use an L-shape or rectangle
+          expandStrategy = 'L-shape';
+          width = windowWidth * remainingColsInRow;
+          height = windowHeight * (1 + remainingRows);
+        } else if (canExpandRight) {
+          // Can only expand horizontally - expand to the end of the row
+          expandStrategy = 'horizontal';
+          width = windowWidth * remainingColsInRow;
+        } else if (canExpandDown) {
+          // Can only expand vertically - expand to the bottom of the grid
+          expandStrategy = 'vertical';
+          height = windowHeight * (1 + remainingRows);
+        } else {
+          // Cannot expand - standard size
+          expandStrategy = 'none';
+        }
+        
+        // Apply expanded position and size
+        windowEl.style.top = `${top}px`;
+        windowEl.style.left = `${left}px`;
+        windowEl.style.width = `${width}px`;
+        windowEl.style.height = `${height}px`;
+        
+        console.log(`Last window expanded using ${expandStrategy} strategy to fill empty spaces. Grid: ${columns}x${rows}, Window at: row ${row}, col ${col}`);
+      } else {
+        // Standard window positioning for non-last windows
+        const row = Math.floor(index / columns);
+        const col = index % columns;
+        
+        // Position - exact fit without gaps
+        const top = (row * windowHeight) + toolbarHeight;
+        const left = col * windowWidth;
+        
+        // Apply position and size - exact dimensions
+        windowEl.style.top = `${top}px`;
+        windowEl.style.left = `${left}px`;
+        windowEl.style.width = `${windowWidth}px`;
+        windowEl.style.height = `${windowHeight}px`;
+      }
     });
     
     return this;
