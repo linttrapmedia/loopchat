@@ -51,7 +51,7 @@ make clean
 
 ## Testing
 
-The project uses test fixtures in `test-fixtures.json` which contain sample data for threads, posts, and other elements.
+TBD
 
 ## Type Checking
 

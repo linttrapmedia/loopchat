@@ -1,99 +1,5 @@
 ((LOOPCHAT) => {
   /**
-   * Loads test data from test-fixtures.json file
-   * @returns {LoopChat} The LoopChat instance for chaining
-   */
-  LOOPCHAT.prototype.loadTestData = function () {
-    const loadData = async () => {
-      try {
-        const response = await fetch("./test-fixtures.json");
-        if (!response.ok) {
-          throw new Error(`Failed to load test data: ${response.status}`);
-        }
-
-        const data = await response.json();
-        this.testData = data;
-
-        // Process users data
-        if (data.users && Array.isArray(data.users)) {
-          console.log("Loading users data:", data.users);
-          this.users = {}; // Reset users map
-          data.users.forEach((user) => {
-            this.users[user.id] = user;
-          });
-          console.log("Users loaded:", Object.keys(this.users).length);
-        }
-
-        // Process agents data
-        if (data.agents && Array.isArray(data.agents)) {
-          console.log("Loading agents data:", data.agents);
-          this.agents = {}; // Reset agents map
-          data.agents.forEach((agent) => {
-            this.agents[agent.id] = agent;
-          });
-          console.log("Agents loaded:", Object.keys(this.agents).length);
-        }
-
-        // Process channels (threads)
-        this.channels = data.threads || [];
-
-        // Initialize tasks if they exist in test data
-        if (data.tasks && Array.isArray(data.tasks)) {
-          console.log("Loading tasks data:", data.tasks);
-          this.tasks = data.tasks;
-        } else {
-          // Initialize with empty tasks array
-          this.tasks = [];
-        }
-
-        // Set active channel if there are channels
-        if (this.channels.length > 0) {
-          this.activeChannel = this.channels[0].id;
-
-          // render the active channel content
-          const channelContent = document.getElementById("channel__content");
-          if (channelContent) {
-            this.renderChannelContent(this.activeChannel);
-          }
-
-          // Update UI to reflect the selected channel
-          const tabs = document.querySelectorAll(".channel__tab");
-          tabs.forEach((tab) => {
-            const tabEl = /** @type {HTMLElement} */ (tab);
-            if (tabEl.id === `channel__tab-${this.activeChannel}`) {
-              tabEl.style.backgroundColor = "#e0e0e0";
-              tabEl.style.borderLeft = "2px solid #000000";
-            } else {
-              tabEl.style.backgroundColor = "transparent";
-              tabEl.style.borderLeft = "2px solid transparent";
-            }
-          });
-        }
-
-        console.log("Test data loaded successfully:", this.testData);
-      } catch (error) {
-        console.error("Error loading test data:", error);
-
-        // Fallback to default channels if loading fails - use the same IDs as in test data
-        this.channels = [
-          { id: "general", title: "General" },
-          { id: "support", title: "Support" },
-          { id: "development", title: "Development" },
-        ];
-        this.activeChannel = "general";
-        
-        // Initialize empty tasks array
-        this.tasks = [];
-      }
-    };
-
-    // Execute the async function
-    loadData();
-
-    return this;
-  };
-
-  /**
    * Sends a message in the currently active channel
    * @param {string} message - The message text to send
    * @returns {LoopChat} The LoopChat instance for chaining
@@ -128,8 +34,8 @@
 
     // Update the channel window
     this.updateChannelWindow(this.activeChannel);
-    
-    // Clear the message input field 
+
+    // Clear the message input field
     const messageInputField = document.getElementById("message__input_field");
     if (messageInputField) {
       messageInputField.value = "";
@@ -181,20 +87,20 @@
 
     // Create a task for this response (simulating agent doing work)
     const taskData = {
-      title: `Process request: "${message.substring(0, 30)}${message.length > 30 ? '...' : ''}"`,
+      title: `Process request: "${message.substring(0, 30)}${message.length > 30 ? "..." : ""}"`,
       description: `Process and respond to user query: "${message}"\n\nResponse: "${responsePost.envelope.message}"`,
       status: Math.random() > 0.3 ? "completed" : "in_progress", // Randomly complete some tasks
-      priority: Math.random() > 0.7 ? "high" : (Math.random() > 0.4 ? "medium" : "low"), // Random priority
+      priority: Math.random() > 0.7 ? "high" : Math.random() > 0.4 ? "medium" : "low", // Random priority
       agentId: authorId,
       createdBy: "user1", // Default to first user
       channelId: this.activeChannel,
-      postId: responsePost.id
+      postId: responsePost.id,
     };
-    
+
     // If task is completed, add completedAt timestamp
     if (taskData.status === "completed") {
       taskData.completedAt = new Date().toISOString();
-      
+
       // Add completion to history
       if (!taskData.history) {
         taskData.history = [];
@@ -203,10 +109,10 @@
         timestamp: taskData.completedAt,
         action: "status_changed_to_completed",
         agentId: authorId,
-        details: "Task automatically completed"
+        details: "Task automatically completed",
       });
     }
-    
+
     // Create the task
     this.createTask(taskData);
 
@@ -223,18 +129,21 @@
    */
   LOOPCHAT.prototype.activateChannel = function (channelId) {
     console.log("Activating channel:", channelId);
-    
+
     // Check if channel exists
-    const channelExists = this.channels.some(c => c.id === channelId);
+    const channelExists = this.channels.some((c) => c.id === channelId);
     if (!channelExists) {
       console.error("Tried to activate non-existent channel:", channelId);
-      console.log("Available channels:", this.channels.map(c => c.id));
+      console.log(
+        "Available channels:",
+        this.channels.map((c) => c.id)
+      );
       return this;
     }
-    
+
     // Open or focus the channel window
     this.openChannelWindow(channelId);
-    
+
     return this;
   };
 
@@ -258,7 +167,7 @@
   LOOPCHAT.prototype.createTask = function (taskData) {
     // Generate an ID if not provided
     const taskId = taskData.id || `task_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-    
+
     // Create the task object with defaults
     const task = {
       id: taskId,
@@ -277,20 +186,20 @@
           timestamp: new Date().toISOString(),
           action: "created",
           agentId: taskData.createdBy || "system",
-          details: "Task created"
-        }
-      ]
+          details: "Task created",
+        },
+      ],
     };
-    
+
     // Add to tasks array
     if (!this.tasks) {
       this.tasks = [];
     }
     this.tasks.push(task);
-    
+
     // Update the tasks window if it exists
     this.updateTasksWindow();
-    
+
     console.log("Task created:", task);
     return task;
   };
@@ -305,54 +214,55 @@
     if (!this.tasks) {
       return null;
     }
-    
+
     // Find the task
-    const taskIndex = this.tasks.findIndex(t => t.id === taskId);
+    const taskIndex = this.tasks.findIndex((t) => t.id === taskId);
     if (taskIndex === -1) {
       console.error("Task not found:", taskId);
       return null;
     }
-    
+
     const task = this.tasks[taskIndex];
-    
+
     // Create a history entry for the update
     const historyEntry = {
       timestamp: new Date().toISOString(),
       action: "updated",
       agentId: updateData.updatedBy || "system",
-      details: "Task updated"
+      details: "Task updated",
     };
-    
+
     // Special handling for status changes
     if (updateData.status && updateData.status !== task.status) {
       historyEntry.action = `status_changed_to_${updateData.status}`;
       historyEntry.details = `Status changed from '${task.status}' to '${updateData.status}'`;
-      
+
       // Set completedAt timestamp if the status is changing to 'completed'
       if (updateData.status === "completed" && task.status !== "completed") {
         updateData.completedAt = new Date().toISOString();
       }
     }
-    
+
     // Add the history entry
     if (!task.history) {
       task.history = [];
     }
     task.history.push(historyEntry);
-    
+
     // Update the task fields
-    Object.keys(updateData).forEach(key => {
-      if (key !== 'id' && key !== 'history') { // Don't allow updating ID or history directly
+    Object.keys(updateData).forEach((key) => {
+      if (key !== "id" && key !== "history") {
+        // Don't allow updating ID or history directly
         task[key] = updateData[key];
       }
     });
-    
+
     // Update the tasks array
     this.tasks[taskIndex] = task;
-    
+
     // Update the tasks window if it exists
     this.updateTasksWindow();
-    
+
     console.log("Task updated:", task);
     return task;
   };
@@ -370,32 +280,32 @@
     if (!this.tasks) {
       return [];
     }
-    
+
     // If no filters, return all tasks
     if (Object.keys(filters).length === 0) {
       return [...this.tasks];
     }
-    
+
     // Apply filters
-    return this.tasks.filter(task => {
+    return this.tasks.filter((task) => {
       let matches = true;
-      
+
       if (filters.status && task.status !== filters.status) {
         matches = false;
       }
-      
+
       if (filters.agentId && task.agentId !== filters.agentId) {
         matches = false;
       }
-      
+
       if (filters.channelId && task.channelId !== filters.channelId) {
         matches = false;
       }
-      
+
       if (filters.priority && task.priority !== filters.priority) {
         matches = false;
       }
-      
+
       return matches;
     });
   };
@@ -409,8 +319,8 @@
     if (!this.tasks) {
       return null;
     }
-    
-    return this.tasks.find(task => task.id === taskId) || null;
+
+    return this.tasks.find((task) => task.id === taskId) || null;
   };
 
   /**
@@ -429,9 +339,9 @@
           timestamp: new Date().toISOString(),
           action: "cancelled",
           agentId: cancelledBy,
-          details: reason
-        }
-      ]
+          details: reason,
+        },
+      ],
     });
   };
 
@@ -446,7 +356,7 @@
     if (!task) {
       return null;
     }
-    
+
     // Create a new task based on the original
     const newTaskData = {
       title: `Rerun: ${task.title}`,
@@ -461,11 +371,11 @@
           timestamp: new Date().toISOString(),
           action: "created",
           agentId: rerunBy,
-          details: `Task rerun from task ID: ${taskId}`
-        }
-      ]
+          details: `Task rerun from task ID: ${taskId}`,
+        },
+      ],
     };
-    
+
     return this.createTask(newTaskData);
   };
 })(window.LoopChat);

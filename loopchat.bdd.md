@@ -10,18 +10,12 @@ Feature: Application Initialization
   I want the application to initialize properly
   So that I can start using it immediately
 
-  Scenario: Basic initialization with default settings
+  Scenario: Basic initialization with default settings and data
     Given the LoopChat application is loaded in a browser
     When the application is initialized without specific parameters
     Then the application should display the default UI
     And the application should show at least one default channel
-
-  Scenario: Initialization with test data
-    Given the LoopChat application is loaded in a browser
-    When the application is initialized
-    Then the application should load test data from test-fixtures.json
-    And the application should populate channels based on the test data
-    And the application should activate the first channel by default
+    And the application should use all data passed in to render initial render state
 ```
 
 ## Channel Management
