@@ -5,44 +5,50 @@
    */
   LOOPCHAT.prototype.renderRoot = function () {
     // Define applyStyles helper if it doesn't exist
-    if (typeof this.applyStyles !== 'function') {
-      this.applyStyles = function(element, styles) {
+    if (typeof this.applyStyles !== "function") {
+      this.applyStyles = function (element, styles) {
         if (!element || !styles) return element;
-        
-        Object.keys(styles).forEach(key => {
+
+        Object.keys(styles).forEach((key) => {
           element.style[key] = styles[key];
         });
-        
+
         return element;
       };
     }
-    
+
     // Ensure design is loaded, if not, use fallback values
     if (!this.design) {
       console.warn("Design system not loaded, using fallback values");
       this.design = {
         typography: {
           fontFamily: { primary: "monospace" },
-          fontSize: { base: "12px" }
+          fontSize: { base: "12px" },
         },
         colors: {
           ui: { background: "#f5f6fa" },
           text: { primary: "#000000", inverted: "#ffffff" },
-          primary: { main: "#000000", light: "#222222" }
+          primary: { main: "#000000", light: "#222222" },
         },
         spacing: {
-          xxs: "2px", xs: "4px", sm: "6px", md: "8px", 
-          lg: "12px", xl: "16px", xxl: "20px", xxxl: "24px"
+          xxs: "2px",
+          xs: "4px",
+          sm: "6px",
+          md: "8px",
+          lg: "12px",
+          xl: "16px",
+          xxl: "20px",
+          xxxl: "24px",
         },
         borders: { radius: { sm: "3px" }, width: { thin: "1px" } },
         shadows: { md: "0 2px 5px rgba(0,0,0,0.2)" },
         zIndex: { toolbar: "50", dropdown: "9999" },
         components: {
-          toolbar: { height: "30px", background: "#000000", color: "#ffffff" }
-        }
+          toolbar: { height: "30px", background: "#000000", color: "#ffffff" },
+        },
       };
     }
-    
+
     // Apply design tokens to root element
     this.applyStyles(this.root, {
       width: "100%",
@@ -52,7 +58,7 @@
       fontFamily: this.design.typography.fontFamily.primary,
       fontSize: this.design.typography.fontSize.base,
       backgroundColor: this.design.colors.ui.background,
-      color: this.design.colors.text.primary
+      color: this.design.colors.text.primary,
     });
 
     // Create a desktop container for all windows
@@ -62,7 +68,7 @@
       position: "relative",
       width: "100%",
       height: "100%",
-      overflow: "hidden"
+      overflow: "hidden",
     });
 
     // Create a toolbar at the top
@@ -79,7 +85,7 @@
       display: "flex",
       alignItems: "center",
       padding: `0 ${this.design.spacing.lg}`,
-      zIndex: this.design.zIndex.toolbar
+      zIndex: this.design.zIndex.toolbar,
     });
 
     // App title
@@ -88,7 +94,7 @@
     this.applyStyles(title, {
       fontWeight: this.design.typography.fontWeight.bold,
       fontSize: this.design.typography.fontSize.base,
-      marginRight: this.design.spacing.xxl
+      marginRight: this.design.spacing.xxl,
     });
 
     toolbar.appendChild(title);
@@ -114,7 +120,7 @@
       border: "0",
       borderRadius: this.design.borders.radius.sm,
       cursor: "pointer",
-      fontSize: this.design.typography.fontSize.md
+      fontSize: this.design.typography.fontSize.md,
     });
 
     // Dropdown menu
@@ -132,9 +138,9 @@
       zIndex: this.getZIndex("dropdown"),
       minWidth: "200px",
       maxHeight: "400px",
-      overflow: "auto"
+      overflow: "auto",
     });
-    
+
     // Window Management section header
     const windowManagementHeader = document.createElement("div");
     windowManagementHeader.innerText = "WINDOW MANAGEMENT";
@@ -145,9 +151,9 @@
       fontSize: this.design.typography.fontSize.xs,
       fontWeight: this.design.typography.fontWeight.bold,
       textTransform: "uppercase",
-      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
     });
-    
+
     dropdownMenu.appendChild(windowManagementHeader);
 
     // Show all windows option
@@ -158,7 +164,7 @@
       cursor: "pointer",
       color: this.design.colors.text.primary,
       fontSize: this.design.typography.fontSize.sm,
-      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
     });
 
     showAllOption.addEventListener("mouseover", () => {
@@ -188,7 +194,7 @@
       padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
       cursor: "pointer",
       color: this.design.colors.text.primary,
-      fontSize: this.design.typography.fontSize.sm
+      fontSize: this.design.typography.fontSize.sm,
     });
 
     cascadeOption.addEventListener("mouseover", () => {
@@ -228,7 +234,7 @@
       cursor: "pointer",
       color: this.design.colors.text.primary,
       fontSize: this.design.typography.fontSize.sm,
-      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+      borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
     });
 
     minimizeAllOption.addEventListener("mouseover", () => {
@@ -258,7 +264,7 @@
       padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
       cursor: "pointer",
       color: this.design.colors.text.primary,
-      fontSize: this.design.typography.fontSize.sm
+      fontSize: this.design.typography.fontSize.sm,
     });
 
     tileOption.addEventListener("mouseover", () => {
@@ -285,19 +291,19 @@
     autoTileToggle.style.justifyContent = "space-between";
     autoTileToggle.style.padding = `${this.design.spacing.sm} ${this.design.spacing.lg}`;
     autoTileToggle.style.borderBottom = `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`;
-    
+
     const autoTileLabel = document.createElement("span");
     autoTileLabel.innerText = "Auto-tile Windows";
     autoTileLabel.style.fontSize = this.design.typography.fontSize.sm;
     autoTileLabel.style.color = this.design.colors.text.primary;
-    
+
     const toggleSwitch = document.createElement("div");
     toggleSwitch.className = "toggle-switch";
     toggleSwitch.style.position = "relative";
     toggleSwitch.style.display = "inline-block";
     toggleSwitch.style.width = "36px";
     toggleSwitch.style.height = "20px";
-    
+
     const toggleInput = document.createElement("input");
     toggleInput.type = "checkbox";
     toggleInput.id = "auto-tile-checkbox";
@@ -305,7 +311,7 @@
     toggleInput.style.opacity = "0";
     toggleInput.style.width = "0";
     toggleInput.style.height = "0";
-    
+
     const toggleSlider = document.createElement("span");
     toggleSlider.className = "toggle-slider";
     toggleSlider.style.position = "absolute";
@@ -317,7 +323,7 @@
     toggleSlider.style.backgroundColor = this.autoTileWindows ? this.design.colors.primary.accent : "#ccc";
     toggleSlider.style.borderRadius = "10px";
     toggleSlider.style.transition = "all 0.2s ease";
-    
+
     // Toggle indicator
     const toggleIndicator = document.createElement("span");
     toggleIndicator.style.position = "absolute";
@@ -329,62 +335,62 @@
     toggleIndicator.style.backgroundColor = "#fff";
     toggleIndicator.style.borderRadius = "50%";
     toggleIndicator.style.transition = "all 0.2s ease";
-    
+
     // We'll handle the toggle events through the container click handler only
     // to avoid event propagation issues and ensure consistent behavior
-    
+
     // Assemble toggle switch
     toggleSlider.appendChild(toggleIndicator);
     toggleSwitch.appendChild(toggleInput);
     toggleSwitch.appendChild(toggleSlider);
-    
+
     autoTileToggle.appendChild(autoTileLabel);
     autoTileToggle.appendChild(toggleSwitch);
-    
+
     // Create a function to update window arrangement options based on auto-tile state
     const updateWindowArrangementOptions = (isEnabled) => {
-      console.log(`Updating cascade and tile options. Auto-tile is: ${isEnabled ? 'ON' : 'OFF'}`);
+      console.log(`Updating cascade and tile options. Auto-tile is: ${isEnabled ? "ON" : "OFF"}`);
       // Only disable cascade and tile options, not minimizeAllOption
       const buttons = [cascadeOption, tileOption];
-      
+
       // First ensure all buttons have the _disabled property defined
-      buttons.forEach(button => {
+      buttons.forEach((button) => {
         if (button._disabled === undefined) {
           button._disabled = false;
         }
       });
-      
+
       if (isEnabled) {
         // Disable all buttons
-        buttons.forEach(button => {
+        buttons.forEach((button) => {
           // Visual disabling
           button.style.opacity = "0.5";
           button.style.color = this.design.colors.text.tertiary;
           button.style.cursor = "not-allowed";
           button.title = "Disabled when auto-tile is on";
-          
+
           // Functional disabling - clone the node to remove all event listeners
           if (!button._disabled) {
             console.log(`Disabling button: ${button.innerText}`);
             const clone = button.cloneNode(true);
-            
+
             // Make sure the button has a parent before replacing it
             if (button.parentNode) {
               button.parentNode.replaceChild(clone, button);
             } else {
               console.warn(`Button ${button.innerText} has no parent node, cannot replace`);
             }
-            
+
             // Store reference to original button
             clone._originalButton = button;
             clone._disabled = true;
-            
+
             // Add a click handler that does nothing but prevent event propagation
             // Store button text before adding event listener to avoid scope issues
             const buttonText = clone.innerText;
             const self = this; // Store reference to 'this' for use in event handler
-            
-            clone.addEventListener("click", function(e) {
+
+            clone.addEventListener("click", function (e) {
               e.stopPropagation();
               e.preventDefault();
               console.log(`Button ${buttonText} disabled - auto-tile is on`);
@@ -396,7 +402,7 @@
               }, 300);
               return false;
             });
-            
+
             // Replace the reference in our local scope
             if (button === cascadeOption) cascadeOption = clone;
             if (button === tileOption) tileOption = clone;
@@ -404,11 +410,11 @@
         });
       } else {
         // Re-enable all buttons by restoring originals if they were disabled
-        buttons.forEach(button => {
+        buttons.forEach((button) => {
           // Get the button text for logging
           const buttonText = button.innerText || "unknown";
           console.log(`Re-enabling button: ${buttonText}`);
-          
+
           if (button._disabled && button._originalButton) {
             // We have the original button, so restore it with all event handlers
             if (button.parentNode) {
@@ -418,10 +424,10 @@
               button._originalButton.style.cursor = "pointer";
               button._originalButton.style.backgroundColor = "transparent";
               button._originalButton.title = "";
-              
+
               // Now replace the node
               button.parentNode.replaceChild(button._originalButton, button);
-              
+
               // Update our references
               if (button === cascadeOption) cascadeOption = button._originalButton;
               if (button === tileOption) tileOption = button._originalButton;
@@ -440,54 +446,50 @@
         });
       }
     };
-    
+
     // Set initial state of window arrangement options
     updateWindowArrangementOptions(this.autoTileWindows);
-    
+
     // Add click handler to the entire toggle container
     autoTileToggle.addEventListener("click", (e) => {
       // Prevent the event from closing the dropdown
       e.stopPropagation();
-      
+
       // Toggle the state directly with immediate UI update
       this.autoTileWindows = !this.autoTileWindows;
       console.log("Auto-tile toggled to:", this.autoTileWindows);
-      
+
       // Force immediate UI update
       const isOn = this.autoTileWindows;
-      
+
       // Set background color of slider
-      toggleSlider.style.backgroundColor = isOn 
-        ? this.design.colors.primary.accent 
-        : "#ccc";
-      
+      toggleSlider.style.backgroundColor = isOn ? this.design.colors.primary.accent : "#ccc";
+
       // Set position of indicator
-      toggleIndicator.style.left = isOn 
-        ? "18px" 
-        : "2px";
-      
+      toggleIndicator.style.left = isOn ? "18px" : "2px";
+
       // Update checkbox state
       toggleInput.checked = isOn;
-      
+
       // Update window arrangement options
       updateWindowArrangementOptions(isOn);
-      
+
       // If enabled, tile windows immediately
       if (isOn) {
         setTimeout(() => this.tileWindows(), 50);
       }
-      
+
       // Don't hide dropdown - let user see the effect
       return false;
     });
-    
+
     // Add window management options to dropdown menu
     dropdownMenu.appendChild(showAllOption);
     dropdownMenu.appendChild(minimizeAllOption);
     dropdownMenu.appendChild(cascadeOption);
     dropdownMenu.appendChild(tileOption);
     dropdownMenu.appendChild(autoTileToggle);
-    
+
     // Add minimized windows section
     const minimizedWindowsHeader = document.createElement("div");
     minimizedWindowsHeader.id = "minimized-windows-header";
@@ -500,15 +502,15 @@
       fontWeight: this.design.typography.fontWeight.bold,
       textTransform: "uppercase",
       borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
-      marginTop: this.design.spacing.sm
+      marginTop: this.design.spacing.sm,
     });
-    
+
     dropdownMenu.appendChild(minimizedWindowsHeader);
-    
+
     // Container for minimized windows
     const minimizedWindowsContainer = document.createElement("div");
     minimizedWindowsContainer.id = "minimized-windows-container";
-    
+
     // No windows message (shown when empty)
     const noWindowsMessage = document.createElement("div");
     noWindowsMessage.id = "no-minimized-windows-message";
@@ -518,35 +520,35 @@
       color: this.design.colors.text.tertiary,
       fontStyle: "italic",
       fontSize: this.design.typography.fontSize.sm,
-      textAlign: "center"
+      textAlign: "center",
     });
-    
+
     minimizedWindowsContainer.appendChild(noWindowsMessage);
     dropdownMenu.appendChild(minimizedWindowsContainer);
 
     // Toggle dropdown visibility
     dropdownToggle.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent click from reaching document
-      
+
       // Update the minimized windows section
       this.updateMainMenuMinimizedWindows();
-      
+
       // Update toggle state to reflect current setting
       const toggleInput = document.getElementById("auto-tile-checkbox");
       const toggleSlider = document.querySelector(".toggle-slider");
       const toggleIndicator = toggleSlider?.querySelector("span");
-      
+
       if (toggleInput && toggleSlider && toggleIndicator) {
         toggleInput.checked = this.autoTileWindows;
         toggleSlider.style.backgroundColor = this.autoTileWindows ? this.design.colors.primary.accent : "#ccc";
         toggleIndicator.style.left = this.autoTileWindows ? "18px" : "2px";
-        
+
         // Force an update of all button states whenever dropdown is opened
         // This ensures visual state is consistent with functionality
         console.log("Dropdown opened, refreshing window arrangement options");
         updateWindowArrangementOptions(this.autoTileWindows);
       }
-      
+
       if (dropdownMenu.style.display === "none") {
         dropdownMenu.style.display = "block";
       } else {
@@ -574,7 +576,7 @@
 
     return this;
   };
-  
+
   /**
    * Updates the minimized windows section in the main menu dropdown
    * @returns {LoopChat} The LoopChat instance for chaining
@@ -582,29 +584,29 @@
   LOOPCHAT.prototype.updateMainMenuMinimizedWindows = function () {
     const container = document.getElementById("minimized-windows-container");
     const noWindowsMessage = document.getElementById("no-minimized-windows-message");
-    
+
     if (!container) return this;
-    
+
     // Clear existing window items (except the no windows message)
-    Array.from(container.children).forEach(child => {
+    Array.from(container.children).forEach((child) => {
       if (child.id !== "no-minimized-windows-message") {
         child.remove();
       }
     });
-    
+
     // Get all minimized windows
-    const minimizedWindows = this.windows.filter(window => window.minimized);
-    
+    const minimizedWindows = this.windows.filter((window) => window.minimized);
+
     // Show/hide no windows message
     if (noWindowsMessage) {
       noWindowsMessage.style.display = minimizedWindows.length > 0 ? "none" : "block";
     }
-    
+
     // Add items for each minimized window
-    minimizedWindows.forEach(window => {
+    minimizedWindows.forEach((window) => {
       // Get appropriate label based on window type
       let windowLabel = "Window";
-      
+
       if (window.type === "channels") {
         windowLabel = "Channels";
       } else if (window.type === "agents") {
@@ -612,7 +614,7 @@
       } else if (window.type === "sidebar") {
         windowLabel = "Directory";
       } else if (window.type === "input") {
-        windowLabel = "Message Input";
+        windowLabel = "Messenger";
       } else if (window.type === "tasks") {
         windowLabel = "Tasks";
       } else if (window.type === "task_details" && window.taskId) {
@@ -631,7 +633,7 @@
       } else if (window.post) {
         // For message windows from the original implementation
         const post = window.post;
-        
+
         // Get author name if available
         if (post.author) {
           let authorName = post.author;
@@ -643,40 +645,40 @@
           windowLabel = authorName;
         }
       }
-      
+
       // Create window item
       const windowItem = document.createElement("div");
       windowItem.id = `menu-window-item-${window.id}`;
       windowItem.innerText = windowLabel;
-      
+
       this.applyStyles(windowItem, {
         padding: `${this.design.spacing.sm} ${this.design.spacing.lg}`,
         cursor: "pointer",
         color: this.design.colors.text.primary,
         fontSize: this.design.typography.fontSize.sm,
-        borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`
+        borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
       });
-      
+
       windowItem.addEventListener("mouseover", () => {
         windowItem.style.backgroundColor = this.design.colors.ui.hover;
       });
-      
+
       windowItem.addEventListener("mouseout", () => {
         windowItem.style.backgroundColor = "transparent";
       });
-      
+
       windowItem.addEventListener("click", () => {
         // Hide dropdown
         document.getElementById("main-menu-content").style.display = "none";
-        
+
         // Restore window
         this.windowRestore(window.id);
       });
-      
+
       // Add item to container
       container.appendChild(windowItem);
     });
-    
+
     return this;
   };
 
@@ -1364,7 +1366,7 @@
     windowHeader.style.userSelect = "none";
 
     const windowTitle = document.createElement("div");
-    windowTitle.innerText = "Message Input";
+    windowTitle.innerText = "Messenger";
     windowTitle.style.fontSize = "11px";
     windowTitle.style.fontWeight = "bold";
 
@@ -1384,21 +1386,7 @@
       this.windowMinimize("window-message-input");
     });
 
-    const closeButton = document.createElement("button");
-    closeButton.innerHTML = "&#10005;";
-    closeButton.style.background = "none";
-    closeButton.style.border = "none";
-    closeButton.style.color = "#ffffff";
-    closeButton.style.cursor = "pointer";
-    closeButton.style.fontSize = "12px";
-    closeButton.style.padding = "0 4px";
-    closeButton.addEventListener("click", () => {
-      this.windowClose("window-message-input");
-    });
-
     windowControls.appendChild(minimizeButton);
-    windowControls.appendChild(closeButton);
-
     windowHeader.appendChild(windowTitle);
     windowHeader.appendChild(windowControls);
     inputWindow.appendChild(windowHeader);
@@ -1497,7 +1485,7 @@
 
     return this;
   };
-  
+
   /**
    * Renders the tasks window - uncloseable, displays all tasks
    * @returns {LoopChat} The LoopChat instance for chaining
@@ -1519,7 +1507,7 @@
       backgroundColor: this.design.colors.ui.surface,
       border: `${this.design.borders.width.thin} solid ${this.design.colors.primary.main}`,
       boxShadow: this.design.shadows.md,
-      zIndex: this.design.zIndex.windowFocus // Higher than other windows by default
+      zIndex: this.design.zIndex.windowFocus, // Higher than other windows by default
     });
 
     // Add click handler to focus this window when clicked anywhere
@@ -1538,20 +1526,20 @@
       backgroundColor: this.design.components.window.header.background,
       color: this.design.components.window.header.color,
       cursor: "move",
-      userSelect: "none"
+      userSelect: "none",
     });
 
     const windowTitle = document.createElement("div");
     windowTitle.innerText = "Tasks";
     this.applyStyles(windowTitle, {
       fontSize: this.design.components.window.header.fontSize,
-      fontWeight: this.design.typography.fontWeight.bold
+      fontWeight: this.design.typography.fontWeight.bold,
     });
 
     const windowControls = document.createElement("div");
     this.applyStyles(windowControls, {
       display: "flex",
-      gap: this.design.spacing.sm
+      gap: this.design.spacing.sm,
     });
 
     const minimizeButton = document.createElement("button");
@@ -1562,7 +1550,7 @@
       color: this.design.colors.text.inverted,
       cursor: "pointer",
       fontSize: this.design.typography.fontSize.base,
-      padding: `0 ${this.design.spacing.xs}`
+      padding: `0 ${this.design.spacing.xs}`,
     });
     minimizeButton.addEventListener("click", () => {
       this.windowMinimize("window-tasks");
@@ -1583,7 +1571,7 @@
       display: "flex",
       flexDirection: "column",
       overflow: "hidden",
-      backgroundColor: this.design.colors.ui.background
+      backgroundColor: this.design.colors.ui.background,
     });
 
     // Tasks toolbar (filters, search, actions)
@@ -1595,7 +1583,7 @@
       alignItems: "center",
       padding: this.design.spacing.md,
       borderBottom: `${this.design.borders.width.thin} solid ${this.design.colors.ui.divider}`,
-      backgroundColor: this.design.colors.ui.hover
+      backgroundColor: this.design.colors.ui.hover,
     });
 
     // Left side - filters
@@ -1603,14 +1591,14 @@
     this.applyStyles(filtersContainer, {
       display: "flex",
       gap: this.design.spacing.md,
-      alignItems: "center"
+      alignItems: "center",
     });
 
     // Filter label
     const filterLabel = document.createElement("span");
     filterLabel.innerText = "Filter:";
     this.applyStyles(filterLabel, {
-      fontSize: this.design.typography.fontSize.base
+      fontSize: this.design.typography.fontSize.base,
     });
     filtersContainer.appendChild(filterLabel);
 
@@ -1620,28 +1608,28 @@
       padding: `${this.design.spacing.xxs} ${this.design.spacing.xs}`,
       fontSize: this.design.typography.fontSize.base,
       border: `${this.design.borders.width.thin} solid ${this.design.colors.ui.border}`,
-      borderRadius: this.design.borders.radius.sm
+      borderRadius: this.design.borders.radius.sm,
     });
-    
+
     const statusOptions = [
       { value: "", text: "All Statuses" },
       { value: "pending", text: "Pending" },
       { value: "in_progress", text: "In Progress" },
       { value: "completed", text: "Completed" },
-      { value: "cancelled", text: "Cancelled" }
+      { value: "cancelled", text: "Cancelled" },
     ];
-    
-    statusOptions.forEach(option => {
+
+    statusOptions.forEach((option) => {
       const optionEl = document.createElement("option");
       optionEl.value = option.value;
       optionEl.text = option.text;
       statusSelect.appendChild(optionEl);
     });
-    
+
     statusSelect.addEventListener("change", () => {
       this.updateTasksWindow();
     });
-    
+
     filtersContainer.appendChild(statusSelect);
 
     // Priority filter
@@ -1650,27 +1638,27 @@
       padding: `${this.design.spacing.xxs} ${this.design.spacing.xs}`,
       fontSize: this.design.typography.fontSize.base,
       border: `${this.design.borders.width.thin} solid ${this.design.colors.ui.border}`,
-      borderRadius: this.design.borders.radius.sm
+      borderRadius: this.design.borders.radius.sm,
     });
-    
+
     const priorityOptions = [
       { value: "", text: "All Priorities" },
       { value: "high", text: "High" },
       { value: "medium", text: "Medium" },
-      { value: "low", text: "Low" }
+      { value: "low", text: "Low" },
     ];
-    
-    priorityOptions.forEach(option => {
+
+    priorityOptions.forEach((option) => {
       const optionEl = document.createElement("option");
       optionEl.value = option.value;
       optionEl.text = option.text;
       prioritySelect.appendChild(optionEl);
     });
-    
+
     prioritySelect.addEventListener("change", () => {
       this.updateTasksWindow();
     });
-    
+
     filtersContainer.appendChild(prioritySelect);
 
     // Right side - actions
@@ -1678,14 +1666,14 @@
     this.applyStyles(actionsContainer, {
       display: "flex",
       gap: this.design.spacing.md,
-      alignItems: "center"
+      alignItems: "center",
     });
 
     // Use the createButton helper instead of manual styling
     const newTaskButton = this.createButton("New Task", "primary", {
       onClick: () => {
         this.showNewTaskDialog();
-      }
+      },
     });
     actionsContainer.appendChild(newTaskButton);
 
@@ -1693,7 +1681,7 @@
     const refreshButton = this.createButton("Refresh", "secondary", {
       onClick: () => {
         this.updateTasksWindow();
-      }
+      },
     });
     actionsContainer.appendChild(refreshButton);
 
@@ -1708,7 +1696,7 @@
     this.applyStyles(tasksListContainer, {
       flex: "1",
       overflow: "auto",
-      padding: "0"
+      padding: "0",
     });
 
     // Tasks table
@@ -1718,30 +1706,30 @@
       width: "100%",
       borderCollapse: "collapse",
       fontSize: this.design.typography.fontSize.base,
-      tableLayout: "fixed"
+      tableLayout: "fixed",
     });
-    
+
     // Table header
     const tableHeader = document.createElement("thead");
     this.applyStyles(tableHeader, {
       position: "sticky",
       top: "0",
       backgroundColor: this.design.components.table.headerBackground,
-      zIndex: "1"
+      zIndex: "1",
     });
-    
+
     const headerRow = document.createElement("tr");
-    
+
     const columns = [
       { id: "status", label: "Status", width: "10%" },
       { id: "title", label: "Title", width: "30%" },
       { id: "agent", label: "Agent", width: "15%" },
       { id: "priority", label: "Priority", width: "10%" },
       { id: "created", label: "Created", width: "15%" },
-      { id: "actions", label: "Actions", width: "20%" }
+      { id: "actions", label: "Actions", width: "20%" },
     ];
-    
-    columns.forEach(column => {
+
+    columns.forEach((column) => {
       const th = document.createElement("th");
       th.innerText = column.label;
       this.applyStyles(th, {
@@ -1749,19 +1737,19 @@
         textAlign: "left",
         fontWeight: this.design.typography.fontWeight.bold,
         borderBottom: `${this.design.borders.width.thin} solid ${this.design.components.table.borderColor}`,
-        width: column.width
+        width: column.width,
       });
       headerRow.appendChild(th);
     });
-    
+
     tableHeader.appendChild(headerRow);
     tasksTable.appendChild(tableHeader);
-    
+
     // Table body - will be populated in updateTasksWindow
     const tableBody = document.createElement("tbody");
     tableBody.id = "tasks__table-body";
     tasksTable.appendChild(tableBody);
-    
+
     tasksListContainer.appendChild(tasksTable);
     windowContent.appendChild(tasksListContainer);
 
@@ -1779,7 +1767,7 @@
       id: "window-tasks",
       type: "tasks",
       minimized: false,
-      uncloseable: true
+      uncloseable: true,
     });
 
     // Populate with initial tasks
@@ -1787,7 +1775,7 @@
 
     return this;
   };
-  
+
   /**
    * Updates the tasks window with current tasks
    * @returns {LoopChat} The LoopChat instance for chaining
@@ -1795,21 +1783,21 @@
   LOOPCHAT.prototype.updateTasksWindow = function () {
     const tableBody = document.getElementById("tasks__table-body");
     if (!tableBody) return this;
-    
+
     // Clear current content
     tableBody.innerHTML = "";
-    
+
     // Get filters
     const statusFilter = document.querySelector("#window-tasks select:first-of-type")?.value || "";
     const priorityFilter = document.querySelector("#window-tasks select:last-of-type")?.value || "";
-    
+
     // Get filtered tasks
     const filters = {};
     if (statusFilter) filters.status = statusFilter;
     if (priorityFilter) filters.priority = priorityFilter;
-    
+
     const tasks = this.getTasks(filters);
-    
+
     if (tasks.length === 0) {
       // No tasks message
       const noTasksRow = document.createElement("tr");
@@ -1818,67 +1806,68 @@
       this.applyStyles(noTasksCell, {
         padding: this.design.spacing.xxl,
         textAlign: "center",
-        color: this.design.colors.text.tertiary
+        color: this.design.colors.text.tertiary,
       });
       noTasksCell.innerText = "No tasks found";
       noTasksRow.appendChild(noTasksCell);
       tableBody.appendChild(noTasksRow);
     } else {
       // Render each task
-      tasks.forEach(task => {
+      tasks.forEach((task) => {
         const taskRow = document.createElement("tr");
         taskRow.id = `task-row-${task.id}`;
         this.applyStyles(taskRow, {
-          borderBottom: `${this.design.borders.width.thin} solid ${this.design.components.table.borderColor}`
+          borderBottom: `${this.design.borders.width.thin} solid ${this.design.components.table.borderColor}`,
         });
-        
+
         // Alternate row background
         if (tasks.indexOf(task) % 2 === 0) {
           taskRow.style.backgroundColor = this.design.components.table.rowEvenBackground;
         } else {
           taskRow.style.backgroundColor = this.design.components.table.rowOddBackground;
         }
-        
+
         // Hover effect
         taskRow.addEventListener("mouseover", () => {
           taskRow.style.backgroundColor = this.design.components.table.rowHoverBackground;
         });
-        
+
         taskRow.addEventListener("mouseout", () => {
-          taskRow.style.backgroundColor = tasks.indexOf(task) % 2 === 0 
-            ? this.design.components.table.rowEvenBackground 
-            : this.design.components.table.rowOddBackground;
+          taskRow.style.backgroundColor =
+            tasks.indexOf(task) % 2 === 0
+              ? this.design.components.table.rowEvenBackground
+              : this.design.components.table.rowOddBackground;
         });
-        
+
         // Status cell
         const statusCell = document.createElement("td");
         this.applyStyles(statusCell, {
-          padding: this.design.spacing.md
+          padding: this.design.spacing.md,
         });
-        
+
         // Use the createStatusBadge helper function
         const statusBadge = this.createStatusBadge(task.status);
-        
+
         statusCell.appendChild(statusBadge);
         taskRow.appendChild(statusCell);
-        
+
         // Title cell
         const titleCell = document.createElement("td");
         titleCell.style.padding = "8px";
         titleCell.style.fontWeight = "bold";
         titleCell.innerText = task.title;
-        
+
         // Add description as tooltip if available
         if (task.description) {
           titleCell.title = task.description;
         }
-        
+
         taskRow.appendChild(titleCell);
-        
+
         // Agent cell
         const agentCell = document.createElement("td");
         agentCell.style.padding = "8px";
-        
+
         // Get agent name if available
         let agentName = task.agentId || "Unassigned";
         if (task.agentId && this.agents && this.agents[task.agentId]) {
@@ -1886,21 +1875,21 @@
         } else if (task.agentId && this.users && this.users[task.agentId]) {
           agentName = this.users[task.agentId].name;
         }
-        
+
         agentCell.innerText = agentName;
         taskRow.appendChild(agentCell);
-        
+
         // Priority cell
         const priorityCell = document.createElement("td");
         priorityCell.style.padding = "8px";
-        
+
         const priorityBadge = document.createElement("span");
         priorityBadge.innerText = task.priority;
         priorityBadge.style.padding = "2px 6px";
         priorityBadge.style.borderRadius = "12px";
         priorityBadge.style.fontSize = "10px";
         priorityBadge.style.textTransform = "uppercase";
-        
+
         // Priority color
         switch (task.priority) {
           case "high":
@@ -1916,28 +1905,28 @@
             priorityBadge.style.color = "#606060";
             break;
         }
-        
+
         priorityCell.appendChild(priorityBadge);
         taskRow.appendChild(priorityCell);
-        
+
         // Created date cell
         const createdCell = document.createElement("td");
         createdCell.style.padding = "8px";
         createdCell.innerText = new Date(task.createdAt).toLocaleString(undefined, {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
         });
         taskRow.appendChild(createdCell);
-        
+
         // Actions cell
         const actionsCell = document.createElement("td");
         actionsCell.style.padding = "8px";
         actionsCell.style.display = "flex";
         actionsCell.style.gap = "4px";
-        
+
         // Actions based on current status
         if (task.status === "pending" || task.status === "in_progress") {
           // Complete button
@@ -1950,17 +1939,17 @@
           completeBtn.style.borderRadius = "3px";
           completeBtn.style.cursor = "pointer";
           completeBtn.style.fontSize = "11px";
-          
+
           completeBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             this.updateTask(task.id, {
               status: "completed",
-              updatedBy: "user1" // Default to first user for now
+              updatedBy: "user1", // Default to first user for now
             });
           });
-          
+
           actionsCell.appendChild(completeBtn);
-          
+
           // Cancel button
           const cancelBtn = document.createElement("button");
           cancelBtn.innerText = "Cancel";
@@ -1971,12 +1960,12 @@
           cancelBtn.style.borderRadius = "3px";
           cancelBtn.style.cursor = "pointer";
           cancelBtn.style.fontSize = "11px";
-          
+
           cancelBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             this.cancelTask(task.id, "user1");
           });
-          
+
           actionsCell.appendChild(cancelBtn);
         } else if (task.status === "completed" || task.status === "cancelled") {
           // Rerun button
@@ -1989,15 +1978,15 @@
           rerunBtn.style.borderRadius = "3px";
           rerunBtn.style.cursor = "pointer";
           rerunBtn.style.fontSize = "11px";
-          
+
           rerunBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             this.rerunTask(task.id, "user1");
           });
-          
+
           actionsCell.appendChild(rerunBtn);
         }
-        
+
         // View details button (always available)
         const viewBtn = document.createElement("button");
         viewBtn.innerText = "Details";
@@ -2008,23 +1997,23 @@
         viewBtn.style.borderRadius = "3px";
         viewBtn.style.cursor = "pointer";
         viewBtn.style.fontSize = "11px";
-        
+
         viewBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           this.showTaskDetailsWindow(task.id);
         });
-        
+
         actionsCell.appendChild(viewBtn);
         taskRow.appendChild(actionsCell);
-        
+
         // Add row to table body
         tableBody.appendChild(taskRow);
       });
     }
-    
+
     return this;
   };
-  
+
   /**
    * Shows a dialog to create a new task
    * @returns {LoopChat} The LoopChat instance for chaining
@@ -2043,7 +2032,7 @@
     modalOverlay.style.display = "flex";
     modalOverlay.style.justifyContent = "center";
     modalOverlay.style.alignItems = "center";
-    
+
     // Modal container
     const modalContainer = document.createElement("div");
     modalContainer.style.backgroundColor = "#ffffff";
@@ -2055,7 +2044,7 @@
     modalContainer.style.overflow = "auto";
     modalContainer.style.display = "flex";
     modalContainer.style.flexDirection = "column";
-    
+
     // Modal header
     const modalHeader = document.createElement("div");
     modalHeader.style.padding = "12px 16px";
@@ -2063,13 +2052,13 @@
     modalHeader.style.display = "flex";
     modalHeader.style.justifyContent = "space-between";
     modalHeader.style.alignItems = "center";
-    
+
     const modalTitle = document.createElement("h3");
     modalTitle.innerText = "Create New Task";
     modalTitle.style.margin = "0";
     modalTitle.style.fontSize = "16px";
     modalTitle.style.fontWeight = "bold";
-    
+
     const closeButton = document.createElement("button");
     closeButton.innerHTML = "&#10005;";
     closeButton.style.background = "none";
@@ -2077,35 +2066,35 @@
     closeButton.style.cursor = "pointer";
     closeButton.style.fontSize = "16px";
     closeButton.style.padding = "0";
-    
+
     closeButton.addEventListener("click", () => {
       document.body.removeChild(modalOverlay);
     });
-    
+
     modalHeader.appendChild(modalTitle);
     modalHeader.appendChild(closeButton);
     modalContainer.appendChild(modalHeader);
-    
+
     // Modal content
     const modalContent = document.createElement("div");
     modalContent.style.padding = "16px";
-    
+
     // Form
     const form = document.createElement("form");
     form.style.display = "flex";
     form.style.flexDirection = "column";
     form.style.gap = "12px";
-    
+
     // Title field
     const titleGroup = document.createElement("div");
-    
+
     const titleLabel = document.createElement("label");
     titleLabel.innerText = "Title:";
     titleLabel.style.display = "block";
     titleLabel.style.marginBottom = "4px";
     titleLabel.style.fontSize = "12px";
     titleLabel.style.fontWeight = "bold";
-    
+
     const titleInput = document.createElement("input");
     titleInput.type = "text";
     titleInput.placeholder = "Enter task title";
@@ -2115,21 +2104,21 @@
     titleInput.style.border = "1px solid #ccc";
     titleInput.style.borderRadius = "3px";
     titleInput.style.fontSize = "12px";
-    
+
     titleGroup.appendChild(titleLabel);
     titleGroup.appendChild(titleInput);
     form.appendChild(titleGroup);
-    
+
     // Description field
     const descGroup = document.createElement("div");
-    
+
     const descLabel = document.createElement("label");
     descLabel.innerText = "Description:";
     descLabel.style.display = "block";
     descLabel.style.marginBottom = "4px";
     descLabel.style.fontSize = "12px";
     descLabel.style.fontWeight = "bold";
-    
+
     const descInput = document.createElement("textarea");
     descInput.placeholder = "Enter task description";
     descInput.style.width = "100%";
@@ -2140,21 +2129,21 @@
     descInput.style.fontSize = "12px";
     descInput.style.minHeight = "80px";
     descInput.style.resize = "vertical";
-    
+
     descGroup.appendChild(descLabel);
     descGroup.appendChild(descInput);
     form.appendChild(descGroup);
-    
+
     // Priority field
     const priorityGroup = document.createElement("div");
-    
+
     const priorityLabel = document.createElement("label");
     priorityLabel.innerText = "Priority:";
     priorityLabel.style.display = "block";
     priorityLabel.style.marginBottom = "4px";
     priorityLabel.style.fontSize = "12px";
     priorityLabel.style.fontWeight = "bold";
-    
+
     const prioritySelect = document.createElement("select");
     prioritySelect.style.width = "100%";
     prioritySelect.style.padding = "6px";
@@ -2162,34 +2151,34 @@
     prioritySelect.style.border = "1px solid #ccc";
     prioritySelect.style.borderRadius = "3px";
     prioritySelect.style.fontSize = "12px";
-    
+
     const priorityOptions = [
       { value: "high", text: "High" },
       { value: "medium", text: "Medium" },
-      { value: "low", text: "Low" }
+      { value: "low", text: "Low" },
     ];
-    
-    priorityOptions.forEach(option => {
+
+    priorityOptions.forEach((option) => {
       const optionEl = document.createElement("option");
       optionEl.value = option.value;
       optionEl.text = option.text;
       prioritySelect.appendChild(optionEl);
     });
-    
+
     priorityGroup.appendChild(priorityLabel);
     priorityGroup.appendChild(prioritySelect);
     form.appendChild(priorityGroup);
-    
+
     // Agent field
     const agentGroup = document.createElement("div");
-    
+
     const agentLabel = document.createElement("label");
     agentLabel.innerText = "Assigned Agent:";
     agentLabel.style.display = "block";
     agentLabel.style.marginBottom = "4px";
     agentLabel.style.fontSize = "12px";
     agentLabel.style.fontWeight = "bold";
-    
+
     const agentSelect = document.createElement("select");
     agentSelect.style.width = "100%";
     agentSelect.style.padding = "6px";
@@ -2197,34 +2186,34 @@
     agentSelect.style.border = "1px solid #ccc";
     agentSelect.style.borderRadius = "3px";
     agentSelect.style.fontSize = "12px";
-    
+
     // Add unassigned option
     const unassignedOption = document.createElement("option");
     unassignedOption.value = "";
     unassignedOption.text = "Unassigned";
     agentSelect.appendChild(unassignedOption);
-    
+
     // Add agents
     if (this.agents && typeof this.agents === "object") {
-      Object.values(this.agents).forEach(agent => {
+      Object.values(this.agents).forEach((agent) => {
         const option = document.createElement("option");
         option.value = agent.id;
         option.text = agent.name;
         agentSelect.appendChild(option);
       });
     }
-    
+
     agentGroup.appendChild(agentLabel);
     agentGroup.appendChild(agentSelect);
     form.appendChild(agentGroup);
-    
+
     // Form actions
     const formActions = document.createElement("div");
     formActions.style.display = "flex";
     formActions.style.justifyContent = "flex-end";
     formActions.style.gap = "8px";
     formActions.style.marginTop = "16px";
-    
+
     const cancelBtn = document.createElement("button");
     cancelBtn.type = "button";
     cancelBtn.innerText = "Cancel";
@@ -2235,11 +2224,11 @@
     cancelBtn.style.borderRadius = "3px";
     cancelBtn.style.cursor = "pointer";
     cancelBtn.style.fontSize = "12px";
-    
+
     cancelBtn.addEventListener("click", () => {
       document.body.removeChild(modalOverlay);
     });
-    
+
     const createBtn = document.createElement("button");
     createBtn.type = "button";
     createBtn.innerText = "Create Task";
@@ -2250,7 +2239,7 @@
     createBtn.style.borderRadius = "3px";
     createBtn.style.cursor = "pointer";
     createBtn.style.fontSize = "12px";
-    
+
     createBtn.addEventListener("click", () => {
       // Get form values
       const title = titleInput.value.trim();
@@ -2258,41 +2247,41 @@
         alert("Task title is required");
         return;
       }
-      
+
       const taskData = {
         title: title,
         description: descInput.value.trim(),
         priority: prioritySelect.value,
         agentId: agentSelect.value || null,
         createdBy: "user1", // Default to first user for now
-        status: "pending"
+        status: "pending",
       };
-      
+
       // Create task
       this.createTask(taskData);
-      
+
       // Close dialog
       document.body.removeChild(modalOverlay);
     });
-    
+
     formActions.appendChild(cancelBtn);
     formActions.appendChild(createBtn);
     form.appendChild(formActions);
-    
+
     modalContent.appendChild(form);
     modalContainer.appendChild(modalContent);
     modalOverlay.appendChild(modalContainer);
-    
+
     document.body.appendChild(modalOverlay);
-    
+
     // Focus title input
     setTimeout(() => {
       titleInput.focus();
     }, 0);
-    
+
     return this;
   };
-  
+
   /**
    * Shows a task details window
    * @param {string} taskId - ID of the task to show details for
@@ -2305,17 +2294,17 @@
       console.error("Task not found:", taskId);
       return this;
     }
-    
+
     // Check if window already exists
     const windowId = `window-task-${taskId}`;
     let taskWindow = document.getElementById(windowId);
-    
+
     if (taskWindow) {
       // Focus existing window
       this.windowFocus(windowId);
       return this;
     }
-    
+
     // Create a new window
     taskWindow = document.createElement("div");
     taskWindow.id = windowId;
@@ -2332,12 +2321,12 @@
     taskWindow.style.border = "1px solid #000000";
     taskWindow.style.boxShadow = this.design.shadows.md;
     taskWindow.style.zIndex = this.getZIndex("window.default"); // Default window z-index
-    
+
     // Add click handler to focus this window
     taskWindow.addEventListener("mousedown", () => {
       this.windowFocus(windowId);
     });
-    
+
     // Window header
     const windowHeader = document.createElement("div");
     windowHeader.className = "window__header";
@@ -2349,16 +2338,16 @@
     windowHeader.style.color = "#ffffff";
     windowHeader.style.cursor = "move";
     windowHeader.style.userSelect = "none";
-    
+
     const windowTitle = document.createElement("div");
     windowTitle.innerText = `Task: ${task.title}`;
     windowTitle.style.fontSize = "11px";
     windowTitle.style.fontWeight = "bold";
-    
+
     const windowControls = document.createElement("div");
     windowControls.style.display = "flex";
     windowControls.style.gap = "6px";
-    
+
     const minimizeButton = document.createElement("button");
     minimizeButton.innerHTML = "&#8211;";
     minimizeButton.style.background = "none";
@@ -2370,7 +2359,7 @@
     minimizeButton.addEventListener("click", () => {
       this.windowMinimize(windowId);
     });
-    
+
     const closeButton = document.createElement("button");
     closeButton.innerHTML = "&#10005;";
     closeButton.style.background = "none";
@@ -2382,14 +2371,14 @@
     closeButton.addEventListener("click", () => {
       this.windowClose(windowId);
     });
-    
+
     windowControls.appendChild(minimizeButton);
     windowControls.appendChild(closeButton);
-    
+
     windowHeader.appendChild(windowTitle);
     windowHeader.appendChild(windowControls);
     taskWindow.appendChild(windowHeader);
-    
+
     // Window content
     const windowContent = document.createElement("div");
     windowContent.className = "window__content";
@@ -2398,11 +2387,11 @@
     windowContent.style.flexDirection = "column";
     windowContent.style.padding = "16px";
     windowContent.style.overflow = "auto";
-    
+
     // Task details
     const detailsContainer = document.createElement("div");
     detailsContainer.style.marginBottom = "16px";
-    
+
     // Task title
     const titleEl = document.createElement("h2");
     titleEl.innerText = task.title;
@@ -2410,26 +2399,26 @@
     titleEl.style.fontSize = "16px";
     titleEl.style.fontWeight = "bold";
     detailsContainer.appendChild(titleEl);
-    
+
     // Status and priority badges
     const badgesContainer = document.createElement("div");
     badgesContainer.style.display = "flex";
     badgesContainer.style.gap = "8px";
     badgesContainer.style.marginBottom = "12px";
-    
+
     // Fallback implementation for createStatusBadge if it's not available
-    if (typeof this.createStatusBadge !== 'function') {
-      this.createStatusBadge = function(status) {
-        const badge = document.createElement('span');
+    if (typeof this.createStatusBadge !== "function") {
+      this.createStatusBadge = function (status) {
+        const badge = document.createElement("span");
         badge.innerText = status;
-        
+
         // Apply styles based on status
         badge.style.padding = "2px 6px";
         badge.style.borderRadius = "12px";
         badge.style.fontSize = "10px";
         badge.style.fontWeight = "bold";
         badge.style.textTransform = "uppercase";
-        
+
         switch (status) {
           case "pending":
             badge.style.backgroundColor = "#e0e0e0";
@@ -2451,24 +2440,24 @@
             badge.style.backgroundColor = "#e0e0e0";
             badge.style.color = "#606060";
         }
-        
+
         return badge;
       };
     }
-    
+
     // Fallback implementation for createPriorityBadge if it's not available
-    if (typeof this.createPriorityBadge !== 'function') {
-      this.createPriorityBadge = function(priority) {
-        const badge = document.createElement('span');
+    if (typeof this.createPriorityBadge !== "function") {
+      this.createPriorityBadge = function (priority) {
+        const badge = document.createElement("span");
         badge.innerText = priority;
-        
+
         // Apply styles based on priority
         badge.style.padding = "2px 6px";
         badge.style.borderRadius = "12px";
         badge.style.fontSize = "10px";
         badge.style.fontWeight = "bold";
         badge.style.textTransform = "uppercase";
-        
+
         switch (priority) {
           case "high":
             badge.style.backgroundColor = "#ffcccc";
@@ -2486,35 +2475,35 @@
             badge.style.backgroundColor = "#fff0b3";
             badge.style.color = "#a67c00";
         }
-        
+
         return badge;
       };
     }
-    
+
     // Status badge - using the design system helper
     const statusBadge = this.createStatusBadge(task.status);
     badgesContainer.appendChild(statusBadge);
-    
+
     // Priority badge - using the design system helper
     const priorityBadge = this.createPriorityBadge(task.priority);
     // Add "Priority: " prefix to the text
     priorityBadge.innerText = `Priority: ${task.priority}`;
-    
+
     badgesContainer.appendChild(priorityBadge);
     detailsContainer.appendChild(badgesContainer);
-    
+
     // Task description
     if (task.description) {
       const descContainer = document.createElement("div");
       descContainer.style.marginBottom = "16px";
-      
+
       const descLabel = document.createElement("div");
       descLabel.innerText = "Description";
       descLabel.style.fontWeight = "bold";
       descLabel.style.fontSize = "12px";
       descLabel.style.marginBottom = "4px";
       descContainer.appendChild(descLabel);
-      
+
       const descText = document.createElement("div");
       descText.style.whiteSpace = "pre-wrap";
       descText.style.fontSize = "12px";
@@ -2524,10 +2513,10 @@
       descText.style.borderRadius = "3px";
       descText.innerText = task.description;
       descContainer.appendChild(descText);
-      
+
       detailsContainer.appendChild(descContainer);
     }
-    
+
     // Meta info
     const metaContainer = document.createElement("div");
     metaContainer.style.display = "grid";
@@ -2535,7 +2524,7 @@
     metaContainer.style.gap = "8px";
     metaContainer.style.marginBottom = "16px";
     metaContainer.style.fontSize = "12px";
-    
+
     // Created by
     let createdByName = task.createdBy || "Unknown";
     if (task.createdBy && this.users && this.users[task.createdBy]) {
@@ -2543,16 +2532,16 @@
     } else if (task.createdBy && this.agents && this.agents[task.createdBy]) {
       createdByName = this.agents[task.createdBy].name;
     }
-    
+
     const createdByEl = document.createElement("div");
     createdByEl.innerHTML = `<strong>Created by:</strong> ${createdByName}`;
     metaContainer.appendChild(createdByEl);
-    
+
     // Created at
     const createdAtEl = document.createElement("div");
     createdAtEl.innerHTML = `<strong>Created:</strong> ${new Date(task.createdAt).toLocaleString()}`;
     metaContainer.appendChild(createdAtEl);
-    
+
     // Assigned to
     let assignedToName = task.agentId ? "Unassigned" : "Unassigned";
     if (task.agentId && this.agents && this.agents[task.agentId]) {
@@ -2560,36 +2549,36 @@
     } else if (task.agentId && this.users && this.users[task.agentId]) {
       assignedToName = this.users[task.agentId].name;
     }
-    
+
     const assignedToEl = document.createElement("div");
     assignedToEl.innerHTML = `<strong>Assigned to:</strong> ${assignedToName}`;
     metaContainer.appendChild(assignedToEl);
-    
+
     // Completed at (if applicable)
     if (task.completedAt) {
       const completedAtEl = document.createElement("div");
       completedAtEl.innerHTML = `<strong>Completed:</strong> ${new Date(task.completedAt).toLocaleString()}`;
       metaContainer.appendChild(completedAtEl);
     }
-    
+
     detailsContainer.appendChild(metaContainer);
-    
+
     // Actions buttons
     const actionsContainer = document.createElement("div");
     this.applyStyles(actionsContainer, {
       display: "flex",
       gap: this.design.spacing.md,
-      marginBottom: this.design.spacing.xxxl
+      marginBottom: this.design.spacing.xxxl,
     });
-    
+
     // Actions based on current status
     if (task.status === "pending" || task.status === "in_progress") {
       // Fallback implementation for createButton if it's not available
-      if (typeof this.createButton !== 'function') {
-        this.createButton = function(text, type = 'primary', options = {}) {
-          const button = document.createElement('button');
+      if (typeof this.createButton !== "function") {
+        this.createButton = function (text, type = "primary", options = {}) {
+          const button = document.createElement("button");
           button.innerText = text;
-          
+
           // Apply base styles based on button type
           switch (type) {
             case "primary":
@@ -2622,83 +2611,83 @@
               button.style.color = "#ffffff";
               button.style.border = "none";
           }
-          
+
           // Common styles
           button.style.padding = "6px 12px";
           button.style.borderRadius = "3px";
           button.style.cursor = "pointer";
           button.style.fontSize = "12px";
-          
+
           // Add click handler if provided
           if (options.onClick) {
-            button.addEventListener('click', options.onClick);
+            button.addEventListener("click", options.onClick);
           }
-          
+
           return button;
         };
       }
-      
+
       // Complete button using design system helper
       const completeBtn = this.createButton("Complete Task", "success", {
         onClick: () => {
           this.updateTask(task.id, {
             status: "completed",
-            updatedBy: "user1" // Default to first user for now
+            updatedBy: "user1", // Default to first user for now
           });
-          
+
           // Update window title and status badge
           windowTitle.innerText = `Task: ${task.title} (Completed)`;
-          
+
           // Replace the status badge
           const newStatusBadge = this.createStatusBadge("completed");
           badgesContainer.replaceChild(newStatusBadge, statusBadge);
-          
+
           // Remove action buttons
           actionsContainer.innerHTML = "";
-          
+
           // Add rerun button
           const rerunBtn = this.createButton("Rerun Task", "info", {
             onClick: () => {
               this.rerunTask(task.id, "user1");
               // Close this window
               this.windowClose(windowId);
-            }
+            },
           });
-          
+
           actionsContainer.appendChild(rerunBtn);
-        }
+        },
       });
-      
+
       actionsContainer.appendChild(completeBtn);
-      
+
       // Cancel button using design system helper
       const cancelBtn = this.createButton("Cancel Task", "danger", {
         onClick: () => {
           this.cancelTask(task.id, "user1");
-          
+
           // Update window title and status badge
           windowTitle.innerText = `Task: ${task.title} (Cancelled)`;
-          
+
           // Replace the status badge
           const newStatusBadge = this.createStatusBadge("cancelled");
           badgesContainer.replaceChild(newStatusBadge, statusBadge);
-          
+
           // Remove action buttons
           actionsContainer.innerHTML = "";
-          
+
           // Add rerun button
           const rerunBtn = this.createButton("Rerun Task", "info", {
             onClick: () => {
               this.rerunTask(task.id, "user1");
               // Close this window
               this.windowClose(windowId);
-            }
+            },
           });
-          
+
           actionsContainer.appendChild(rerunBtn);
-        }
+        },
       });
-      
+
       actionsContainer.appendChild(cancelBtn);
     } else if (task.status === "completed" || task.status === "cancelled") {
       // Rerun button using design system helper
@@ -2707,51 +2696,51 @@
           this.rerunTask(task.id, "user1");
           // Close this window
           this.windowClose(windowId);
-        }
+        },
       });
-      
+
       actionsContainer.appendChild(rerunBtn);
     }
-    
+
     detailsContainer.appendChild(actionsContainer);
     windowContent.appendChild(detailsContainer);
-    
+
     // Task history
     const historyContainer = document.createElement("div");
-    
+
     const historyTitle = document.createElement("h3");
     historyTitle.innerText = "Task History";
     historyTitle.style.margin = "0 0 8px 0";
     historyTitle.style.fontSize = "14px";
     historyTitle.style.fontWeight = "bold";
     historyContainer.appendChild(historyTitle);
-    
+
     const historyList = document.createElement("div");
     historyList.style.fontSize = "12px";
     historyList.style.border = "1px solid #e0e0e0";
     historyList.style.borderRadius = "3px";
-    
+
     if (task.history && task.history.length > 0) {
       task.history.forEach((entry, index) => {
         const entryEl = document.createElement("div");
         entryEl.style.padding = "8px";
         entryEl.style.borderBottom = index < task.history.length - 1 ? "1px solid #e0e0e0" : "none";
-        
+
         // Alternate background colors
         if (index % 2 === 0) {
           entryEl.style.backgroundColor = "#f9f9f9";
         }
-        
+
         // Entry time
         const timeEl = document.createElement("div");
         timeEl.style.color = "#808080";
         timeEl.style.marginBottom = "4px";
         timeEl.innerText = new Date(entry.timestamp).toLocaleString();
         entryEl.appendChild(timeEl);
-        
+
         // Entry action and details
         const actionEl = document.createElement("div");
-        
+
         // Format the action
         let actionText = entry.action;
         if (entry.action === "created") {
@@ -2764,7 +2753,7 @@
           const newStatus = entry.action.replace("status_changed_to_", "");
           actionText = `Status changed to ${newStatus}`;
         }
-        
+
         // Add agent name if available
         let agentName = entry.agentId || "system";
         if (entry.agentId && this.users && this.users[entry.agentId]) {
@@ -2772,9 +2761,9 @@
         } else if (entry.agentId && this.agents && this.agents[entry.agentId]) {
           agentName = this.agents[entry.agentId].name;
         }
-        
+
         actionEl.innerHTML = `<strong>${actionText}</strong> by ${agentName}`;
-        
+
         // Add details if available
         if (entry.details && entry.details !== actionText) {
           const detailsEl = document.createElement("div");
@@ -2782,7 +2771,7 @@
           detailsEl.innerText = entry.details;
           actionEl.appendChild(detailsEl);
         }
-        
+
         entryEl.appendChild(actionEl);
         historyList.appendChild(entryEl);
       });
@@ -2794,34 +2783,34 @@
       noHistoryEl.innerText = "No history available";
       historyList.appendChild(noHistoryEl);
     }
-    
+
     historyContainer.appendChild(historyList);
     windowContent.appendChild(historyContainer);
-    
+
     taskWindow.appendChild(windowContent);
-    
+
     // Make window draggable
     this.makeWindowDraggable(taskWindow, windowHeader);
-    
+
     // Add to DOM
     document.getElementById("desktop").appendChild(taskWindow);
-    
+
     // Add to windows array
     this.windows.push({
       id: windowId,
       type: "task_details",
       taskId: taskId,
-      minimized: false
+      minimized: false,
     });
-    
+
     // Focus the newly created window to bring it to the top of the z-index stack
     this.windowFocus(windowId);
-    
+
     // Auto-tile windows if enabled
     if (this.autoTileWindows) {
       this.tileWindows();
     }
-    
+
     return this;
   };
 
@@ -3011,10 +3000,10 @@
       channelId: channelId,
       minimized: false,
     });
-    
+
     // Focus the newly created window to bring it to the top of the z-index stack
     this.windowFocus(channelWindowId);
-    
+
     // Auto-tile windows if enabled
     if (this.autoTileWindows) {
       this.tileWindows();
@@ -3302,7 +3291,7 @@
       openButton.addEventListener("click", () => {
         this.openInWindow(post);
       });
-      
+
       // Create task button
       const createTaskButton = document.createElement("button");
       createTaskButton.innerText = "Create Task";
@@ -3312,13 +3301,12 @@
       createTaskButton.style.border = "none";
       createTaskButton.style.cursor = "pointer";
       createTaskButton.style.fontSize = "12px";
-      
+
       createTaskButton.addEventListener("click", () => {
         // Extract channel info
-        const channelId = this.channels.find(c => 
-          c.posts && c.posts.some(p => p.id === post.id)
-        )?.id || this.activeChannel;
-        
+        const channelId =
+          this.channels.find((c) => c.posts && c.posts.some((p) => p.id === post.id))?.id || this.activeChannel;
+
         // Create a new task for this post
         const taskData = {
           title: `Follow up on message from ${post.author}`,
@@ -3328,12 +3316,12 @@
           agentId: null, // Unassigned initially
           createdBy: "user1", // Default to first user
           channelId: channelId,
-          postId: post.id
+          postId: post.id,
         };
-        
+
         // Create the task
         const task = this.createTask(taskData);
-        
+
         // Show the task details window
         this.showTaskDetailsWindow(task.id);
       });
