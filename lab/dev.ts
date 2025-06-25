@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import homepage from "./index.html";
+import homepage from "./dev.html";
 
 serve({
   development: {

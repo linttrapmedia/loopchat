@@ -13,6 +13,6 @@
     "@linttrap/oem": "^0.3.0"
   },
   "scripts": {
-    "dev": "bun run src/server/main.ts --hot"
+    "dev": "bun run lab/dev.ts --hot"
   }
 }
