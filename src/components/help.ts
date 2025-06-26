@@ -1,5 +1,11 @@
-import { html } from "../template";
+import { HTML, useStyle } from "@linttrap/oem";
+import { theme_state } from "../state";
 import { color } from "../theme";
+
+export const html = HTML({
+  "style:base": useStyle(),
+  "style:theme": useStyle({ state: theme_state }),
+});
 
 const CommandItem = (command: string, description: string) =>
   html.li(
@@ -36,21 +42,40 @@ const Commands = (title: string, description: string, commands: [command: string
   );
 
 export const Help = html.div(
-  ["style:base", "padding", "10px"],
+  ["style:base", "padding", "20px"],
   ["style:base", "display", "flex"],
   ["style:base", "flexDirection", "column"],
   ["style:base", "gap", "30px"]
 )(
-  html.div()(
+  html.div(
+    ["style:base", "textAlign", "center"],
+    ["style:base", "borderBottom", `1px dashed ${color.white_alpha_10}`],
+    ["style:base", "paddingBottom", "30px"]
+  )(
+    html.pre(["style:base", "color", color.red])(`             
+                                 
+      0000         0000      
+   0000000000   0000000000   
+  0000    000000000    0000  
+  000       00000       000  
+  0000    000000000    0000  
+   0000000000   0000000000   
+      0000         0000      
+                                  
+      `),
     html.h1(
       ["style:base", "padding", "0px"],
       ["style:base", "margin", "0px"],
-      ["style:base", "fontSize", "12px"],
+      ["style:base", "fontSize", "16px"],
       ["style:base", "color", color.white]
     )("Loopchat"),
-    html.p(["style:base", "marginBottom", "0px"])("The ultimate AI workflow automation tool")
+    html.p(
+      ["style:base", "marginBottom", "0px"],
+      ["style:base", "fontSize", "16px"]
+    )("Workflow Automation That Keeps You In The Loop")
   ),
   Commands("Quick Start", "Here are some quick commands to get you started with Loopchat", [
+    ["/setup", "Run the setup tool to get started with Loopchat"],
     ["/help", "Show this help message"],
     ["/search #term", "Run the search tool"],
   ]),
