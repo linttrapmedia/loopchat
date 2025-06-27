@@ -9,5 +9,9 @@ export const SLASH_COMMANDS: SlashCommandType[] = [
     command: "/clear",
     description: "Clear the command line input.",
   },
+  {
+    command: "/create",
+    description: "Create a new item or resource.",
+  },
   { command: "/theme", description: "Change the theme of the application." },
 ];

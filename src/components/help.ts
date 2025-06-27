@@ -37,7 +37,7 @@ const Commands = (title: string, description: string, commands: [command: string
       ["style:base", "margin", "0px"],
       ["style:base", "display", "flex"],
       ["style:base", "flexDirection", "column"],
-      ["style:base", "gap", "2px"]
+      ["style:base", "gap", "4px"]
     )(...commands.map((args) => CommandItem(...args)))
   );
 
@@ -45,7 +45,7 @@ export const Help = html.div(
   ["style:base", "padding", "20px"],
   ["style:base", "display", "flex"],
   ["style:base", "flexDirection", "column"],
-  ["style:base", "gap", "30px"]
+  ["style:base", "gap", "20px"]
 )(
   html.div(
     ["style:base", "textAlign", "center"],
