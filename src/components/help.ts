@@ -3,56 +3,52 @@ import { theme_state } from "../state";
 import { color } from "../theme";
 
 export const html = HTML({
-  "style:base": useStyle(),
+  style: useStyle(),
   "style:theme": useStyle({ state: theme_state }),
 });
 
 const CommandItem = (command: string, description: string) =>
   html.li(
-    ["style:base", "display", "flex"],
-    ["style:base", "gap", "2px"],
-    ["style:base", "alignItems", "center"],
-    ["style:base", "justifyContent", "flex-start"],
-    ["style:base", "gap", "5px"]
+    ["style", "display", "flex"],
+    ["style", "gap", "2px"],
+    ["style", "alignItems", "center"],
+    ["style", "justifyContent", "flex-start"],
+    ["style", "gap", "5px"]
   )(
     html.div(
-      ["style:base", "backgroundColor", color.white_alpha_10],
-      ["style:base", "padding", "2px 5px"],
-      ["style:base", "borderRadius", "2px"]
+      ["style", "backgroundColor", color.white_alpha_10],
+      ["style", "padding", "2px 5px"],
+      ["style", "borderRadius", "2px"]
     )(command),
-    html.div(["style:base", "fontStyle", "italic"])(description)
+    html.div(["style", "fontStyle", "italic"])(description)
   );
 
 const Commands = (title: string, description: string, commands: [command: string, description: string][]) =>
   html.div()(
-    html.h2(
-      ["style:base", "fontSize", "12px"],
-      ["style:base", "color", color.white],
-      ["style:base", "margin", "0px"]
-    )(title),
-    html.p(["style:base", "fontSize", "12px"], ["style:base", "margin", "8px 0px"])(description),
+    html.h2(["style", "fontSize", "12px"], ["style", "color", color.white], ["style", "margin", "0px"])(title),
+    html.p(["style", "fontSize", "12px"], ["style", "margin", "8px 0px"])(description),
     html.ul(
-      ["style:base", "listStyle", "none"],
-      ["style:base", "padding", "0px"],
-      ["style:base", "margin", "0px"],
-      ["style:base", "display", "flex"],
-      ["style:base", "flexDirection", "column"],
-      ["style:base", "gap", "4px"]
+      ["style", "listStyle", "none"],
+      ["style", "padding", "0px"],
+      ["style", "margin", "0px"],
+      ["style", "display", "flex"],
+      ["style", "flexDirection", "column"],
+      ["style", "gap", "4px"]
     )(...commands.map((args) => CommandItem(...args)))
   );
 
 export const Help = html.div(
-  ["style:base", "padding", "20px"],
-  ["style:base", "display", "flex"],
-  ["style:base", "flexDirection", "column"],
-  ["style:base", "gap", "20px"]
+  ["style", "padding", "20px"],
+  ["style", "display", "flex"],
+  ["style", "flexDirection", "column"],
+  ["style", "gap", "20px"]
 )(
   html.div(
-    ["style:base", "textAlign", "center"],
-    ["style:base", "borderBottom", `1px dashed ${color.white_alpha_10}`],
-    ["style:base", "paddingBottom", "30px"]
+    ["style", "textAlign", "center"],
+    ["style", "borderBottom", `1px dashed ${color.white_alpha_10}`],
+    ["style", "paddingBottom", "30px"]
   )(
-    html.pre(["style:base", "color", color.red])(`             
+    html.pre(["style", "color", color.red])(`             
                                  
       0000         0000      
    0000000000   0000000000   
@@ -64,14 +60,14 @@ export const Help = html.div(
                                   
       `),
     html.h1(
-      ["style:base", "padding", "0px"],
-      ["style:base", "margin", "0px"],
-      ["style:base", "fontSize", "16px"],
-      ["style:base", "color", color.white]
+      ["style", "padding", "0px"],
+      ["style", "margin", "0px"],
+      ["style", "fontSize", "16px"],
+      ["style", "color", color.white]
     )("Loopchat"),
     html.p(
-      ["style:base", "marginBottom", "0px"],
-      ["style:base", "fontSize", "16px"]
+      ["style", "marginBottom", "0px"],
+      ["style", "fontSize", "16px"]
     )("Workflow Automation That Keeps You In The Loop")
   ),
   Commands("Quick Start", "Here are some quick commands to get you started with Loopchat", [

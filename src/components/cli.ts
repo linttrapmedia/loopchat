@@ -2,7 +2,15 @@ import { HTML, State, useAttribute, useEvent, useStyle } from "@linttrap/oem";
 import { SLASH_COMMANDS } from "../constants";
 import { theme_state } from "../state";
 import { color } from "../theme";
-import type { CliStateType, SlashCommandType } from "../types";
+import type { SlashCommandType } from "../types";
+
+export type CliStateType = {
+  cursor_position: number;
+  command: string;
+  firstChar: string;
+  lastChar: string;
+  menu: "slash" | "hash" | "at" | "none";
+};
 
 const cli_state = State<CliStateType>({
   cursor_position: 0,
@@ -12,23 +20,27 @@ const cli_state = State<CliStateType>({
   menu: "none",
 });
 
-const cli_state_get = (key: keyof CliStateType) => {
-  return cli_state.get()[key];
+const cli_state_get = (key: keyof CliStateType): string => {
+  return String(cli_state.get()[key]);
 };
 
 const cli_state_eq = (item: keyof CliStateType, value: any) => () => {
   return cli_state.get()[item] === value;
 };
 
+const cli_state_neq = (item: keyof CliStateType, value: any) => () => {
+  return cli_state.get()[item] !== value;
+};
+
 const html = HTML({
-  "attr:base": useAttribute(),
+  attr: useAttribute(),
   "event:keydown": useEvent({ event: "keydown" }),
   "event:mouseover": useEvent({ event: "mouseover" }),
   "event:mouseout": useEvent({ event: "mouseout" }),
   "event:keyup": useEvent({ event: "keyup" }),
   "event:input": useEvent({ event: "input" }),
   "event:click": useEvent({ event: "click" }),
-  "style:base": useStyle(),
+  style: useStyle(),
   "style:cli": useStyle({ state: cli_state }),
   "style:mouseout": useStyle({ event: "mouseout" }),
   "style:mouseover": useStyle({ event: "mouseover" }),
@@ -37,24 +49,22 @@ const html = HTML({
 
 function handleInput(evt?: Event) {
   // get input from field
-  const input = evt?.target as HTMLInputElement;
+  const input = evt?.target as HTMLDivElement | null;
   if (!input) return;
 
   // get input values
-  const value = input.value ?? cli_state_get("command");
-  const lastChar = value[value.length - 1] ?? cli_state_get("lastChar");
-  const firstChar = value[0] ?? cli_state_get("lastChar");
+  const command = input.textContent ?? cli_state_get("command");
+  const lastChar = command[command.length - 1] ?? cli_state_get("lastChar");
+  const firstChar = command[0] ?? cli_state_get("lastChar");
 
   // update the cursor position
-  const cursor_position = input.selectionStart ?? cli_state_get("cursor_position");
+  // const cursor_position = input.selectionStart ?? cli_state_get("cursor_position");
 
   // update the command line state
-  cli_state.deepSet("cursor_position", cursor_position);
-  cli_state.deepSet("command", value);
+  cli_state.deepSet("cursor_position", 0);
+  cli_state.deepSet("command", command);
   cli_state.deepSet("lastChar", lastChar);
   cli_state.deepSet("firstChar", firstChar);
-
-  console.log(cli_state.get());
 
   // if user enters space, reset the command
   if (lastChar === " ") {
@@ -82,8 +92,6 @@ function handleKeydown(evt?: KeyboardEvent) {
 }
 
 function SlashCommandMenuItem(item: SlashCommandType) {
-  console.log();
-
   const item_hover_state = State(false);
   const is_hovered = () => item_hover_state.get() === true;
   const is_not_hovered = () => item_hover_state.get() === false;
@@ -125,34 +133,42 @@ function SlashCommandMenuItem(item: SlashCommandType) {
 }
 
 export const CommandLine = html.div(
-  ["style:base", "flex", "1"],
-  ["style:base", "width", "100%"],
-  ["style:base", "position", "relative"],
+  ["style", "flex", "1"],
+  ["style", "width", "100%"],
+  ["style", "position", "relative"],
   ["event:keydown", handleKeydown]
 )(
-  html.input(
-    ["attr:base", "id", "cli"],
-    ["style:base", "fontFamily", "courier, monospace"],
-    ["style:base", "fontSize", "14px"],
-    ["style:base", "lineHeight", "1.2"],
-    ["style:base", "flex", "1"],
-    ["style:base", "marginRight", "10px"],
-    ["style:base", "border", "none"],
-    ["style:base", "backgroundColor", "transparent"],
-    ["style:base", "color", "inherit"],
-    ["style:base", "outline", "none"],
-    ["attr:base", "placeholder", "⠿ Enter the loop here"],
-    ["attr:base", "autoFocus", "true"],
-    ["style:base", "caretColor", color.white],
+  html.div(
+    ["attr", "id", "cli"],
+    ["style", "fontFamily", "courier, monospace"],
+    ["style", "fontSize", "14px"],
+    ["style", "lineHeight", "1.2"],
+    ["style", "flex", "1"],
+    ["style", "marginRight", "10px"],
+    ["style", "border", "none"],
+    ["style", "backgroundColor", "transparent"],
+    ["style", "color", "inherit"],
+    ["style", "outline", "none"],
+    ["attr", "autoFocus", "true"],
+    ["style", "caretColor", color.white],
     ["event:input", handleInput],
-    ["style:base", "width", "100%"]
+    ["style", "width", "100%"],
+    ["attr", "contentEditable", "true"]
   )(),
   html.div(
-    ["style:base", "padding", "10px 0"],
-    ["style:base", "margin", "10px 0 0"],
-    ["style:base", "flexDirection", "column"],
-    ["style:base", "gap", "2px"],
-    ["style:base", "display", "flex"],
+    ["style:cli", "display", "flex", cli_state_eq("command", "")],
+    ["style:cli", "display", "none", cli_state_neq("command", "")],
+    ["style", "alignItems", "center"],
+    ["style", "justifyContent", "flex-start"],
+    ["style", "lineHeight", "21px"],
+    ["style", "gap", "5px"]
+  )(html.div(["style", "fontSize", "21px"])("↑"), html.span()("Enter the loop")),
+  html.div(
+    ["style", "padding", "10px 0"],
+    ["style", "margin", "10px 0 0"],
+    ["style", "flexDirection", "column"],
+    ["style", "gap", "2px"],
+    ["style", "display", "flex"],
     ["style:cli", "display", "flex", cli_state_eq("menu", "slash")],
     ["style:cli", "display", "none", cli_state_eq("menu", "none")]
   )(...SLASH_COMMANDS.map(SlashCommandMenuItem))
