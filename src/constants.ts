@@ -1,4 +1,4 @@
-import type { SlashCommandType } from "./types";
+import type { HashCommandType, SlashCommandType } from "./types";
 
 export const SLASH_COMMANDS: SlashCommandType[] = [
   {
@@ -15,3 +15,5 @@ export const SLASH_COMMANDS: SlashCommandType[] = [
   },
   { command: "/theme", description: "Change the theme of the application." },
 ];
+
+export const HASH_COMMANDS: HashCommandType[] = [];

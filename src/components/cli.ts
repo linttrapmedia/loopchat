@@ -6,6 +6,7 @@ import type { SlashCommandType } from "../types";
 
 export type CliStateType = {
   cursor_position: number;
+  current_slash_command: string;
   command: string;
   firstChar: string;
   lastChar: string;
@@ -14,6 +15,7 @@ export type CliStateType = {
 
 const cli_state = State<CliStateType>({
   cursor_position: 0,
+  current_slash_command: "",
   command: "",
   firstChar: "",
   lastChar: "",
@@ -55,31 +57,59 @@ function handleInput(evt?: Event) {
   // get input values
   const command = input.textContent ?? cli_state_get("command");
   const lastChar = command[command.length - 1] ?? cli_state_get("lastChar");
+  const lastCharIsSpace = lastChar === " " || lastChar === "\xA0";
   const firstChar = command[0] ?? cli_state_get("lastChar");
 
-  // update the cursor position
-  // const cursor_position = input.selectionStart ?? cli_state_get("cursor_position");
+  // get cursor position from editablecontent input
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return;
+  const range = selection.getRangeAt(0);
+  const cursorPosition = range.startOffset;
 
   // update the command line state
-  cli_state.deepSet("cursor_position", 0);
+  cli_state.deepSet("cursor_position", cursorPosition);
   cli_state.deepSet("command", command);
   cli_state.deepSet("lastChar", lastChar);
   cli_state.deepSet("firstChar", firstChar);
 
-  // if user enters space, reset the command
-  if (lastChar === " ") {
-    cli_state.deepSet("command", "");
+  // if the lastChar is a space, reset the command and return
+  if (lastCharIsSpace) {
+    cli_state.deepSet("current_slash_command", "");
     cli_state.deepSet("menu", "none");
     return;
   }
 
-  // process input for special characters
-  if (cli_state_get("lastChar") === "/") {
-    cli_state.deepSet("menu", "slash");
-  }
+  // inspect current command
+  const start = command.lastIndexOf(" ", cursorPosition - 1) + 1;
+  const end = command.indexOf(" ", cursorPosition);
+  const curr = command.substring(start, end === -1 ? undefined : end);
+  const isSlashCommand = SLASH_COMMANDS.some((item) => item.command.startsWith(curr));
+  const isHashCommand = false; // Placeholder for hash commands, if any
+  const isAtCommand = false; // Placeholder for at commands, if any
 
-  if (cli_state_get("command") === "") {
-    cli_state.deepSet("menu", "none");
+  const menu_type: CliStateType["menu"] =
+    curr.startsWith("/") && isSlashCommand
+      ? "slash"
+      : curr.startsWith("#") && isHashCommand
+      ? "hash"
+      : curr.startsWith("@") && isAtCommand
+      ? "at"
+      : "none";
+
+  switch (menu_type) {
+    case "slash":
+      cli_state.deepSet("current_slash_command", curr);
+      cli_state.deepSet("menu", "slash");
+      break;
+    case "hash":
+    case "at":
+    case "none":
+      cli_state.deepSet("current_slash_command", "");
+      cli_state.deepSet("menu", "none");
+      break;
+    default:
+      cli_state.deepSet("current_slash_command", "");
+      cli_state.deepSet("menu", "none");
   }
 }
 
@@ -109,8 +139,8 @@ function SlashCommandMenuItem(item: SlashCommandType) {
     ["event:mouseout", () => item_hover_state.set(false)],
     ["style", "padding", "3px"],
     ["style", "borderRadius", "4px"],
-    ["style:cli", "display", "grid", () => item.command.startsWith(cli_state_get("command"))],
-    ["style:cli", "display", "none", () => !item.command.startsWith(cli_state_get("command"))],
+    ["style:cli", "display", "grid", () => item.command.startsWith(cli_state_get("current_slash_command"))],
+    ["style:cli", "display", "none", () => !item.command.startsWith(cli_state_get("current_slash_command"))],
     ["style", "alignItems", "center"],
     ["style", "cursor", "pointer"],
     ["style", "gap", "10px"],
