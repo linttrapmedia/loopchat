@@ -1,12 +1,14 @@
-import { HTML, useStyle } from "@linttrap/oem";
-import { theme_state, theme_state_eq } from "../state";
+import { HTML, useInnerHTML, useStyle } from "@linttrap/oem";
+import { theme_state, theme_state_eq, ui_state } from "../state";
 import { color } from "../theme";
 import { CommandLine } from "./cli";
 import { Help } from "./help";
+import { Thread } from "./thread";
 
 export const html = HTML({
   style: useStyle(),
   "style:theme": useStyle({ state: theme_state }),
+  "html:ui": useInnerHTML({ state: ui_state }),
 });
 
 const Header = html.div(
@@ -33,4 +35,4 @@ export const UI = html.div(
   ["style", "overflowY", "auto"],
   ["style", "scrollbarWidth", "thin"],
   ["style", "scrollbarColor", `${color.white_alpha_10} transparent`]
-)(Header, Help);
+)(Header, html.div(["html:ui", (state) => (state === "clean" ? Help() : Thread())])());

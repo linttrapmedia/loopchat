@@ -1,12 +1,19 @@
 import { HTML, State, useAttribute, useEvent, useStyle } from "@linttrap/oem";
-import { SLASH_COMMANDS } from "../constants";
-import { theme_state } from "../state";
+import {
+  menu_state_at_commands,
+  menu_state_hash_commands,
+  menu_state_slash_commands,
+  theme_state,
+  ui_state,
+} from "../state";
 import { color } from "../theme";
-import type { SlashCommandType } from "../types";
+import type { AtCommandType, SlashCommandType } from "../types";
 
 export type CliStateType = {
   cursor_position: number;
   current_slash_command: string;
+  current_hash_command: string;
+  current_at_command: string;
   command: string;
   firstChar: string;
   lastChar: string;
@@ -16,6 +23,8 @@ export type CliStateType = {
 const cli_state = State<CliStateType>({
   cursor_position: 0,
   current_slash_command: "",
+  current_hash_command: "", // Placeholder for future hash commands
+  current_at_command: "", // Placeholder for future at commands
   command: "",
   firstChar: "",
   lastChar: "",
@@ -72,9 +81,14 @@ function handleInput(evt?: Event) {
   cli_state.deepSet("lastChar", lastChar);
   cli_state.deepSet("firstChar", firstChar);
 
+  // top state
+  ui_state.set("dirty");
+
   // if the lastChar is a space, reset the command and return
-  if (lastCharIsSpace) {
+  if (lastCharIsSpace || command === "") {
     cli_state.deepSet("current_slash_command", "");
+    cli_state.deepSet("current_hash_command", "");
+    cli_state.deepSet("current_at_command", "");
     cli_state.deepSet("menu", "none");
     return;
   }
@@ -83,9 +97,9 @@ function handleInput(evt?: Event) {
   const start = command.lastIndexOf(" ", cursorPosition - 1) + 1;
   const end = command.indexOf(" ", cursorPosition);
   const curr = command.substring(start, end === -1 ? undefined : end);
-  const isSlashCommand = SLASH_COMMANDS.some((item) => item.command.startsWith(curr));
-  const isHashCommand = false; // Placeholder for hash commands, if any
-  const isAtCommand = false; // Placeholder for at commands, if any
+  const isSlashCommand = menu_state_slash_commands().some((item) => item.command.startsWith(curr));
+  const isHashCommand = menu_state_hash_commands().some((item) => item.command.startsWith(curr));
+  const isAtCommand = menu_state_at_commands().some((item) => item.command.startsWith(curr));
 
   const menu_type: CliStateType["menu"] =
     curr.startsWith("/") && isSlashCommand
@@ -102,14 +116,17 @@ function handleInput(evt?: Event) {
       cli_state.deepSet("menu", "slash");
       break;
     case "hash":
+      cli_state.deepSet("current_hash_command", curr);
+      cli_state.deepSet("menu", "hash");
+      break;
     case "at":
-    case "none":
-      cli_state.deepSet("current_slash_command", "");
-      cli_state.deepSet("menu", "none");
+      cli_state.deepSet("current_at_command", curr);
+      cli_state.deepSet("menu", "at");
       break;
     default:
       cli_state.deepSet("current_slash_command", "");
-      cli_state.deepSet("menu", "none");
+      cli_state.deepSet("current_hash_command", "");
+      cli_state.deepSet("current_at_command", "");
   }
 }
 
@@ -141,6 +158,47 @@ function SlashCommandMenuItem(item: SlashCommandType) {
     ["style", "borderRadius", "4px"],
     ["style:cli", "display", "grid", () => item.command.startsWith(cli_state_get("current_slash_command"))],
     ["style:cli", "display", "none", () => !item.command.startsWith(cli_state_get("current_slash_command"))],
+    ["style", "alignItems", "center"],
+    ["style", "cursor", "pointer"],
+    ["style", "gap", "10px"],
+    ["style", "gridTemplateColumns", "max-content auto"],
+    ["style:hover", "backgroundColor", "transparent", is_not_hovered],
+    ["style:hover", "color", color.white, is_not_hovered],
+    ["style:hover", "backgroundColor", color.white_alpha_50, is_hovered],
+    ["style:hover", "color", color.black, is_hovered]
+  )(
+    item_html.div(
+      ["style", "padding", "3px 5px"],
+      ["style", "borderRadius", "4px"],
+      ["style:hover", "backgroundColor", color.white_alpha_10, is_not_hovered],
+      ["style:hover", "color", color.white, is_not_hovered],
+      ["style:hover", "backgroundColor", color.white_alpha_50, is_hovered],
+      ["style:hover", "color", color.black, is_hovered]
+    )(item.command),
+    item.description
+  );
+}
+
+function AtCommandMenuItem(item: AtCommandType) {
+  const item_hover_state = State(false);
+  const is_hovered = () => item_hover_state.get() === true;
+  const is_not_hovered = () => item_hover_state.get() === false;
+
+  const item_html = HTML({
+    "event:mouseover": useEvent({ event: "mouseover" }),
+    "event:mouseout": useEvent({ event: "mouseout" }),
+    "style:hover": useStyle({ state: item_hover_state }),
+    "style:cli": useStyle({ state: cli_state }),
+    style: useStyle(),
+  });
+
+  return item_html.div(
+    ["event:mouseover", () => item_hover_state.set(true)],
+    ["event:mouseout", () => item_hover_state.set(false)],
+    ["style", "padding", "3px"],
+    ["style", "borderRadius", "4px"],
+    ["style:cli", "display", "grid", () => item.command.startsWith(cli_state_get("current_at_command"))],
+    ["style:cli", "display", "none", () => !item.command.startsWith(cli_state_get("current_at_command"))],
     ["style", "alignItems", "center"],
     ["style", "cursor", "pointer"],
     ["style", "gap", "10px"],
@@ -201,5 +259,14 @@ export const CommandLine = html.div(
     ["style", "display", "flex"],
     ["style:cli", "display", "flex", cli_state_eq("menu", "slash")],
     ["style:cli", "display", "none", cli_state_eq("menu", "none")]
-  )(...SLASH_COMMANDS.map(SlashCommandMenuItem))
+  )(...menu_state_slash_commands().map(SlashCommandMenuItem)),
+  html.div(
+    ["style", "padding", "10px 0"],
+    ["style", "margin", "10px 0 0"],
+    ["style", "flexDirection", "column"],
+    ["style", "gap", "2px"],
+    ["style", "display", "flex"],
+    ["style:cli", "display", "flex", cli_state_eq("menu", "at")],
+    ["style:cli", "display", "none", cli_state_eq("menu", "none")]
+  )(...menu_state_at_commands().map(AtCommandMenuItem))
 );
