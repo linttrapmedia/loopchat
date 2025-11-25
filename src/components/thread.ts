@@ -1,15 +1,10 @@
-import { HTML, useStyle } from "@linttrap/oem";
-import { theme_state } from "../state";
-
-export const html = HTML({
-  style: useStyle(),
-  "style:theme": useStyle({ state: theme_state }),
-});
+import { tag, trait } from "@/template";
 
 export const Thread = () =>
-  html.div(
-    ["style", "padding", "20px"],
-    ["style", "display", "flex"],
-    ["style", "flexDirection", "column"],
-    ["style", "gap", "20px"]
-  )("thread");
+  tag.div(
+    trait.style("padding", "20px"),
+    trait.style("display", "flex"),
+    trait.style("flexDirection", "column"),
+    trait.style("gap", "20px"),
+    "thread"
+  );

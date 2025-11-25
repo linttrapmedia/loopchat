@@ -10,7 +10,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@linttrap/oem": "^0.3.0"
+    "@linttrap/oem": "^2.1.1"
   },
   "scripts": {
     "dev": "bun run lab/dev.ts --hot"

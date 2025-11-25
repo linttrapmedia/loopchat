@@ -1,38 +1,34 @@
-import { HTML, useInnerHTML, useStyle } from "@linttrap/oem";
-import { theme_state, theme_state_eq, ui_state } from "../state";
-import { color } from "../theme";
-import { CommandLine } from "./cli";
-import { Help } from "./help";
-import { Thread } from "./thread";
+import { CommandLine } from "@/components/cli";
+import { Help } from "@/components/help";
+import { Thread } from "@/components/thread";
+import { colors, store } from "@/store";
+import { tag, trait } from "@/template";
 
-export const html = HTML({
-  style: useStyle(),
-  "style:theme": useStyle({ state: theme_state }),
-  "html:ui": useInnerHTML({ state: ui_state }),
-});
-
-const Header = html.div(
-  ["style", "display", "flex"],
-  ["style", "flexDirection", "row"],
-  ["style", "justifyContent", "space-between"],
-  ["style", "alignItems", "center"],
-  ["style", "padding", "10px"],
-  ["style", "borderBottom", `1px solid ${color.white_alpha_10}`]
-)(CommandLine);
-
-export const UI = html.div(
-  ["style", "fontFamily", "courier, monospace"],
-  ["style", "display", "flex"],
-  ["style", "flexDirection", "column"],
-  ["style", "width", "100%"],
-  ["style", "height", "100%"],
-  ["style:theme", "backgroundColor", color.black, theme_state_eq("dark")],
-  ["style:theme", "color", color.white_alpha_50, theme_state_eq("dark")],
-  ["style:theme", "backgroundColor", color.white, theme_state_eq("light")],
-  ["style:theme", "color", color.black, theme_state_eq("light")],
-  ["style", "fontSize", "13px"],
-  ["style", "lineHeight", "1"],
-  ["style", "overflowY", "auto"],
-  ["style", "scrollbarWidth", "thin"],
-  ["style", "scrollbarColor", `${color.white_alpha_10} transparent`]
-)(Header, html.div(["html:ui", (state) => (state === "clean" ? Help() : Thread())])());
+export const UI = tag.div(
+  trait.style("fontFamily", "courier, monospace"),
+  trait.style("display", "flex"),
+  trait.style("flexDirection", "column"),
+  trait.style("width", "100%"),
+  trait.style("height", "100%"),
+  trait.style("backgroundColor", colors.black, store.data.theme.$test("dark")),
+  trait.style("color", colors.white_alpha_50, store.data.theme.$test("dark")),
+  trait.style("backgroundColor", colors.white, store.data.theme.$test("light")),
+  trait.style("color", colors.black, store.data.theme.$test("light")),
+  trait.style("fontSize", "13px"),
+  trait.style("lineHeight", "1"),
+  trait.style("overflowY", "auto"),
+  trait.style("scrollbarWidth", "thin"),
+  trait.style("scrollbarColor", `${colors.white_alpha_10} transparent`),
+  // Header
+  tag.div(
+    trait.style("display", "flex"),
+    trait.style("flexDirection", "row"),
+    trait.style("justifyContent", "space-between"),
+    trait.style("alignItems", "center"),
+    trait.style("padding", "10px"),
+    trait.style("borderBottom", `1px solid ${colors.white_alpha_10}`),
+    CommandLine
+  ),
+  // Body
+  tag.div(trait.html(Help, store.data.ui.$test("clean")), trait.html(Thread, store.data.ui.$test("dirty")))
+);

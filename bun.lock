@@ -4,7 +4,7 @@
     "": {
       "name": "loopchat",
       "dependencies": {
-        "@linttrap/oem": "^0.3.0",
+        "@linttrap/oem": "^2.1.1",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -15,7 +15,7 @@
     },
   },
   "packages": {
-    "@linttrap/oem": ["@linttrap/oem@0.3.0", "", {}, "sha512-GWoJbXQeiqK5FY9dp74xlNyjou/OTak9GPQWENn7S6CqN29Dky6RIJJKh4fZ1kj7fmoL7IEc9jrpbMFc3TvmJQ=="],
+    "@linttrap/oem": ["@linttrap/oem@2.1.1", "", { "dependencies": { "@linttrap/oem": "^1.0.2" }, "peerDependencies": { "typescript": "^5" } }, "sha512-RretczrHV+dQ5w33UtmpmybEJp2zQxVqI2wAGmjpe392T0Fxf6WbmUth/2q3tiikv6Z0jNAmYxBKjD3ETuU3Tg=="],
 
     "@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
 
@@ -26,5 +26,7 @@
     "typescript": ["typescript@5.8.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
 
     "undici-types": ["undici-types@7.8.0", "", {}, "sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw=="],
+
+    "@linttrap/oem/@linttrap/oem": ["@linttrap/oem@1.0.2", "", { "dependencies": { "@linttrap/oem": "^1.0.0" }, "peerDependencies": { "typescript": "^5" } }, "sha512-QMugNIDHFHdEum3b0hfAP7RY8Micgpi5UnoT6YrHlAbVLSXCkkvEA6F5O/p3IZtTekVPxyQtI+jkEjNxet44kQ=="],
   }
 }

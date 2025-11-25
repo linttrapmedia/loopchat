@@ -1,3 +1,13 @@
+export type CliStateType = {
+  command: string;
+  current_command: string;
+  cursor_position: number;
+  firstChar: string;
+  lastChar: string;
+  menu_suggestion_index: number;
+  menu: "showing" | "hidden";
+};
+
 export type SlashCommandType = {
   command: string;
   description: string;
