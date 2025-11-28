@@ -9,10 +9,10 @@
   },
   "private": true,
   "scripts": {
-    "dev": "bun run lab/dev.ts --hot"
+    "dev": "bun run dev/server.ts --hot"
   },
   "type": "module",
   "dependencies": {
-    "@linttrap/oem": "^2.1.2"
+    "@linttrap/oem": "^2.2.2"
   }
 }

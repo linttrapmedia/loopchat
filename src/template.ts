@@ -1,4 +1,4 @@
-import { Template } from "@linttrap/oem";
+import { Template, useInputEventTrait, useInputValueTrait } from "@linttrap/oem";
 import {
   useAttributeTrait,
   useEventTrait,
@@ -11,4 +11,6 @@ export const [tag, trait] = Template({
   event: useEventTrait,
   html: useInnerHTMLTrait,
   style: useStyleTrait,
+  input: useInputEventTrait,
+  value: useInputValueTrait,
 });
