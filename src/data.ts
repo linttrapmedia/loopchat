@@ -1,4 +1,3 @@
-import icons from "@/icons";
 import util from "@/util";
 import { State, Storage } from "@linttrap/oem";
 import { type MenuType, type ObjectType, type ThemeType } from "./types";
@@ -9,6 +8,63 @@ export const hex = {
   red: "#a25454",
   brand: "#6c63ff",
 };
+
+const menu: MenuType[] = [
+  // object manager grid
+  {
+    id: "1",
+    title: "Objects",
+    description: "Object manager",
+    icon: "box",
+    action: () => {},
+    active: true,
+  },
+  // Notifications
+  {
+    id: "2",
+    title: "Notifications",
+    description: "Notification center",
+    icon: "envelope",
+    action: () => {},
+    active: false,
+  },
+  // agents
+  {
+    id: "4",
+    title: "Agents",
+    description: "Agent manager",
+    icon: "robot",
+    action: () => {},
+    active: false,
+  },
+  // task manager and calendar
+  {
+    id: "3",
+    title: "Tasks",
+    description: "Task manager",
+    icon: "clipboard",
+    action: () => {},
+    active: false,
+  },
+  // Logs
+  {
+    id: "6",
+    title: "Logs",
+    description: "System logs",
+    icon: "list",
+    action: () => {},
+    active: false,
+  },
+  // settings
+  {
+    id: "5",
+    title: "Settings",
+    description: "App settings",
+    icon: "gear",
+    action: () => {},
+    active: false,
+  },
+];
 
 const gridColState = () => {
   const state = State<number>(0);
@@ -25,10 +81,12 @@ const gridColState = () => {
 
 const gridRowState = () => {
   const state = State<number>(0);
+  // account for the two fixed rows at the top of the UI
+  const minRows = menu.length + 2;
   const apply = () => {
     const height = window.innerHeight;
     const rows = Math.floor(height / 50);
-    state.set(rows);
+    state.set(rows < minRows ? minRows : rows);
   };
   apply();
   window.addEventListener("orientationchange", util.debounce(apply, 100));
@@ -42,59 +100,10 @@ export const store = Storage({
     debug: [State<boolean>(true), "memory"],
     grid_cols: [gridColState(), "memory"],
     grid_rows: [gridRowState(), "memory"],
-    menu: [
-      State<MenuType[]>([
-        // object manager grid
-        {
-          id: "1",
-          title: "Objects",
-          description: "Object manager",
-          icon: icons.box(hex.white),
-          action: () => {},
-          active: true,
-        },
-        // messages and updates
-        {
-          id: "2",
-          title: "Messages",
-          description: "Message center",
-          icon: icons.box(hex.white),
-          action: () => {},
-          active: false,
-        },
-        // task manager and calendar
-        {
-          id: "3",
-          title: "Tasks",
-          description: "Task manager",
-          icon: icons.box(hex.white),
-          action: () => {},
-          active: false,
-        },
-        // agents
-        {
-          id: "4",
-          title: "Agents",
-          description: "Agent manager",
-          icon: icons.box(hex.white),
-          action: () => {},
-          active: false,
-        },
-        // settings
-        {
-          id: "5",
-          title: "Settings",
-          description: "App settings",
-          icon: icons.box(hex.white),
-          action: () => {},
-          active: false,
-        },
-      ]),
-      "localStorage",
-    ],
+    menu: [State<MenuType[]>(menu), "localStorage"],
     objects: [
       State<ObjectType[]>([
-        { id: "1", name: "Alice", noun: "person" },
+        { id: "1", name: "Alice", noun: "person", selected: true },
         { id: "1", name: "Allan", noun: "person" },
         { id: "2", name: "Wonderland", noun: "place" },
         { id: "3", name: "Rabbit Hole", noun: "thing" },
@@ -114,7 +123,7 @@ export const store = Storage({
       "localStorage",
     ],
     theme: [State<ThemeType>("dark"), "localStorage"],
-    uiState: [State<"init" | "ready">("init"), "localStorage"],
+    uiState: [State<"init" | "ready">("init"), "memory"],
   },
 });
 

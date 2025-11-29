@@ -5,7 +5,7 @@
     "": {
       "name": "loopchat",
       "dependencies": {
-        "@linttrap/oem": "^2.2.1",
+        "@linttrap/oem": "^2.2.2",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -16,7 +16,7 @@
     },
   },
   "packages": {
-    "@linttrap/oem": ["@linttrap/oem@2.2.2", "", { "dependencies": { "@linttrap/oem": "^1.0.2" }, "peerDependencies": { "typescript": "^5" } }, "sha512-iEtP1TdAPoLRzTmrrwKjMbf044Zm4nRratVWACn8dwgfpqFxsuyoJcZc2VVv65evhsTIzqXNpjnZO49Kd4WZPg=="],
+    "@linttrap/oem": ["@linttrap/oem@2.2.3", "", { "dependencies": { "@linttrap/oem": "^1.0.2" }, "peerDependencies": { "typescript": "^5" } }, "sha512-4dn69OrH6w5UabnSBsllJE6aix2i+O01g0WKKqsUUH94kYkkxb2bhkSgEoStUP5L8pk+gwNjXeeIwcuuYzLeGw=="],
 
     "@types/bun": ["@types/bun@1.3.3", "", { "dependencies": { "bun-types": "1.3.3" } }, "sha512-ogrKbJ2X5N0kWLLFKeytG0eHDleBYtngtlbu9cyBKFtNL3cnpDZkNdQj8flVf6WTZUX5ulI9AY1oa7ljhSrp+g=="],
 

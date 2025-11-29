@@ -13,6 +13,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@linttrap/oem": "^2.2.2"
+    "@linttrap/oem": "^2.2.3"
   }
 }

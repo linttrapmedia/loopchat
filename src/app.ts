@@ -1,5 +1,8 @@
+import { $fsm } from "@/fsm";
+import { icons } from "@/icons";
 import { tag, trait } from "@/template";
 import util from "@/util";
+import { $test } from "@linttrap/oem";
 import { hex, store, totalGridCells } from "./data";
 
 export const UI = tag.div(
@@ -7,6 +10,7 @@ export const UI = tag.div(
   trait.style("fontFamily", "courier, monospace"),
   trait.style("width", "100vw"),
   trait.style("height", "100vh"),
+  trait.style("overflow", "scroll"),
   trait.style("backgroundColor", hex.black, store.data.theme.$test("dark")),
   trait.style("backgroundColor", hex.white, store.data.theme.$test("light")),
   trait.style("color", util.alpha(hex.white, 0.5), store.data.theme.$test("dark")),
@@ -110,17 +114,20 @@ export const UI = tag.div(
 
   // Logo / Hamburger
   tag.div(
-    trait.style("gridColumn", () => `1 / span 1`),
+    trait.style("gridColumn", () => `1 / span 2`),
     trait.style("gridRow", "1 / span 1"),
-    trait.style("padding", "10px"),
+    trait.style("padding", "0 10px"),
     trait.style("textAlign", "center"),
     trait.style("display", "flex"),
     trait.style("alignItems", "center"),
     trait.style("justifyContent", "center"),
     trait.style("backgroundColor", hex.black),
     trait.style("color", hex.brand),
-    trait.style("fontWeight", "bold"),
-    "L00P"
+    trait.style("margin", "1px"),
+    trait.style("letterSpacing", "-1px"),
+    "L",
+    tag.span(trait.style("fontSize", "21px"), "∞"),
+    "P"
   ),
 
   // Menu
@@ -130,19 +137,24 @@ export const UI = tag.div(
     trait.style("display", "grid"),
     trait.style("gridTemplateColumns", "subgrid"),
     trait.style("gridTemplateRows", "subgrid"),
-    trait.html(() =>
-      store.data.menu
-        .val()
-        .map((item) =>
-          tag.div(
-            trait.style("display", "flex"),
-            trait.style("alignItems", "center"),
-            trait.style("cursor", "pointer"),
-            trait.style("justifyContent", "center"),
-            trait.style("fontSize", "20px"),
-            item.icon
-          )
+    trait.html(
+      store.data.menu.$call("map", (item) =>
+        tag.div(
+          trait.style("display", "flex"),
+          trait.style("alignItems", "center"),
+          trait.style("cursor", "pointer"),
+          trait.style("justifyContent", "center"),
+          trait.style("fontSize", "12px"),
+          trait.style("padding", "10px"),
+          trait.style("color", util.alpha(hex.white, 0.2), $test(!item.active)),
+          trait.style("color", hex.brand, $test(item.active)),
+          trait.styleOnEvt("mouseover", "color", util.alpha(hex.white, 0.5), $test(!item.active)),
+          trait.styleOnEvt("mouseout", "color", util.alpha(hex.white, 0.2), $test(!item.active)),
+          trait.event("click", $fsm("ACTIVE_MENU_ITEM", item.id)),
+          icons[item.icon]()
         )
+      ),
+      store.data.menu
     )
   ),
 
@@ -154,6 +166,8 @@ export const UI = tag.div(
     trait.style("alignItems", "center"),
     trait.style("gridColumn", () => `3 / span ${store.data.grid_cols.val() - 1}`, store.data.grid_cols),
     trait.style("gridRow", "1 / span 1"),
+    trait.style("margin", "1px"),
+    trait.style("backgroundColor", hex.black),
     // Title
     tag.input(
       trait.attr("type", "text"),
@@ -165,7 +179,6 @@ export const UI = tag.div(
       trait.style("fontSize", "13px"),
       trait.style("fontFamily", "inherit"),
       trait.style("backgroundColor", "transparent"),
-      trait.style("margin", "2px"),
       trait.style("color", "inherit"),
       trait.style("width", "100%"),
       trait.style("height", "100%"),
@@ -173,15 +186,6 @@ export const UI = tag.div(
       trait.value(store.data.chat.$val)
     )
   ),
-
-  // Preview
-  // tag.div(
-  //   trait.style("gridColumn", () => `${store.data.grid_cols.val() - 1} / -1`, store.data.grid_cols),
-  //   trait.style("gridRow", "2 / -1"),
-  //   trait.style("padding", "10px"),
-  //   trait.style("backgroundColor", "rgba(255, 255, 255, 0.03)"),
-  //   "Preview"
-  // ),
 
   // Objects Grid
   tag.div(
@@ -191,17 +195,24 @@ export const UI = tag.div(
     trait.style("display", "grid"),
     trait.style("gridTemplateColumns", "subgrid"),
     trait.style("gridTemplateRows", "subgrid"),
-    ...store.data.objects
-      .val()
-      .map((obj) =>
+    trait.html(
+      store.data.objects.$call("map", (obj) =>
         tag.div(
-          trait.style("borderRight", `3px solid ${util.alpha(hex.white, 0.5)}`),
-          trait.style("borderBottom", `3px solid ${util.alpha(hex.white, 0.5)}`),
-          trait.style("borderTop", `1px solid ${util.alpha(hex.white, 0.5)}`),
-          trait.style("borderLeft", `1px solid ${util.alpha(hex.white, 0.5)}`),
+          trait.style("borderRight", `2px solid ${util.alpha(hex.white, 0.2)}`, $test(!obj.selected)),
+          trait.style("borderRight", `2px solid ${util.alpha(hex.brand, 0.5)}`, $test(!!obj.selected)),
+          trait.style("borderBottom", `2px solid ${util.alpha(hex.white, 0.2)}`, $test(!obj.selected)),
+          trait.style("borderBottom", `2px solid ${util.alpha(hex.brand, 0.5)}`, $test(!!obj.selected)),
           trait.style("borderRadius", "3px"),
           trait.style("margin", "3px"),
-          trait.style("color", hex.white),
+          trait.style("color", hex.brand, $test(!!obj.selected)),
+          trait.style("color", util.alpha(hex.white, 0.3), $test(!obj.selected)),
+          trait.style("backgroundColor", util.alpha(hex.white, 0.05), $test(!!obj.selected)),
+          trait.style("backgroundColor", "transparent", $test(!obj.selected)),
+          trait.styleOnEvt("mouseover", "backgroundColor", util.alpha(hex.white, 0.1), $test(!obj.selected)),
+          trait.styleOnEvt("mouseout", "backgroundColor", "transparent", $test(!obj.selected)),
+          trait.style("transition", "background-color 0.2s ease"),
+          trait.style("cursor", "pointer"),
+          trait.style("padding", "10px"),
           trait.style("display", "flex"),
           trait.style("flexDirection", "column"),
           trait.style("alignItems", "center"),
@@ -210,5 +221,6 @@ export const UI = tag.div(
           tag.div(obj.name)
         )
       )
+    )
   )
 );

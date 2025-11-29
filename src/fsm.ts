@@ -1,19 +1,38 @@
-import { UI } from "@/app";
 import { store } from "@/data";
 import type { Actions } from "@/types";
 
-export const fsm = (evt: Actions) => {
-  const [action] = evt;
+export function fsm<T extends Actions>(...args: T) {
+  const [action, payload] = args;
+  console.log(store.data.uiState.val(), args);
   switch (store.data.uiState.val()) {
     case "init":
       switch (action) {
         case "INIT":
-          const root = document.getElementById("root");
-          if (!root) return console.error("Root element not found");
-          root.append(UI);
+          store.data.uiState.set("ready");
+      }
+      break;
+    case "ready":
+      switch (action) {
+        case "ACTIVE_MENU_ITEM":
+          const newMenu = store.data.menu.val().map((i) => {
+            if (i.id === payload) {
+              i.active = true;
+            } else {
+              i.active = false;
+            }
+            return i;
+          });
+          store.data.menu.set(newMenu);
+          break;
       }
       break;
     default:
     // noop
   }
-};
+}
+
+// create a callback version of fsm
+export const $fsm =
+  <T extends Actions>(...args: T) =>
+  () =>
+    fsm(...args);
