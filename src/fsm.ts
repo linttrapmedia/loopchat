@@ -9,7 +9,14 @@ function keyFsm(e: KeyboardEvent) {
         case "normal":
           if (e.ctrlKey) store.data.showCommands.set(true);
           if (e.altKey) store.data.showCommands.set(true);
-          if (e.key === "Escape") fsm("SWITCH_MODE", "command");
+          if (e.key === "/") {
+            e.preventDefault();
+            fsm("SWITCH_MODE", "command");
+          }
+          if (e.key === "Escape") {
+            e.preventDefault();
+            store.data.showCommands.set(false);
+          }
           if (e.key === "ArrowDown") {
             const menuLabels = Object.keys(VIEWS);
             const currentIndex = menuLabels.indexOf(store.data.view.val());
@@ -59,6 +66,10 @@ export function fsm<T extends Actions>(...args: T) {
           store.data.view.set(payload);
           break;
         case "SWITCH_MODE":
+          if (payload === "command") {
+            // TBD: maybe do this in keyFsm if ctrl?
+            // store.data.chat.set("");
+          }
           store.data.mode.set(payload);
           break;
       }

@@ -5,7 +5,7 @@
     "": {
       "name": "loopchat",
       "dependencies": {
-        "@linttrap/oem": "^2.2.3",
+        "@linttrap/oem": "^2.2.4",
       },
       "devDependencies": {
         "@types/bun": "latest",

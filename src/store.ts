@@ -35,8 +35,8 @@ export const store = Storage({
   data: {
     chat: [State<string>(""), "localStorage"],
     debug: [State<boolean>(true), "memory"],
-    grid_cols: [gridColState(), "localStorage"],
-    grid_rows: [gridRowState(), "localStorage"],
+    obj_grid_cols: [gridColState(), "localStorage"],
+    obj_grid_rows: [gridRowState(), "localStorage"],
     mode: [State<Mode>("normal"), "localStorage"],
     objects: [
       State<ObjectType[]>([
@@ -67,4 +67,4 @@ export const store = Storage({
 });
 
 export const totalGridCells = () =>
-  Array.from({ length: store.data.grid_rows.val() * store.data.grid_cols.val() }, (_, i) => i);
+  Array.from({ length: store.data.obj_grid_rows.val() * store.data.obj_grid_cols.val() }, (_, i) => i);

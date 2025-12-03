@@ -124,13 +124,13 @@ export const UI = tag.div(
     trait.style("display", "grid"),
     trait.style(
       "gridTemplateColumns",
-      () => `max-content repeat(${store.data.grid_cols.val()}, 1fr)`,
-      store.data.grid_cols
+      () => `max-content repeat(${store.data.obj_grid_cols.val()}, 1fr)`,
+      store.data.obj_grid_cols
     ),
     trait.style(
       "gridTemplateRows",
-      () => `max-content repeat(${store.data.grid_rows.val()}, 1fr)`,
-      store.data.grid_rows
+      () => `max-content repeat(${store.data.obj_grid_rows.val()}, 1fr)`,
+      store.data.obj_grid_rows
     ),
     trait.style("width", "100%"),
     trait.style("height", "100%"),
@@ -141,13 +141,13 @@ export const UI = tag.div(
       trait.style("gridTemplateColumns", "subgrid"),
       trait.style("gridTemplateRows", "subgrid"),
       trait.style("pointerEvents", "none"),
-      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
-      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.style("gridColumn", () => `1 / -1`, store.data.obj_grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.obj_grid_rows),
       trait.style("width", "100%"),
       trait.style("height", "100%"),
       trait.html(
         () =>
-          Array.from({ length: store.data.grid_rows.val() + 1 }, (_, i) => i).map((_, i) =>
+          Array.from({ length: store.data.obj_grid_rows.val() + 1 }, (_, i) => i).map((_, i) =>
             tag.div(
               trait.style("gridColumn", "1/-1"),
               trait.style("alignItems", "center"),
@@ -156,8 +156,8 @@ export const UI = tag.div(
               // `${i + 1}`
             )
           ),
-        store.data.grid_cols,
-        store.data.grid_rows
+        store.data.obj_grid_cols,
+        store.data.obj_grid_rows
       )
     ),
 
@@ -167,13 +167,13 @@ export const UI = tag.div(
       trait.style("gridTemplateColumns", "subgrid"),
       trait.style("gridTemplateRows", "subgrid"),
       trait.style("pointerEvents", "none"),
-      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
-      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.style("gridColumn", () => `1 / -1`, store.data.obj_grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.obj_grid_rows),
       trait.style("width", "100%"),
       trait.style("height", "100%"),
       trait.html(
         () =>
-          Array.from({ length: store.data.grid_cols.val() + 1 }, (_, i) => i).map((_, i) =>
+          Array.from({ length: store.data.obj_grid_cols.val() + 1 }, (_, i) => i).map((_, i) =>
             tag.div(
               trait.style("gridRow", "1/-1"),
               trait.style("alignItems", "center"),
@@ -182,8 +182,8 @@ export const UI = tag.div(
               // `${i + 1}`
             )
           ),
-        store.data.grid_cols,
-        store.data.grid_rows
+        store.data.obj_grid_cols,
+        store.data.obj_grid_rows
       )
     ),
 
@@ -194,14 +194,14 @@ export const UI = tag.div(
       trait.style("gridTemplateRows", "subgrid"),
       trait.style("pointerEvents", "none"),
       trait.style("fontFamily", "courier, monospace"),
-      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
-      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.style("gridColumn", () => `1 / -1`, store.data.obj_grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.obj_grid_rows),
       trait.html(
         () =>
-          Array.from({ length: store.data.grid_rows.val() }).map((_, rowIndex) =>
+          Array.from({ length: store.data.obj_grid_rows.val() }).map((_, rowIndex) =>
             tag.div(
               trait.style("gridColumn", "1 / span 1"),
-              trait.style("gridRow", () => `${rowIndex + 2} / span 1`, store.data.grid_rows),
+              trait.style("gridRow", () => `${rowIndex + 2} / span 1`, store.data.obj_grid_rows),
               trait.style("fontSize", "10px"),
               trait.style("display", "flex"),
               trait.style("alignItems", "center"),
@@ -210,8 +210,8 @@ export const UI = tag.div(
               `${rowIndex + 1}`
             )
           ),
-        store.data.grid_rows,
-        store.data.grid_cols
+        store.data.obj_grid_rows,
+        store.data.obj_grid_cols
       )
     ),
 
@@ -222,14 +222,14 @@ export const UI = tag.div(
       trait.style("gridTemplateRows", "subgrid"),
       trait.style("pointerEvents", "none"),
       trait.style("fontFamily", "courier, monospace"),
-      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
-      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.style("gridColumn", () => `1 / -1`, store.data.obj_grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.obj_grid_rows),
       trait.html(
         () =>
-          Array.from({ length: store.data.grid_cols.val() }).map((_, colIndex) =>
+          Array.from({ length: store.data.obj_grid_cols.val() }).map((_, colIndex) =>
             tag.div(
               trait.style("gridRow", "1 / span 1"),
-              trait.style("gridColumn", () => `${colIndex + 2} / span 1`, store.data.grid_cols),
+              trait.style("gridColumn", () => `${colIndex + 2} / span 1`, store.data.obj_grid_cols),
               trait.style("fontSize", "10px"),
               trait.style("display", "flex"),
               trait.style("alignItems", "center"),
@@ -238,8 +238,8 @@ export const UI = tag.div(
               `${colIndex + 1}`
             )
           ),
-        store.data.grid_cols,
-        store.data.grid_rows
+        store.data.obj_grid_cols,
+        store.data.obj_grid_rows
       )
     ),
 
@@ -265,8 +265,13 @@ export const UI = tag.div(
             trait.style("color", util.alpha(HEX.brand, 0.3), $test(obj.selected, false)),
             trait.style("backgroundColor", util.alpha(HEX.brand, 0.05), $test(obj.selected, true)),
             trait.style("backgroundColor", "transparent", $test(obj.selected, false)),
-            trait.styleOnEvt("mouseover", "backgroundColor", util.alpha(HEX.brand, 0.1), $test(obj.selected, false)),
-            trait.styleOnEvt("mouseout", "backgroundColor", "transparent", $test(obj.selected, false)),
+            trait.styleOnEvt(
+              "mouseover",
+              "backgroundColor",
+              util.alpha(HEX.brand, 0.1),
+              $test(obj.selected ?? false, false)
+            ),
+            trait.styleOnEvt("mouseout", "backgroundColor", "transparent", $test(obj.selected ?? false, false)),
             trait.style("transition", "background-color 0.2s ease"),
             trait.style("cursor", "pointer"),
             trait.style("padding", "10px"),
@@ -276,11 +281,14 @@ export const UI = tag.div(
             trait.style("justifyContent", "center"),
             trait.style("textAlign", "center"),
             trait.style("textTransform", "uppercase"),
+            trait.event("click", () => {
+              alert(`Clicked on object: ${obj.name}`);
+            }),
             tag.div(obj.name)
           )
         ),
-        store.data.grid_cols,
-        store.data.grid_rows
+        store.data.obj_grid_cols,
+        store.data.obj_grid_rows
       )
     )
   ),
@@ -291,6 +299,7 @@ export const UI = tag.div(
     trait.style("gridRow", `-1 / -1`),
     trait.style("padding", "10px"),
     trait.style("borderTop", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+    trait.style("textTransform", "uppercase"),
     tag.span(trait.style("opacity", 0.5), "MODE: "),
     store.data.mode.$val
   )
