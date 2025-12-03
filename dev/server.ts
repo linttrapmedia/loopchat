@@ -10,6 +10,11 @@ serve({
   },
   routes: {
     "/": homepage,
+    "/assets/:file": (req) => {
+      const { file } = req.params;
+      const asset = Bun.file(`./dev/assets/${file}`);
+      return new Response(asset);
+    },
   },
 });
 

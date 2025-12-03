@@ -9,11 +9,16 @@
       * {
         box-sizing: border-box;
       }
+      @font-face {
+        font-family: "Glass";
+        src: url("/assets/Glass_TTY_VT220.ttf") format("truetype");
+      }
       body {
         margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
+        font-family: "Glass", courier, monospace;
+        background-color: #121316;
         font-size: 12px;
+        font-weight: 700;
       }
       #root {
         display: flex;

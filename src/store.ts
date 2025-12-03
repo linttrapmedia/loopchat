@@ -1,70 +1,7 @@
+import { VIEWS } from "@/constants";
 import util from "@/util";
 import { State, Storage } from "@linttrap/oem";
-import { type MenuType, type ObjectType, type ThemeType } from "./types";
-
-export const hex = {
-  black: "#121316",
-  white: "#ebebeb",
-  red: "#a25454",
-  brand: "#6c63ff",
-};
-
-const menu: MenuType[] = [
-  // object manager grid
-  {
-    id: "1",
-    title: "Objects",
-    description: "Object manager",
-    icon: "box",
-    action: () => {},
-    active: true,
-  },
-  // Notifications
-  {
-    id: "2",
-    title: "Notifications",
-    description: "Notification center",
-    icon: "envelope",
-    action: () => {},
-    active: false,
-  },
-  // agents
-  {
-    id: "4",
-    title: "Agents",
-    description: "Agent manager",
-    icon: "robot",
-    action: () => {},
-    active: false,
-  },
-  // task manager and calendar
-  {
-    id: "3",
-    title: "Tasks",
-    description: "Task manager",
-    icon: "clipboard",
-    action: () => {},
-    active: false,
-  },
-  // Logs
-  {
-    id: "6",
-    title: "Logs",
-    description: "System logs",
-    icon: "list",
-    action: () => {},
-    active: false,
-  },
-  // settings
-  {
-    id: "5",
-    title: "Settings",
-    description: "App settings",
-    icon: "gear",
-    action: () => {},
-    active: false,
-  },
-];
+import { type Mode, type ObjectType, type ThemeType } from "./types";
 
 const gridColState = () => {
   const state = State<number>(0);
@@ -82,7 +19,7 @@ const gridColState = () => {
 const gridRowState = () => {
   const state = State<number>(0);
   // account for the two fixed rows at the top of the UI
-  const minRows = menu.length + 2;
+  const minRows = Object.entries(VIEWS).length + 2;
   const apply = () => {
     const height = window.innerHeight;
     const rows = Math.floor(height / 50);
@@ -98,9 +35,9 @@ export const store = Storage({
   data: {
     chat: [State<string>(""), "localStorage"],
     debug: [State<boolean>(true), "memory"],
-    grid_cols: [gridColState(), "memory"],
-    grid_rows: [gridRowState(), "memory"],
-    menu: [State<MenuType[]>(menu), "localStorage"],
+    grid_cols: [gridColState(), "localStorage"],
+    grid_rows: [gridRowState(), "localStorage"],
+    mode: [State<Mode>("normal"), "localStorage"],
     objects: [
       State<ObjectType[]>([
         { id: "1", name: "Alice", noun: "person", selected: true },
@@ -124,6 +61,8 @@ export const store = Storage({
     ],
     theme: [State<ThemeType>("dark"), "localStorage"],
     uiState: [State<"init" | "ready">("init"), "memory"],
+    view: [State<keyof typeof VIEWS>("Objects"), "localStorage"],
+    showCommands: [State<boolean>(false), "memory"],
   },
 });
 

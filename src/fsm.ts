@@ -1,5 +1,44 @@
-import { store } from "@/data";
-import type { Actions } from "@/types";
+import { VIEWS } from "@/constants";
+import { store } from "@/store";
+import { type Actions } from "@/types";
+
+function keyFsm(e: KeyboardEvent) {
+  switch (e.type) {
+    case "keydown":
+      switch (store.data.mode.val()) {
+        case "normal":
+          if (e.ctrlKey) store.data.showCommands.set(true);
+          if (e.altKey) store.data.showCommands.set(true);
+          if (e.key === "Escape") fsm("SWITCH_MODE", "command");
+          if (e.key === "ArrowDown") {
+            const menuLabels = Object.keys(VIEWS);
+            const currentIndex = menuLabels.indexOf(store.data.view.val());
+            const nextIndex = (currentIndex + 1) % menuLabels.length;
+            fsm("ACTIVE_MENU_ITEM", menuLabels[nextIndex] as any);
+          }
+          if (e.key === "ArrowUp") {
+            const menuLabels = Object.keys(VIEWS);
+            const currentIndex = menuLabels.indexOf(store.data.view.val());
+            const nextIndex = (currentIndex - 1 + menuLabels.length) % menuLabels.length;
+            fsm("ACTIVE_MENU_ITEM", menuLabels[nextIndex] as any);
+          }
+          break;
+        case "command":
+          if (e.key === "Escape") fsm("SWITCH_MODE", "normal");
+          break;
+      }
+
+      break;
+    case "keyup":
+      switch (store.data.mode.val()) {
+        case "normal":
+          if (!e.ctrlKey) store.data.showCommands.set(false);
+          if (!e.altKey) store.data.showCommands.set(false);
+          break;
+      }
+      break;
+  }
+}
 
 export function fsm<T extends Actions>(...args: T) {
   const [action, payload] = args;
@@ -9,20 +48,18 @@ export function fsm<T extends Actions>(...args: T) {
       switch (action) {
         case "INIT":
           store.data.uiState.set("ready");
+          document.addEventListener("keydown", keyFsm);
+          document.addEventListener("keyup", keyFsm);
+          break;
       }
       break;
     case "ready":
       switch (action) {
         case "ACTIVE_MENU_ITEM":
-          const newMenu = store.data.menu.val().map((i) => {
-            if (i.id === payload) {
-              i.active = true;
-            } else {
-              i.active = false;
-            }
-            return i;
-          });
-          store.data.menu.set(newMenu);
+          store.data.view.set(payload);
+          break;
+        case "SWITCH_MODE":
+          store.data.mode.set(payload);
           break;
       }
       break;

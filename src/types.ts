@@ -1,4 +1,12 @@
+import type { VIEWS } from "@/constants";
 import type { icons } from "@/icons";
+
+export type Actions =
+  | [action: "INIT"]
+  | [action: "ACTIVE_MENU_ITEM", id: keyof typeof VIEWS]
+  | [action: "SWITCH_MODE", mode: Mode];
+
+export type Mode = "normal" | "command";
 
 export type ThemeType = "light" | "dark";
 
@@ -9,13 +17,12 @@ export type ObjectType = {
   selected?: boolean;
 };
 
-export type MenuType = {
-  id: string;
-  title: string;
+export type ViewNames = "Objects" | "Notifications" | "Agents" | "Tasks" | "Logs" | "Settings";
+
+export type ViewType = {
+  label: string;
   description: string;
   icon: keyof typeof icons;
-  action: () => void;
-  active: boolean;
+  ctrlCommands?: Record<string, [description: string, action: Actions]>;
+  altCommands?: Record<string, [description: string, action: Actions]>;
 };
-
-export type Actions = [action: "INIT"] | [action: "ACTIVE_MENU_ITEM", id: string];

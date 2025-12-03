@@ -1,161 +1,40 @@
+import { HEX, VIEWS } from "@/constants";
 import { $fsm } from "@/fsm";
 import { icons } from "@/icons";
 import { tag, trait } from "@/template";
+import type { ViewType } from "@/types";
 import util from "@/util";
 import { $test } from "@linttrap/oem";
-import { hex, store, totalGridCells } from "./data";
+import { store } from "./store";
 
 export const UI = tag.div(
   trait.style("padding", "3px"),
-  trait.style("fontFamily", "courier, monospace"),
   trait.style("width", "100vw"),
   trait.style("height", "100vh"),
   trait.style("overflow", "scroll"),
-  trait.style("backgroundColor", hex.black, store.data.theme.$test("dark")),
-  trait.style("backgroundColor", hex.white, store.data.theme.$test("light")),
-  trait.style("color", util.alpha(hex.white, 0.5), store.data.theme.$test("dark")),
-  trait.style("color", hex.black, store.data.theme.$test("light")),
   trait.style("display", "grid"),
-  trait.style(
-    "gridTemplateColumns",
-    () => `max-content max-content repeat(${store.data.grid_cols.val() - 2}, 1fr)`,
-    store.data.grid_cols
-  ),
-  trait.style(
-    "gridTemplateRows",
-    () => `max-content max-content repeat(${store.data.grid_rows.val() - 2}, 1fr)`,
-    store.data.grid_rows
-  ),
+  trait.style("gridTemplateColumns", "max-content 1fr max-content"),
+  trait.style("gridTemplateRows", "max-content 1fr max-content"),
+  trait.style("backgroundColor", HEX.black, store.data.theme.$test("dark")),
+  trait.style("backgroundColor", HEX.brand, store.data.theme.$test("light")),
+  trait.style("color", util.alpha(HEX.brand, 0.5), store.data.theme.$test("dark")),
 
-  // Grid Overlay
+  // Logo
   tag.div(
-    trait.style("display", "grid", store.data.debug.$test(true)),
-    trait.style("display", "none", store.data.debug.$test(false)),
-    trait.style("gridTemplateColumns", "subgrid"),
-    trait.style("gridTemplateRows", "subgrid"),
-    trait.style("pointerEvents", "none"),
-    trait.style("fontFamily", "courier, monospace"),
-    trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
-    trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
-    trait.html(
-      () =>
-        totalGridCells().map((_, i) =>
-          tag.div(
-            trait.style("borderTop", `1px solid ${util.alpha(hex.white, 0.1)}`),
-            trait.style("borderLeft", `1px solid ${util.alpha(hex.white, 0.1)}`),
-            trait.style("alignItems", "center"),
-            trait.style("justifyContent", "center"),
-            trait.style("display", "flex"),
-            trait.style("fontSize", "10px"),
-            trait.style("color", util.alpha(hex.white, 0.1))
-            // `${i + 1}`
-          )
-        ),
-      store.data.grid_rows,
-      store.data.grid_cols
-    )
-  ),
-
-  // Column Labels
-  tag.div(
-    trait.style("display", "grid"),
-    trait.style("gridTemplateColumns", "subgrid"),
-    trait.style("gridTemplateRows", "subgrid"),
-    trait.style("pointerEvents", "none"),
-    trait.style("fontFamily", "courier, monospace"),
-    trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
-    trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
-    trait.html(
-      () =>
-        Array.from({ length: store.data.grid_cols.val() - 2 }).map((_, colIndex) =>
-          tag.div(
-            trait.style("gridColumn", () => `${colIndex + 3} / span 1`, store.data.grid_cols),
-            trait.style("gridRow", "2 / span 1"),
-            trait.style("fontSize", "10px"),
-            trait.style("display", "flex"),
-            trait.style("alignItems", "center"),
-            trait.style("justifyContent", "center"),
-            trait.style("padding", "2px"),
-            trait.style("color", util.alpha(hex.white, 0.2)),
-            `${colIndex + 1}`
-          )
-        ),
-      store.data.grid_cols
-    )
-  ),
-
-  // Row Labels
-  tag.div(
-    trait.style("display", "grid"),
-    trait.style("gridTemplateColumns", "subgrid"),
-    trait.style("gridTemplateRows", "subgrid"),
-    trait.style("pointerEvents", "none"),
-    trait.style("fontFamily", "courier, monospace"),
-    trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
-    trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
-    trait.html(
-      () =>
-        Array.from({ length: store.data.grid_rows.val() - 2 }).map((_, rowIndex) =>
-          tag.div(
-            trait.style("gridColumn", "2 / span 1"),
-            trait.style("gridRow", () => `${rowIndex + 3} / span 1`, store.data.grid_rows),
-            trait.style("fontSize", "10px"),
-            trait.style("display", "flex"),
-            trait.style("alignItems", "center"),
-            trait.style("justifyContent", "center"),
-            trait.style("padding", "5px"),
-            trait.style("color", util.alpha(hex.white, 0.2)),
-            `${rowIndex + 1}`
-          )
-        ),
-      store.data.grid_rows
-    )
-  ),
-
-  // Logo / Hamburger
-  tag.div(
-    trait.style("gridColumn", () => `1 / span 2`),
-    trait.style("gridRow", "1 / span 1"),
+    trait.style("gridColumn", "1/1"),
+    trait.style("gridRow", "1 / 1"),
     trait.style("padding", "0 10px"),
     trait.style("textAlign", "center"),
     trait.style("display", "flex"),
     trait.style("alignItems", "center"),
     trait.style("justifyContent", "center"),
-    trait.style("backgroundColor", hex.black),
-    trait.style("color", hex.brand),
-    trait.style("margin", "1px"),
-    trait.style("letterSpacing", "-1px"),
-    "L",
-    tag.span(trait.style("fontSize", "21px"), "∞"),
-    "P"
-  ),
+    trait.style("backgroundColor", HEX.black),
+    trait.style("color", HEX.brand),
+    trait.style("textShadow", `0 0 5px ${util.alpha(HEX.brand, 0.6)}`, store.data.theme.$test("dark")),
 
-  // Menu
-  tag.div(
-    trait.style("gridColumn", `1 / span 1`),
-    trait.style("gridRow", `3 / -1`),
-    trait.style("display", "grid"),
-    trait.style("gridTemplateColumns", "subgrid"),
-    trait.style("gridTemplateRows", "subgrid"),
-    trait.html(
-      store.data.menu.$call("map", (item) =>
-        tag.div(
-          trait.style("display", "flex"),
-          trait.style("alignItems", "center"),
-          trait.style("cursor", "pointer"),
-          trait.style("justifyContent", "center"),
-          trait.style("fontSize", "12px"),
-          trait.style("padding", "10px"),
-          trait.style("color", util.alpha(hex.white, 0.2), $test(!item.active)),
-          trait.style("color", hex.brand, $test(item.active)),
-          trait.styleOnEvt("mouseover", "color", util.alpha(hex.white, 0.5), $test(!item.active)),
-          trait.styleOnEvt("mouseout", "color", util.alpha(hex.white, 0.2), $test(!item.active)),
-          trait.event("click", $fsm("ACTIVE_MENU_ITEM", item.id)),
-          icons[item.icon]()
-        )
-      ),
-      store.data.menu
-    )
+    trait.style("borderBottom", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+    trait.style("borderRight", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+    "LOOP"
   ),
 
   // Chat
@@ -164,63 +43,255 @@ export const UI = tag.div(
     trait.style("flexDirection", "row"),
     trait.style("justifyContent", "space-between"),
     trait.style("alignItems", "center"),
-    trait.style("gridColumn", () => `3 / span ${store.data.grid_cols.val() - 1}`, store.data.grid_cols),
-    trait.style("gridRow", "1 / span 1"),
-    trait.style("margin", "1px"),
-    trait.style("backgroundColor", hex.black),
+    trait.style("gridColumn", "2 / -1"),
+    trait.style("gridRow", "1 / 1"),
+    trait.style("backgroundColor", HEX.black),
+    trait.style("borderBottom", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+
     // Title
     tag.input(
+      trait.attr("id", "chat-input"),
       trait.attr("type", "text"),
-      trait.attr("placeholder", "Chat..."),
-      trait.attr("autofocus", "true"),
+      trait.attr("placeholder", "CHAT..."),
+      trait.placeholderColor(util.alpha(HEX.brand, 0.5)),
       trait.style("padding", "10px"),
       trait.style("border", "none"),
       trait.style("outline", "none"),
       trait.style("fontSize", "13px"),
       trait.style("fontFamily", "inherit"),
       trait.style("backgroundColor", "transparent"),
-      trait.style("color", "inherit"),
+      trait.style("color", HEX.brand),
       trait.style("width", "100%"),
       trait.style("height", "100%"),
+      trait.style("textTransform", "uppercase"),
+      trait.trigger("focus", store.data.mode.$test("command")),
+      trait.trigger("blur", store.data.mode.$test("normal")),
       trait.input("input", store.data.chat.set),
       trait.value(store.data.chat.$val)
     )
   ),
 
-  // Objects Grid
+  // Menu
   tag.div(
-    trait.style("gridColumn", () => `3 / span ${store.data.grid_cols.val() - 2}`, store.data.grid_cols),
-    trait.style("gridRow", `3 / -1`, store.data.grid_rows),
-    trait.style("overflowY", "auto"),
-    trait.style("display", "grid"),
-    trait.style("gridTemplateColumns", "subgrid"),
-    trait.style("gridTemplateRows", "subgrid"),
+    trait.style("gridColumn", `1 / 1`),
+    trait.style("gridRow", `2 / -1`),
+    trait.style("display", "flex"),
+    trait.style("flexDirection", "column"),
+    trait.style("borderRight", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
     trait.html(
-      store.data.objects.$call("map", (obj) =>
-        tag.div(
-          trait.style("borderRight", `2px solid ${util.alpha(hex.white, 0.2)}`, $test(!obj.selected)),
-          trait.style("borderRight", `2px solid ${util.alpha(hex.brand, 0.5)}`, $test(!!obj.selected)),
-          trait.style("borderBottom", `2px solid ${util.alpha(hex.white, 0.2)}`, $test(!obj.selected)),
-          trait.style("borderBottom", `2px solid ${util.alpha(hex.brand, 0.5)}`, $test(!!obj.selected)),
-          trait.style("borderRadius", "3px"),
-          trait.style("margin", "3px"),
-          trait.style("color", hex.brand, $test(!!obj.selected)),
-          trait.style("color", util.alpha(hex.white, 0.3), $test(!obj.selected)),
-          trait.style("backgroundColor", util.alpha(hex.white, 0.05), $test(!!obj.selected)),
-          trait.style("backgroundColor", "transparent", $test(!obj.selected)),
-          trait.styleOnEvt("mouseover", "backgroundColor", util.alpha(hex.white, 0.1), $test(!obj.selected)),
-          trait.styleOnEvt("mouseout", "backgroundColor", "transparent", $test(!obj.selected)),
-          trait.style("transition", "background-color 0.2s ease"),
-          trait.style("cursor", "pointer"),
-          trait.style("padding", "10px"),
-          trait.style("display", "flex"),
-          trait.style("flexDirection", "column"),
-          trait.style("alignItems", "center"),
-          trait.style("justifyContent", "center"),
-          trait.style("textAlign", "center"),
-          tag.div(obj.name)
-        )
+      () =>
+        Object.entries(VIEWS).map(([key, item]: [any, ViewType]) =>
+          tag.div(
+            trait.style("display", "flex"),
+            trait.style("alignItems", "center"),
+            trait.style("cursor", "pointer"),
+            trait.style("justifyContent", "center"),
+            trait.style("fontSize", "12px"),
+            trait.style("padding", "10px"),
+            trait.style("color", util.alpha(HEX.brand, 0.2), store.data.view.$test(key, false)),
+            trait.style("color", HEX.brand, store.data.view.$test(key as any, true)),
+            trait.styleOnEvt("mouseover", "color", util.alpha(HEX.brand, 0.5), store.data.view.$test(key, false)),
+            trait.styleOnEvt("mouseout", "color", util.alpha(HEX.brand, 0.2), store.data.view.$test(key, false)),
+            trait.event("click", $fsm("ACTIVE_MENU_ITEM", key)),
+            trait.tooltip(item.label, {
+              position: "right",
+              bgColor: HEX.brand,
+              textColor: HEX.black,
+            }),
+            icons[item.icon]("currentColor", 21)
+          )
+        ),
+      store.data.view
+    )
+  ),
+
+  // Preview
+  tag.div(
+    trait.style("gridColumn", `3 / -1`),
+    trait.style("gridRow", `2 / -1`),
+    trait.style("display", "flex"),
+    trait.style("alignItems", "center"),
+    trait.style("justifyContent", "center"),
+    trait.style("color", util.alpha(HEX.brand, 0.1)),
+    trait.style("borderLeft", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+    "Preview"
+  ),
+
+  // Body
+  tag.div(
+    trait.style("gridColumn", `2 / 3`),
+    trait.style("gridRow", `2 / -1`),
+    trait.style("display", "grid"),
+    trait.style(
+      "gridTemplateColumns",
+      () => `max-content repeat(${store.data.grid_cols.val()}, 1fr)`,
+      store.data.grid_cols
+    ),
+    trait.style(
+      "gridTemplateRows",
+      () => `max-content repeat(${store.data.grid_rows.val()}, 1fr)`,
+      store.data.grid_rows
+    ),
+    trait.style("width", "100%"),
+    trait.style("height", "100%"),
+
+    // Row Overlay
+    tag.div(
+      trait.style("display", "grid"),
+      trait.style("gridTemplateColumns", "subgrid"),
+      trait.style("gridTemplateRows", "subgrid"),
+      trait.style("pointerEvents", "none"),
+      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.style("width", "100%"),
+      trait.style("height", "100%"),
+      trait.html(
+        () =>
+          Array.from({ length: store.data.grid_rows.val() + 1 }, (_, i) => i).map((_, i) =>
+            tag.div(
+              trait.style("gridColumn", "1/-1"),
+              trait.style("alignItems", "center"),
+              trait.style("justifyContent", "center"),
+              trait.style("borderTop", `1px solid ${util.alpha(HEX.brand, 0.05)}`)
+              // `${i + 1}`
+            )
+          ),
+        store.data.grid_cols,
+        store.data.grid_rows
+      )
+    ),
+
+    // Column Overlay
+    tag.div(
+      trait.style("display", "grid"),
+      trait.style("gridTemplateColumns", "subgrid"),
+      trait.style("gridTemplateRows", "subgrid"),
+      trait.style("pointerEvents", "none"),
+      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.style("width", "100%"),
+      trait.style("height", "100%"),
+      trait.html(
+        () =>
+          Array.from({ length: store.data.grid_cols.val() + 1 }, (_, i) => i).map((_, i) =>
+            tag.div(
+              trait.style("gridRow", "1/-1"),
+              trait.style("alignItems", "center"),
+              trait.style("justifyContent", "center"),
+              trait.style("borderLeft", `1px solid ${util.alpha(HEX.brand, 0.05)}`)
+              // `${i + 1}`
+            )
+          ),
+        store.data.grid_cols,
+        store.data.grid_rows
+      )
+    ),
+
+    // Row Labels
+    tag.div(
+      trait.style("display", "grid"),
+      trait.style("gridTemplateColumns", "subgrid"),
+      trait.style("gridTemplateRows", "subgrid"),
+      trait.style("pointerEvents", "none"),
+      trait.style("fontFamily", "courier, monospace"),
+      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.html(
+        () =>
+          Array.from({ length: store.data.grid_rows.val() }).map((_, rowIndex) =>
+            tag.div(
+              trait.style("gridColumn", "1 / span 1"),
+              trait.style("gridRow", () => `${rowIndex + 2} / span 1`, store.data.grid_rows),
+              trait.style("fontSize", "10px"),
+              trait.style("display", "flex"),
+              trait.style("alignItems", "center"),
+              trait.style("justifyContent", "center"),
+              trait.style("padding", "5px"),
+              `${rowIndex + 1}`
+            )
+          ),
+        store.data.grid_rows,
+        store.data.grid_cols
+      )
+    ),
+
+    // Column Labels
+    tag.div(
+      trait.style("display", "grid"),
+      trait.style("gridTemplateColumns", "subgrid"),
+      trait.style("gridTemplateRows", "subgrid"),
+      trait.style("pointerEvents", "none"),
+      trait.style("fontFamily", "courier, monospace"),
+      trait.style("gridColumn", () => `1 / -1`, store.data.grid_cols),
+      trait.style("gridRow", () => `1 / -1`, store.data.grid_rows),
+      trait.html(
+        () =>
+          Array.from({ length: store.data.grid_cols.val() }).map((_, colIndex) =>
+            tag.div(
+              trait.style("gridRow", "1 / span 1"),
+              trait.style("gridColumn", () => `${colIndex + 2} / span 1`, store.data.grid_cols),
+              trait.style("fontSize", "10px"),
+              trait.style("display", "flex"),
+              trait.style("alignItems", "center"),
+              trait.style("justifyContent", "center"),
+              trait.style("padding", "5px"),
+              `${colIndex + 1}`
+            )
+          ),
+        store.data.grid_cols,
+        store.data.grid_rows
+      )
+    ),
+
+    // Objects Grid
+    tag.div(
+      trait.style("gridColumn", () => `2 / -1`),
+      trait.style("gridRow", () => `2 / -1`),
+      trait.style("overflowY", "auto"),
+      trait.style("display", "grid", store.data.view.$test("Objects")),
+      trait.style("display", "none", store.data.view.$test("Objects", false)),
+      trait.style("gridTemplateColumns", "subgrid"),
+      trait.style("gridTemplateRows", "subgrid"),
+      trait.html(
+        store.data.objects.$call("map", (obj) =>
+          tag.div(
+            trait.style("borderRight", `2px solid ${util.alpha(HEX.brand, 0.2)}`, $test(obj.selected, false)),
+            trait.style("borderRight", `2px solid ${util.alpha(HEX.brand, 0.5)}`, $test(obj.selected, true)),
+            trait.style("borderBottom", `2px solid ${util.alpha(HEX.brand, 0.2)}`, $test(obj.selected, false)),
+            trait.style("borderBottom", `2px solid ${util.alpha(HEX.brand, 0.5)}`, $test(obj.selected, true)),
+            trait.style("borderRadius", "3px"),
+            trait.style("margin", "3px"),
+            trait.style("color", HEX.brand, $test(obj.selected, true)),
+            trait.style("color", util.alpha(HEX.brand, 0.3), $test(obj.selected, false)),
+            trait.style("backgroundColor", util.alpha(HEX.brand, 0.05), $test(obj.selected, true)),
+            trait.style("backgroundColor", "transparent", $test(obj.selected, false)),
+            trait.styleOnEvt("mouseover", "backgroundColor", util.alpha(HEX.brand, 0.1), $test(obj.selected, false)),
+            trait.styleOnEvt("mouseout", "backgroundColor", "transparent", $test(obj.selected, false)),
+            trait.style("transition", "background-color 0.2s ease"),
+            trait.style("cursor", "pointer"),
+            trait.style("padding", "10px"),
+            trait.style("display", "flex"),
+            trait.style("flexDirection", "column"),
+            trait.style("alignItems", "center"),
+            trait.style("justifyContent", "center"),
+            trait.style("textAlign", "center"),
+            trait.style("textTransform", "uppercase"),
+            tag.div(obj.name)
+          )
+        ),
+        store.data.grid_cols,
+        store.data.grid_rows
       )
     )
+  ),
+
+  // Footer
+  tag.div(
+    trait.style("gridColumn", `1 / -1`),
+    trait.style("gridRow", `-1 / -1`),
+    trait.style("padding", "10px"),
+    trait.style("borderTop", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+    tag.span(trait.style("opacity", 0.5), "MODE: "),
+    store.data.mode.$val
   )
 );
