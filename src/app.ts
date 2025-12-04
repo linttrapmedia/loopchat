@@ -2,7 +2,7 @@ import { HEX, VIEWS } from "@/constants";
 import { $fsm } from "@/fsm";
 import { icons } from "@/icons";
 import { tag, trait } from "@/template";
-import type { ViewType } from "@/types";
+import type { ObjectType, ViewType } from "@/types";
 import util from "@/util";
 import { $test } from "@linttrap/oem";
 import { store } from "./store";
@@ -48,7 +48,7 @@ export const UI = tag.div(
     trait.style("backgroundColor", HEX.black),
     trait.style("borderBottom", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
 
-    // Title
+    // Input
     tag.input(
       trait.attr("id", "chat-input"),
       trait.attr("type", "text"),
@@ -68,6 +68,55 @@ export const UI = tag.div(
       trait.trigger("blur", store.data.mode.$test("normal")),
       trait.input("input", store.data.chat.set),
       trait.value(store.data.chat.$val)
+    )
+  ),
+
+  // Combo Box
+  tag.div(
+    trait.style("gridColumn", `2 / -1`),
+    trait.style("gridRow", `2 / -1`),
+    trait.style("zIndex", "1"),
+    trait.style("display", "flex", store.data.chat.$test(/^@/)),
+    trait.style("display", "none", store.data.chat.$test(/^$/)),
+    tag.div(
+      trait.style("display", "flex"),
+      trait.style("flexDirection", "column"),
+      trait.style("backgroundColor", HEX.black),
+      trait.style("padding", "10px"),
+      trait.style("borderBottom", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+      trait.style("textTransform", "uppercase"),
+      trait.style("width", "100%"),
+      trait.style("height", "max-content"),
+      trait.html(
+        store.data.objects.$chain(
+          [
+            "filter",
+            (o: ObjectType) =>
+              `@${o.name}`.toUpperCase().startsWith(store.data.chat.val().toUpperCase()) ||
+              store.data.chat.val() === "@",
+          ],
+          [
+            "map",
+            (o: ObjectType) =>
+              tag.div(
+                trait.style("lineHeight", "1.5", 2),
+                tag.span(trait.style("color", HEX.brand), "@"),
+                ...o.name.split("").map((char, index) =>
+                  tag.span(
+                    trait.style("color", () => {
+                      const chatStr = store.data.chat.val().toUpperCase();
+                      const targetStr = `@${o.name.toUpperCase()}`;
+                      const isMatch = targetStr.split("").every((c, i) => chatStr.charAt(i) === c || i > index + 1);
+                      return isMatch ? HEX.brand : util.alpha(HEX.brand, 0.5);
+                    }),
+                    char
+                  )
+                )
+              ),
+          ]
+        ),
+        store.data.chat
+      )
     )
   ),
 
@@ -106,16 +155,16 @@ export const UI = tag.div(
   ),
 
   // Preview
-  tag.div(
-    trait.style("gridColumn", `3 / -1`),
-    trait.style("gridRow", `2 / -1`),
-    trait.style("display", "flex"),
-    trait.style("alignItems", "center"),
-    trait.style("justifyContent", "center"),
-    trait.style("color", util.alpha(HEX.brand, 0.1)),
-    trait.style("borderLeft", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
-    "Preview"
-  ),
+  // tag.div(
+  //   trait.style("gridColumn", `3 / -1`),
+  //   trait.style("gridRow", `2 / -1`),
+  //   trait.style("display", "flex"),
+  //   trait.style("alignItems", "center"),
+  //   trait.style("justifyContent", "center"),
+  //   trait.style("color", util.alpha(HEX.brand, 0.1)),
+  //   trait.style("borderLeft", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
+  //   "Preview"
+  // ),
 
   // Body
   tag.div(

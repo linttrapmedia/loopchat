@@ -40,7 +40,7 @@ export const store = Storage({
     mode: [State<Mode>("normal"), "localStorage"],
     objects: [
       State<ObjectType[]>([
-        { id: "1", name: "Alice", noun: "person", selected: true },
+        { id: "1", name: "Alice", noun: "person" },
         { id: "1", name: "Allan", noun: "person" },
         { id: "2", name: "Wonderland", noun: "place" },
         { id: "3", name: "Rabbit Hole", noun: "thing" },

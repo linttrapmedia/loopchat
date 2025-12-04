@@ -17,17 +17,23 @@ function keyFsm(e: KeyboardEvent) {
             e.preventDefault();
             store.data.showCommands.set(false);
           }
-          if (e.key === "ArrowDown") {
+          if (e.key === "ArrowDown" || e.key === "j") {
             const menuLabels = Object.keys(VIEWS);
             const currentIndex = menuLabels.indexOf(store.data.view.val());
             const nextIndex = (currentIndex + 1) % menuLabels.length;
             fsm("ACTIVE_MENU_ITEM", menuLabels[nextIndex] as any);
           }
-          if (e.key === "ArrowUp") {
+          if (e.key === "ArrowUp" || e.key === "k") {
             const menuLabels = Object.keys(VIEWS);
             const currentIndex = menuLabels.indexOf(store.data.view.val());
             const nextIndex = (currentIndex - 1 + menuLabels.length) % menuLabels.length;
             fsm("ACTIVE_MENU_ITEM", menuLabels[nextIndex] as any);
+          }
+          if (e.key === "ArrowLeft" || e.key === "h") {
+            // TODO
+          }
+          if (e.key === "ArrowRight" || e.key === "l") {
+            // TODO
           }
           break;
         case "command":
