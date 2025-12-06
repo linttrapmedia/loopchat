@@ -193,7 +193,7 @@ export const useScrollintoViewTrait = (el: HTMLElement, ...rest: (StateType<any>
   const apply = () => {
     const applies = conditions.every((i) => (typeof i === "function" ? i() : i));
     if (applies) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   };
   const unsubs = states.map((state) => state.sub(apply));
