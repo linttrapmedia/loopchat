@@ -1,4 +1,4 @@
-import type { ViewNames, ViewType } from "@/types";
+import type { IndexedDBType, ViewNames, ViewType } from "@/types";
 
 export const HEX = {
   black: "#121316",
@@ -45,5 +45,15 @@ export const VIEWS: Record<ViewNames, ViewType> = {
     label: "Settings",
     description: "App settings",
     icon: "gear",
+  },
+};
+
+export const INDEXEDDB: IndexedDBType = {
+  version: 1,
+  stores: {
+    objects: {
+      name: "objects",
+      keyPath: "id",
+    },
   },
 };

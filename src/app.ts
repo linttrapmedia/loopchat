@@ -1,5 +1,5 @@
-import { HEX, VIEWS } from "@/constants";
-import { $fsm } from "@/fsm";
+import { HEX } from "@/constants";
+import { $fsm, fsm } from "@/fsm";
 import { icons } from "@/icons";
 import { tag, trait } from "@/template";
 import type { ObjectType, ViewType } from "@/types";
@@ -53,6 +53,7 @@ export const UI = tag.div(
       trait.attr("id", "chat-input"),
       trait.attr("type", "text"),
       trait.attr("placeholder", "CHAT..."),
+      trait.attr("disabled", "true", store.data.mode.$test("normal")),
       trait.placeholderColor(util.alpha(HEX.brand, 0.5)),
       trait.style("padding", "10px"),
       trait.style("border", "none"),
@@ -66,7 +67,7 @@ export const UI = tag.div(
       trait.style("textTransform", "uppercase"),
       trait.trigger("focus", store.data.mode.$test("command")),
       trait.trigger("blur", store.data.mode.$test("normal")),
-      trait.input("input", store.data.chat.set),
+      trait.input("input", (evt) => fsm("ON_CHAT_INPUT", evt)),
       trait.value(store.data.chat.$val)
     )
   ),
@@ -77,7 +78,10 @@ export const UI = tag.div(
     trait.style("gridRow", `2 / -1`),
     trait.style("zIndex", "1"),
     trait.style("display", "flex", store.data.chat.$test(/^@/)),
+    trait.style("display", "flex", store.data.mode.$test("command")),
     trait.style("display", "none", store.data.chat.$test(/^$/)),
+    trait.style("display", "none", store.data.mode.$test("normal")),
+    trait.style("overflowY", "auto"),
     tag.div(
       trait.style("display", "flex"),
       trait.style("flexDirection", "column"),
@@ -88,32 +92,31 @@ export const UI = tag.div(
       trait.style("width", "100%"),
       trait.style("height", "max-content"),
       trait.html(
-        store.data.objects.$chain(
-          [
-            "filter",
-            (o: ObjectType) =>
-              `@${o.name}`.toUpperCase().startsWith(store.data.chat.val().toUpperCase()) ||
-              store.data.chat.val() === "@",
-          ],
-          [
-            "map",
-            (o: ObjectType) =>
-              tag.div(
-                trait.style("lineHeight", "1.5", 2),
-                tag.span(trait.style("color", HEX.brand), "@"),
-                ...o.name.split("").map((char, index) =>
-                  tag.span(
-                    trait.style("color", () => {
-                      const chatStr = store.data.chat.val().toUpperCase();
-                      const targetStr = `@${o.name.toUpperCase()}`;
-                      const isMatch = targetStr.split("").every((c, i) => chatStr.charAt(i) === c || i > index + 1);
-                      return isMatch ? HEX.brand : util.alpha(HEX.brand, 0.5);
-                    }),
-                    char
-                  )
-                )
-              ),
-          ]
+        store.data.filteredObjects.$call("map", (o: ObjectType, i: number) =>
+          tag.div(
+            trait.scrollIntoView(store.data.filteredObjectIdx.$test(i)),
+            trait.style("backgroundColor", util.alpha(HEX.brand, 0.05), store.data.filteredObjectIdx.$test(i)),
+            trait.style("backgroundColor", "transparent", store.data.filteredObjectIdx.$test(i, false)),
+            trait.style(
+              "borderBottom",
+              `1px solid ${util.alpha(HEX.brand, 0.05)}`,
+              store.data.filteredObjectIdx.$test(i, false)
+            ),
+            trait.style("padding", "5px 10px"),
+            trait.style("lineHeight", "1.5", 2),
+            tag.span(trait.style("color", HEX.brand), "@"),
+            ...o.name.split("").map((char, index) =>
+              tag.span(
+                trait.style("color", () => {
+                  const chatStr = store.data.chat.val().toUpperCase();
+                  const targetStr = `@${o.name.toUpperCase()}`;
+                  const isMatch = targetStr.split("").every((c, i) => chatStr.charAt(i) === c || i > index + 1);
+                  return isMatch ? HEX.brand : util.alpha(HEX.brand, 0.5);
+                }),
+                char
+              )
+            )
+          )
         ),
         store.data.chat
       )
@@ -128,28 +131,27 @@ export const UI = tag.div(
     trait.style("flexDirection", "column"),
     trait.style("borderRight", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
     trait.html(
-      () =>
-        Object.entries(VIEWS).map(([key, item]: [any, ViewType]) =>
-          tag.div(
-            trait.style("display", "flex"),
-            trait.style("alignItems", "center"),
-            trait.style("cursor", "pointer"),
-            trait.style("justifyContent", "center"),
-            trait.style("fontSize", "12px"),
-            trait.style("padding", "10px"),
-            trait.style("color", util.alpha(HEX.brand, 0.2), store.data.view.$test(key, false)),
-            trait.style("color", HEX.brand, store.data.view.$test(key as any, true)),
-            trait.styleOnEvt("mouseover", "color", util.alpha(HEX.brand, 0.5), store.data.view.$test(key, false)),
-            trait.styleOnEvt("mouseout", "color", util.alpha(HEX.brand, 0.2), store.data.view.$test(key, false)),
-            trait.event("click", $fsm("ACTIVE_MENU_ITEM", key)),
-            trait.tooltip(item.label, {
-              position: "right",
-              bgColor: HEX.brand,
-              textColor: HEX.black,
-            }),
-            icons[item.icon]("currentColor", 21)
-          )
-        ),
+      store.data.views.$call("map", ([key, item]: [any, ViewType]) =>
+        tag.div(
+          trait.style("display", "flex"),
+          trait.style("alignItems", "center"),
+          trait.style("cursor", "pointer"),
+          trait.style("justifyContent", "center"),
+          trait.style("fontSize", "12px"),
+          trait.style("padding", "10px"),
+          trait.style("color", util.alpha(HEX.brand, 0.2), store.data.view.$test(key, false)),
+          trait.style("color", HEX.brand, store.data.view.$test(key as any, true)),
+          trait.styleOnEvt("mouseover", "color", util.alpha(HEX.brand, 0.5), store.data.view.$test(key, false)),
+          trait.styleOnEvt("mouseout", "color", util.alpha(HEX.brand, 0.2), store.data.view.$test(key, false)),
+          trait.event("click", $fsm("ACTIVE_MENU_ITEM", key)),
+          trait.tooltip(item.label, {
+            position: "right",
+            bgColor: HEX.brand,
+            textColor: HEX.black,
+          }),
+          icons[item.icon]("currentColor", 21)
+        )
+      ),
       store.data.view
     )
   ),
@@ -302,7 +304,7 @@ export const UI = tag.div(
       trait.style("gridTemplateColumns", "subgrid"),
       trait.style("gridTemplateRows", "subgrid"),
       trait.html(
-        store.data.objects.$call("map", (obj) =>
+        store.data.cachedObjects.$call("map", (obj) =>
           tag.div(
             trait.style("borderRight", `2px solid ${util.alpha(HEX.brand, 0.2)}`, $test(obj.selected, false)),
             trait.style("borderRight", `2px solid ${util.alpha(HEX.brand, 0.5)}`, $test(obj.selected, true)),

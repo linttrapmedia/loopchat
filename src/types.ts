@@ -4,7 +4,14 @@ import type { icons } from "@/icons";
 export type Actions =
   | [action: "INIT"]
   | [action: "ACTIVE_MENU_ITEM", id: keyof typeof VIEWS]
-  | [action: "SWITCH_MODE", mode: Mode];
+  | [action: "SWITCH_MODE", mode: Mode]
+  | [action: "SWITCH_MODE_TO_NORMAL"]
+  | [action: "SWITCH_MODE_TO_COMMAND"]
+  | [action: "NEXT_SUGGESTED_OBJECT_INDEX"]
+  | [action: "PREV_SUGGESTED_OBJECT_INDEX"]
+  | [action: "ON_CHAT_INPUT", input: string];
+
+export type IndexedDBType = { version: number; stores: Record<string, { name: string; keyPath: string }> };
 
 export type Mode = "normal" | "command";
 

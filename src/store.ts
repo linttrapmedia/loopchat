@@ -1,9 +1,9 @@
 import { VIEWS } from "@/constants";
 import util from "@/util";
 import { State, Storage } from "@linttrap/oem";
-import { type Mode, type ObjectType, type ThemeType } from "./types";
+import { type Mode, type ObjectType, type ThemeType, type ViewType } from "./types";
 
-const gridColState = () => {
+const GridColState = () => {
   const state = State<number>(0);
   const apply = () => {
     const width = window.innerWidth;
@@ -16,7 +16,7 @@ const gridColState = () => {
   return state;
 };
 
-const gridRowState = () => {
+const GridRowState = () => {
   const state = State<number>(0);
   // account for the two fixed rows at the top of the UI
   const minRows = Object.entries(VIEWS).length + 2;
@@ -35,10 +35,12 @@ export const store = Storage({
   data: {
     chat: [State<string>(""), "localStorage"],
     debug: [State<boolean>(true), "memory"],
-    obj_grid_cols: [gridColState(), "localStorage"],
-    obj_grid_rows: [gridRowState(), "localStorage"],
+    obj_grid_cols: [GridColState(), "localStorage"],
+    obj_grid_rows: [GridRowState(), "localStorage"],
     mode: [State<Mode>("normal"), "localStorage"],
-    objects: [
+    filteredObjects: [State<ObjectType[]>([]), "memory"],
+    filteredObjectIdx: [State<number>(-1), "memory"],
+    cachedObjects: [
       State<ObjectType[]>([
         { id: "1", name: "Alice", noun: "person" },
         { id: "1", name: "Allan", noun: "person" },
@@ -63,6 +65,7 @@ export const store = Storage({
     uiState: [State<"init" | "ready">("init"), "memory"],
     view: [State<keyof typeof VIEWS>("Objects"), "localStorage"],
     showCommands: [State<boolean>(false), "memory"],
+    views: [State<[string, ViewType][]>(Object.entries(VIEWS)), "memory"],
   },
 });
 

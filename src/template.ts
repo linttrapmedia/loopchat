@@ -187,6 +187,19 @@ export const useToolTipTrait = (
   };
 };
 
+export const useScrollintoViewTrait = (el: HTMLElement, ...rest: (StateType<any> | Condition)[]) => {
+  const states = extractStates(...rest);
+  const conditions = extractConditions(...rest);
+  const apply = () => {
+    const applies = conditions.every((i) => (typeof i === "function" ? i() : i));
+    if (applies) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+  const unsubs = states.map((state) => state.sub(apply));
+  return () => unsubs.forEach((unsub) => unsub());
+};
+
 export const [tag, trait] = Template({
   attr: useAttributeTrait,
   event: useEventTrait,
@@ -199,4 +212,5 @@ export const [tag, trait] = Template({
   trigger: useTriggerTrait,
   fatCaret: useCustomCaretForContentEditable,
   tooltip: useToolTipTrait,
+  scrollIntoView: useScrollintoViewTrait,
 });
