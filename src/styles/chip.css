@@ -1,0 +1,56 @@
+/* Chip styles */
+
+mark[data-chip] {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  border-radius: var(--radius-full);
+  border: var(--border-thin) solid transparent;
+}
+
+/* Default variant */
+mark[data-chip],
+mark[data-chip][data-variant="default"] {
+  background: var(--color-bg-subtle);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Primary variant */
+mark[data-chip][data-variant="primary"] {
+  background: oklch(from var(--color-primary) l c h / 15%);
+  color: var(--color-primary);
+  border-color: oklch(from var(--color-primary) l c h / 30%);
+}
+
+/* Secondary variant */
+mark[data-chip][data-variant="secondary"] {
+  background: oklch(from var(--color-secondary) l c h / 15%);
+  color: var(--color-secondary);
+  border-color: oklch(from var(--color-secondary) l c h / 30%);
+}
+
+/* Remove button inside chip */
+mark[data-chip] > button {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
+  margin-inline-start: var(--space-2xs);
+  margin-inline-end: calc(var(--space-2xs) * -1);
+  font-size: 1em;
+  line-height: 1;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+mark[data-chip] > button:hover {
+  opacity: 1;
+}

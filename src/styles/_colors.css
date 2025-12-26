@@ -1,0 +1,94 @@
+/*
+ * Color Tokens
+ * 
+ * Using OKLCH color space for perceptually uniform colors that are easy to 
+ * manipulate with pure CSS. OKLCH uses:
+ *   L = Lightness (0% = black, 100% = white)
+ *   C = Chroma (0 = gray, higher = more saturated)
+ *   H = Hue (0-360 degrees)
+ *
+ * Usage examples:
+ *   Lighten:  oklch(from var(--color-primary) calc(l + 0.1) c h)
+ *   Darken:   oklch(from var(--color-primary) calc(l - 0.1) c h)
+ *   Opacity:  oklch(from var(--color-primary) l c h / 50%)
+ *   Desaturate: oklch(from var(--color-primary) l calc(c - 0.05) h)
+ *   Shift hue: oklch(from var(--color-primary) l c calc(h + 30))
+ */
+
+:root {
+  /* ==========================================================================
+   * BASE COLORS
+   * ========================================================================== */
+
+  /* Primary - Main brand/action color */
+  --color-primary: oklch(55% 0.2 250);
+
+  /* Secondary - Supporting color */
+  --color-secondary: oklch(55% 0.15 280);
+
+  /* Accent - Highlight/call-to-action */
+  --color-accent: oklch(65% 0.25 150);
+
+  /* ==========================================================================
+   * SEMANTIC COLORS
+   * ========================================================================== */
+
+  /* Success */
+  --color-success: oklch(60% 0.18 145);
+
+  /* Warning */
+  --color-warning: oklch(75% 0.18 85);
+
+  /* Error/Danger */
+  --color-error: oklch(55% 0.22 25);
+
+  /* Info */
+  --color-info: oklch(60% 0.15 230);
+
+  /* ==========================================================================
+   * NEUTRAL COLORS
+   * ========================================================================== */
+
+  /* Text colors */
+  --color-text: oklch(20% 0.02 250);
+  --color-text-muted: oklch(45% 0.02 250);
+
+  /* Background colors */
+  --color-bg: oklch(99% 0.005 250);
+  --color-bg-subtle: oklch(96% 0.01 250);
+
+  /* Border color */
+  --color-border: oklch(85% 0.02 250);
+
+  /* Surface (cards, panels) */
+  --color-surface: oklch(100% 0 0);
+}
+
+/* ==========================================================================
+ * DARK MODE
+ * ========================================================================== */
+
+[data-theme="dark"] {
+  /* Primary - slightly lighter for dark bg */
+  --color-primary: oklch(65% 0.2 250);
+
+  /* Secondary */
+  --color-secondary: oklch(65% 0.15 280);
+
+  /* Accent */
+  --color-accent: oklch(70% 0.25 150);
+
+  /* Semantic - brighter for dark bg */
+  --color-success: oklch(70% 0.18 145);
+  --color-warning: oklch(80% 0.18 85);
+  --color-error: oklch(65% 0.22 25);
+  --color-info: oklch(70% 0.15 230);
+
+  /* Neutrals inverted */
+  --color-text: oklch(95% 0.02 250);
+  --color-text-muted: oklch(65% 0.02 250);
+  --color-bg: oklch(15% 0.02 250);
+  --color-bg-subtle: oklch(20% 0.02 250);
+  --color-border: oklch(30% 0.02 250);
+  --color-surface: oklch(18% 0.02 250);
+}

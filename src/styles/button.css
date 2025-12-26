@@ -1,0 +1,111 @@
+/* Button styles */
+
+button,
+[type="button"],
+[type="submit"],
+[type="reset"] {
+  --btn-bg: var(--color-primary);
+  --btn-color: white;
+  --btn-border: transparent;
+  --btn-padding-y: var(--space-xs);
+  --btn-padding-x: var(--space-md);
+  --btn-font-size: var(--text-sm);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  font-family: inherit;
+  font-size: var(--btn-font-size);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  white-space: nowrap;
+  border: var(--border-thin) solid var(--btn-border);
+  border-radius: var(--radius-md);
+  background: var(--btn-bg);
+  color: var(--btn-color);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+
+button:hover,
+[type="button"]:hover,
+[type="submit"]:hover,
+[type="reset"]:hover {
+  background: oklch(from var(--btn-bg) calc(l - 0.05) c h);
+}
+
+button:active,
+[type="button"]:active,
+[type="submit"]:active,
+[type="reset"]:active {
+  transform: scale(0.98);
+}
+
+button:focus-visible,
+[type="button"]:focus-visible,
+[type="submit"]:focus-visible,
+[type="reset"]:focus-visible {
+  outline: var(--border-medium) solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+button:disabled,
+[type="button"]:disabled,
+[type="submit"]:disabled,
+[type="reset"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary variant (default) */
+button[data-variant="primary"] {
+  --btn-bg: var(--color-primary);
+  --btn-color: white;
+}
+
+/* Secondary variant */
+button[data-variant="secondary"] {
+  --btn-bg: var(--color-secondary);
+  --btn-color: white;
+}
+
+/* Contrast variant */
+button[data-variant="contrast"] {
+  --btn-bg: var(--color-text);
+  --btn-color: var(--color-bg);
+}
+
+/* Outline variant */
+button[data-variant="outline"] {
+  --btn-bg: transparent;
+  --btn-color: var(--color-primary);
+  --btn-border: var(--color-primary);
+}
+
+button[data-variant="outline"]:hover {
+  --btn-bg: oklch(from var(--color-primary) l c h / 10%);
+}
+
+/* Size variants */
+button[data-size="small"] {
+  --btn-padding-y: var(--space-2xs);
+  --btn-padding-x: var(--space-sm);
+  --btn-font-size: var(--text-xs);
+}
+
+button[data-size="medium"] {
+  --btn-padding-y: var(--space-xs);
+  --btn-padding-x: var(--space-md);
+  --btn-font-size: var(--text-sm);
+}
+
+button[data-size="large"] {
+  --btn-padding-y: var(--space-sm);
+  --btn-padding-x: var(--space-lg);
+  --btn-font-size: var(--text-md);
+}

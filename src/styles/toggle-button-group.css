@@ -1,0 +1,39 @@
+/* Toggle button group styles */
+
+[data-toggle-group] {
+  display: inline-flex;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3xs);
+}
+
+[data-toggle-group] > button {
+  --btn-bg: transparent;
+  --btn-color: var(--color-text-muted);
+  --btn-border: transparent;
+
+  padding: var(--space-xs) var(--space-md);
+  border-radius: calc(var(--radius-md) - var(--space-3xs));
+  font-weight: var(--weight-medium);
+  transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+}
+
+[data-toggle-group] > button:hover {
+  --btn-bg: oklch(from var(--color-bg-subtle) calc(l - 0.05) c h);
+  color: var(--color-text);
+}
+
+[data-toggle-group] > button[aria-pressed="true"] {
+  --btn-bg: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-toggle-group] > button:focus-visible {
+  z-index: 1;
+  position: relative;
+}
+
+[data-toggle-group] > button:disabled {
+  opacity: 0.5;
+}

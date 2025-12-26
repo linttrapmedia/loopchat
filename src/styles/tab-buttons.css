@@ -1,0 +1,47 @@
+/* Tab buttons styles */
+
+nav[role="tablist"] {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-block-end: var(--border-thin) solid var(--color-border);
+}
+
+nav[role="tablist"] > ul {
+  display: contents;
+}
+
+nav[role="tablist"] button[role="tab"] {
+  --btn-bg: transparent;
+  --btn-color: var(--color-text-muted);
+  --btn-border: transparent;
+
+  position: relative;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 0;
+  border: none;
+  border-block-end: var(--border-medium) solid transparent;
+  margin-block-end: calc(var(--border-thin) * -1);
+  font-weight: var(--weight-medium);
+  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+
+nav[role="tablist"] button[role="tab"]:hover {
+  --btn-bg: transparent;
+  color: var(--color-text);
+}
+
+nav[role="tablist"] button[role="tab"][aria-selected="true"] {
+  color: var(--color-primary);
+  border-block-end-color: var(--color-primary);
+}
+
+nav[role="tablist"] button[role="tab"]:focus-visible {
+  outline-offset: -2px;
+}
+
+nav[role="tablist"] button[role="tab"]:disabled {
+  opacity: 0.5;
+}

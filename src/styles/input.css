@@ -1,0 +1,55 @@
+/* Input styles */
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([role="switch"]),
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"] {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  font-family: inherit;
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([role="switch"]):hover {
+  border-color: oklch(from var(--color-border) calc(l - 0.1) c h);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([role="switch"]):focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / 20%);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([role="switch"]):disabled {
+  background: var(--color-bg-subtle);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([role="switch"])[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([role="switch"])[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px oklch(from var(--color-error) l c h / 20%);
+}
+
+input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+/* Search input clear button */
+input[type="search"]::-webkit-search-cancel-button {
+  cursor: pointer;
+}

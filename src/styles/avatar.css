@@ -1,0 +1,43 @@
+/* Avatar styles */
+
+figure[data-avatar] {
+  --avatar-size: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  margin: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-bg-subtle);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+figure[data-avatar] img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+figure[data-avatar] abbr {
+  font-size: calc(var(--avatar-size) * 0.4);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* Size variants */
+figure[data-avatar][data-size="small"] {
+  --avatar-size: 1.75rem;
+}
+
+figure[data-avatar][data-size="medium"] {
+  --avatar-size: 2.5rem;
+}
+
+figure[data-avatar][data-size="large"] {
+  --avatar-size: 4rem;
+}

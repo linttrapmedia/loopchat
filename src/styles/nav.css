@@ -1,0 +1,62 @@
+/* Nav styles */
+
+nav {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-surface);
+  border-block-end: var(--border-thin) solid var(--color-border);
+}
+
+nav > ul {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav > ul > li {
+  margin: 0;
+}
+
+/* Brand/logo link */
+nav > ul > li:first-child a {
+  font-size: var(--text-lg);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+nav > ul > li:first-child strong {
+  font-weight: var(--weight-bold);
+}
+
+/* Navigation links container - push to the right */
+nav > ul > li:last-child {
+  margin-inline-start: auto;
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Individual nav links */
+nav a {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+}
+
+nav a:hover {
+  color: var(--color-text);
+  background: var(--color-bg-subtle);
+}
+
+nav a[aria-current="page"] {
+  color: var(--color-primary);
+  background: oklch(from var(--color-primary) l c h / 10%);
+}

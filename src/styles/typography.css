@@ -1,0 +1,63 @@
+/* Typography styles */
+
+/* Typography component variants */
+[data-variant="body1"] {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+}
+
+[data-variant="body2"] {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+[data-variant="caption"] {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+}
+
+[data-variant="overline"] {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--color-text-muted);
+}
+
+/* Semantic heading variants for non-heading elements */
+[data-variant="h1"] {
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+
+[data-variant="h2"] {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+
+[data-variant="h3"] {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+
+[data-variant="h4"] {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+}
+
+[data-variant="h5"] {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+}
+
+[data-variant="h6"] {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+}

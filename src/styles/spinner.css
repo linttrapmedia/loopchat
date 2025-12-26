@@ -1,0 +1,44 @@
+/* Spinner styles */
+
+[aria-busy="true"][data-size] {
+  display: inline-block;
+  border-style: solid;
+  border-color: var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: var(--radius-full);
+  animation: spinner-spin 0.8s var(--ease-linear) infinite;
+}
+
+/* Size variants */
+[aria-busy="true"][data-size="small"] {
+  width: 1rem;
+  height: 1rem;
+  border-width: 2px;
+}
+
+[aria-busy="true"][data-size="medium"] {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 2px;
+}
+
+[aria-busy="true"][data-size="large"] {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 3px;
+}
+
+@keyframes spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [aria-busy="true"][data-size] {
+    animation: none;
+    border-color: var(--color-primary);
+    opacity: 0.6;
+  }
+}

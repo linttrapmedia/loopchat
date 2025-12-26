@@ -1,0 +1,48 @@
+/* Snackbar styles */
+
+output[role="status"] {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-toast);
+  animation: slide-up var(--duration-normal) var(--ease-out);
+}
+
+output[role="status"][hidden] {
+  display: none;
+}
+
+/* Info variant */
+output[data-variant="info"] {
+  background: var(--color-info);
+  color: white;
+}
+
+/* Success variant */
+output[data-variant="success"] {
+  background: var(--color-success);
+  color: white;
+}
+
+/* Warning variant */
+output[data-variant="warning"] {
+  background: var(--color-warning);
+  color: oklch(from var(--color-warning) calc(l - 0.4) c h);
+}
+
+/* Error variant */
+output[data-variant="error"] {
+  background: var(--color-error);
+  color: white;
+}

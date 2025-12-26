@@ -1,0 +1,56 @@
+/* Icon button styles */
+
+button[data-icon-button] {
+  --icon-btn-size: 2.5rem;
+  --icon-btn-icon-size: 1.25rem;
+
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+  padding: 0;
+  border-radius: var(--radius-md);
+}
+
+button[data-icon-button] > svg {
+  width: var(--icon-btn-icon-size);
+  height: var(--icon-btn-icon-size);
+}
+
+/* Default variant */
+button[data-icon-button],
+button[data-icon-button][data-variant="default"] {
+  --btn-bg: transparent;
+  --btn-color: var(--color-text);
+  --btn-border: var(--color-border);
+}
+
+button[data-icon-button][data-variant="default"]:hover {
+  --btn-bg: var(--color-bg-subtle);
+}
+
+/* Primary variant */
+button[data-icon-button][data-variant="primary"] {
+  --btn-bg: var(--color-primary);
+  --btn-color: white;
+}
+
+/* Secondary variant */
+button[data-icon-button][data-variant="secondary"] {
+  --btn-bg: var(--color-secondary);
+  --btn-color: white;
+}
+
+/* Size variants */
+button[data-icon-button][data-size="small"] {
+  --icon-btn-size: 2rem;
+  --icon-btn-icon-size: 1rem;
+}
+
+button[data-icon-button][data-size="medium"] {
+  --icon-btn-size: 2.5rem;
+  --icon-btn-icon-size: 1.25rem;
+}
+
+button[data-icon-button][data-size="large"] {
+  --icon-btn-size: 3rem;
+  --icon-btn-icon-size: 1.5rem;
+}

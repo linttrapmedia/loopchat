@@ -1,0 +1,6 @@
+/* Text field styles */
+
+/* TextField shares styling with Input - this file is for any TextField-specific overrides */
+
+/* TextField is essentially Input with the same structure, so most styles come from input.css */
+/* Additional TextField-specific styles can be added here if needed */

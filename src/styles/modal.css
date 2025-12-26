@@ -1,0 +1,27 @@
+/* Modal styles */
+
+/* Modal uses the same dialog element styling from dialog.css */
+/* Additional modal-specific styles can be added here */
+
+/* Full-screen modal variant */
+dialog[data-fullscreen] {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+}
+
+dialog[data-fullscreen] > article {
+  height: 100vh;
+  max-height: 100vh;
+}
+
+/* Centered modal content */
+dialog[data-centered] > article > section,
+dialog[data-centered] > article > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

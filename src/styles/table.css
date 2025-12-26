@@ -1,0 +1,58 @@
+/* Table styles */
+
+figure:has(table) {
+  margin: 0;
+  overflow-x: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+thead {
+  background: var(--color-bg-subtle);
+  border-block-end: var(--border-thin) solid var(--color-border);
+}
+
+th {
+  padding: var(--space-sm) var(--space-md);
+  font-weight: var(--weight-semibold);
+  text-align: start;
+  color: var(--color-text);
+}
+
+td {
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text);
+  border-block-end: var(--border-thin) solid var(--color-border);
+}
+
+tbody tr:last-child td {
+  border-block-end: none;
+}
+
+tbody tr:hover {
+  background: oklch(from var(--color-bg-subtle) l c h / 50%);
+}
+
+/* Striped table */
+table[data-striped] tbody tr:nth-child(even) {
+  background: var(--color-bg-subtle);
+}
+
+table[data-striped] tbody tr:nth-child(even):hover {
+  background: oklch(from var(--color-bg-subtle) calc(l - 0.02) c h);
+}
+
+/* Responsive table wrapper */
+figure:has(table) {
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}

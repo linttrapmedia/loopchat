@@ -1,0 +1,176 @@
+/* Rich text styles */
+
+/* Prose container - for rich content like blog posts, documentation, etc. */
+article[data-prose] {
+  max-width: var(--measure-normal);
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-block-start: 0;
+  margin-block-end: var(--space-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  margin-block-end: var(--space-lg);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+}
+
+h4 {
+  font-size: var(--text-xl);
+}
+
+h5 {
+  font-size: var(--text-lg);
+}
+
+h6 {
+  font-size: var(--text-md);
+}
+
+/* Paragraphs */
+p {
+  margin-block-start: 0;
+  margin-block-end: var(--space-md);
+  line-height: var(--leading-relaxed);
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+a:hover {
+  color: oklch(from var(--color-primary) calc(l - 0.1) c h);
+}
+
+/* Bold & emphasis */
+strong,
+b {
+  font-weight: var(--weight-semibold);
+}
+
+em,
+i {
+  font-style: italic;
+}
+
+/* Blockquotes */
+blockquote {
+  margin: var(--space-md) 0;
+  padding: var(--space-md) var(--space-lg);
+  border-inline-start: var(--border-thick) solid var(--color-primary);
+  background: var(--color-bg-subtle);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-style: italic;
+}
+
+blockquote > p:last-child {
+  margin-block-end: 0;
+}
+
+/* Code */
+code {
+  padding: var(--space-3xs) var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-sm);
+}
+
+pre {
+  margin: var(--space-md) 0;
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+pre > code {
+  padding: 0;
+  background: transparent;
+}
+
+/* Small text */
+small {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* Keyboard */
+kbd {
+  display: inline-block;
+  padding: var(--space-3xs) var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  background: var(--color-bg-subtle);
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 -1px 0 var(--color-border);
+}
+
+/* Abbreviation */
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+/* Underline */
+u {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+/* Strikethrough */
+s,
+del {
+  text-decoration: line-through;
+}
+
+/* Inserted text */
+ins {
+  text-decoration: none;
+  background: oklch(from var(--color-success) l c h / 20%);
+}
+
+/* Subscript & superscript */
+sub,
+sup {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+
+sub {
+  bottom: -0.25em;
+}

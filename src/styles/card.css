@@ -1,0 +1,39 @@
+/* Card styles */
+
+article {
+  background: var(--color-surface);
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+article > header {
+  padding: var(--space-md) var(--space-lg);
+  border-block-end: var(--border-thin) solid var(--color-border);
+  background: var(--color-bg-subtle);
+}
+
+article > header > h1,
+article > header > h2,
+article > header > h3,
+article > header > h4,
+article > header > h5,
+article > header > h6 {
+  margin: 0;
+}
+
+article > div,
+article > section {
+  padding: var(--space-lg);
+}
+
+article > footer {
+  padding: var(--space-md) var(--space-lg);
+  border-block-start: var(--border-thin) solid var(--color-border);
+  background: var(--color-bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}

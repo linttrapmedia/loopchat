@@ -1,0 +1,33 @@
+/* Grid styles */
+
+[data-grid] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: var(--space-md);
+}
+
+[data-container] {
+  width: 100%;
+  max-width: var(--max-w-6xl);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+
+@media (--md-n-above) {
+  [data-container] {
+    padding-inline: var(--space-lg);
+  }
+}
+
+@media (--lg-n-above) {
+  [data-container] {
+    padding-inline: var(--space-xl);
+  }
+}
+
+/* Group - horizontal flex container */
+[role="group"]:not([data-button-group]):not([data-toggle-group]):not([role="tablist"]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}

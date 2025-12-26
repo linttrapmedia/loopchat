@@ -1,0 +1,31 @@
+/* Badge styles */
+
+mark {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2xs) var(--space-xs);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+/* Primary variant (default) */
+mark,
+mark[data-variant="primary"] {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Secondary variant */
+mark[data-variant="secondary"] {
+  background: var(--color-secondary);
+  color: white;
+}
+
+/* Contrast variant */
+mark[data-variant="contrast"] {
+  background: var(--color-text);
+  color: var(--color-bg);
+}

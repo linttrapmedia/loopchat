@@ -1,0 +1,53 @@
+/* Dialog styles */
+
+dialog {
+  position: fixed;
+  inset: 0;
+  width: fit-content;
+  max-width: min(90vw, var(--max-w-lg));
+  max-height: 85vh;
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  z-index: var(--z-modal);
+}
+
+dialog::backdrop {
+  background: oklch(from var(--color-text) l c h / 50%);
+  backdrop-filter: blur(4px);
+}
+
+dialog[open] {
+  animation: slide-up var(--duration-normal) var(--ease-out);
+}
+
+dialog > article {
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+dialog > article > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+dialog > article > section,
+dialog > article > div {
+  flex: 1;
+  overflow-y: auto;
+}
+
+dialog > article > footer {
+  flex-shrink: 0;
+}

@@ -1,5 +1,5 @@
-import { db } from "./db";
-import * as schema from "./schema";
+import { db } from "@/database/db";
+import * as schema from "@/database/schema";
 
 await db.insert(schema.movies).values([
   {

@@ -1,0 +1,61 @@
+/* Accordion styles */
+
+details {
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0;
+  margin-block-end: var(--space-xs);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
+details[open] {
+  padding-block-end: var(--space-md);
+}
+
+details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  list-style: none;
+  background: var(--color-bg-subtle);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary::after {
+  content: "";
+  width: 0.5em;
+  height: 0.5em;
+  border-right: var(--border-medium) solid currentColor;
+  border-bottom: var(--border-medium) solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+details[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+details > summary:hover {
+  background: oklch(from var(--color-bg-subtle) calc(l - 0.02) c h);
+}
+
+details > summary:focus-visible {
+  outline: var(--border-medium) solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+details > :not(summary) {
+  padding-inline: var(--space-md);
+}
+
+details > :not(summary):first-of-type {
+  margin-block-start: var(--space-md);
+}

@@ -1,0 +1,29 @@
+/* Button group styles */
+
+[data-button-group] {
+  display: inline-flex;
+}
+
+[data-button-group] > button {
+  border-radius: 0;
+}
+
+[data-button-group] > button:first-child {
+  border-start-start-radius: var(--radius-md);
+  border-end-start-radius: var(--radius-md);
+}
+
+[data-button-group] > button:last-child {
+  border-start-end-radius: var(--radius-md);
+  border-end-end-radius: var(--radius-md);
+}
+
+[data-button-group] > button:not(:first-child) {
+  margin-inline-start: calc(var(--border-thin) * -1);
+}
+
+[data-button-group] > button:hover,
+[data-button-group] > button:focus-visible {
+  z-index: 1;
+  position: relative;
+}

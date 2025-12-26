@@ -9,10 +9,10 @@
   },
   "private": true,
   "scripts": {
-    "start": "bun run --hot src/index.tsx"
+    "dev": "bun run --hot src/router.tsx",
+    "bundle:css": "bun run scripts/bundle-css.ts"
   },
   "dependencies": {
-    "@picocss/pico": "^2.1.1",
     "drizzle-orm": "^0.45.1",
     "hono": "^4.11.2"
   },
