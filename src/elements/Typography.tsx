@@ -1,4 +1,5 @@
 import type { Child } from "hono/jsx";
+import type { JSX } from "hono/jsx/dom/jsx-dev-runtime";
 
 type TypographyProps = {
   children: Child;
@@ -21,7 +22,7 @@ export const Typography = ({ children, variant = "body1", as, class: className }
     overline: "small",
   };
 
-  const Tag = as ?? defaultTags[variant];
+  const Tag = as ?? (defaultTags[variant] as any);
 
   return (
     <Tag data-variant={variant !== defaultTags[variant] ? variant : undefined} class={className}>

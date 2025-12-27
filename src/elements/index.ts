@@ -44,4 +44,4 @@ export { RichText } from "./RichText";
 export { Typography } from "./Typography";
 
 // Layout Utilities
-export { Container, Grid, Group } from "./Grid";
+export { Container, Grid, Group, Stack } from "./Grid";

@@ -23,11 +23,13 @@ function minifyCSS(css: string): string {
       // Remove comments
       .replace(/\/\*[\s\S]*?\*\//g, "")
       // Remove newlines and carriage returns
-      .replace(/[\r\n]+/g, "")
-      // Remove extra whitespace
-      .replace(/\s+/g, " ")
-      // Remove space around brackets, colons, semicolons, commas
-      .replace(/\s*([{};:,>~+])\s*/g, "$1")
+      .replace(/[\r\n]+/g, " ")
+      // Collapse multiple spaces to single space
+      .replace(/\s{2,}/g, " ")
+      // Remove space around brackets, colons, semicolons (but NOT combinators like > ~ +)
+      .replace(/\s*([{};:])\s*/g, "$1")
+      // Remove space after commas (but keep space before for selectors)
+      .replace(/,\s+/g, ",")
       // Remove space around media query parentheses
       .replace(/\(\s+/g, "(")
       .replace(/\s+\)/g, ")")

@@ -43,6 +43,7 @@ import {
   Select,
   Snackbar,
   Spinner,
+  Stack,
   Switch,
   TabButton,
   TabButtons,
@@ -66,121 +67,314 @@ export const DesignSystem = () => {
         </header>
 
         {/* Table of Contents */}
-        <nav style={{ marginBlockEnd: "var(--space-2xl)" }}>
+        <section id="toc" style={{ marginBlockEnd: "var(--space-2xl)" }}>
           <h2>Components</h2>
-          <Grid>
-            <List>
-              <ListItem>
-                <a href="#typography">Typography</a>
-              </ListItem>
-              <ListItem>
-                <a href="#buttons">Buttons</a>
-              </ListItem>
-              <ListItem>
-                <a href="#cards">Cards</a>
-              </ListItem>
-              <ListItem>
-                <a href="#inputs">Form Inputs</a>
-              </ListItem>
-              <ListItem>
-                <a href="#select">Select</a>
-              </ListItem>
-              <ListItem>
-                <a href="#textarea">Textarea</a>
-              </ListItem>
-              <ListItem>
-                <a href="#form-controls">Form Controls</a>
-              </ListItem>
-              <ListItem>
-                <a href="#range">Range</a>
-              </ListItem>
-            </List>
-            <List>
-              <ListItem>
-                <a href="#badges">Badges &amp; Chips</a>
-              </ListItem>
-              <ListItem>
-                <a href="#alerts">Alerts</a>
-              </ListItem>
-              <ListItem>
-                <a href="#progress">Progress &amp; Spinners</a>
-              </ListItem>
-              <ListItem>
-                <a href="#avatar">Avatar</a>
-              </ListItem>
-              <ListItem>
-                <a href="#table">Table</a>
-              </ListItem>
-              <ListItem>
-                <a href="#lists">Lists</a>
-              </ListItem>
-              <ListItem>
-                <a href="#definition-list">Definition List</a>
-              </ListItem>
-              <ListItem>
-                <a href="#accordion">Accordion</a>
-              </ListItem>
-            </List>
-            <List>
-              <ListItem>
-                <a href="#dialog">Dialog</a>
-              </ListItem>
-              <ListItem>
-                <a href="#modal">Modal</a>
-              </ListItem>
-              <ListItem>
-                <a href="#snackbar">Snackbar</a>
-              </ListItem>
-              <ListItem>
-                <a href="#tabs">Tabs</a>
-              </ListItem>
-              <ListItem>
-                <a href="#navigation">Navigation</a>
-              </ListItem>
-              <ListItem>
-                <a href="#layout">Grid &amp; Layout</a>
-              </ListItem>
-              <ListItem>
-                <a href="#divider">Divider</a>
-              </ListItem>
-            </List>
-          </Grid>
-        </nav>
+          <List>
+            <ListItem>
+              <a href="#typography">Typography</a>
+            </ListItem>
+            <ListItem>
+              <a href="#buttons">Buttons</a>
+            </ListItem>
+            <ListItem>
+              <a href="#cards">Cards</a>
+            </ListItem>
+            <ListItem>
+              <a href="#inputs">Form Inputs</a>
+            </ListItem>
+            <ListItem>
+              <a href="#select">Select</a>
+            </ListItem>
+            <ListItem>
+              <a href="#textarea">Textarea</a>
+            </ListItem>
+            <ListItem>
+              <a href="#form-controls">Form Controls</a>
+            </ListItem>
+            <ListItem>
+              <a href="#range">Range</a>
+            </ListItem>
+            <ListItem>
+              <a href="#badges">Badges &amp; Chips</a>
+            </ListItem>
+            <ListItem>
+              <a href="#alerts">Alerts</a>
+            </ListItem>
+            <ListItem>
+              <a href="#progress">Progress &amp; Spinners</a>
+            </ListItem>
+            <ListItem>
+              <a href="#avatar">Avatar</a>
+            </ListItem>
+            <ListItem>
+              <a href="#table">Table</a>
+            </ListItem>
+            <ListItem>
+              <a href="#lists">Lists</a>
+            </ListItem>
+            <ListItem>
+              <a href="#definition-list">Definition List</a>
+            </ListItem>
+            <ListItem>
+              <a href="#accordion">Accordion</a>
+            </ListItem>
+            <ListItem>
+              <a href="#dialog">Dialog</a>
+            </ListItem>
+            <ListItem>
+              <a href="#modal">Modal</a>
+            </ListItem>
+            <ListItem>
+              <a href="#snackbar">Snackbar</a>
+            </ListItem>
+            <ListItem>
+              <a href="#tabs">Tabs</a>
+            </ListItem>
+            <ListItem>
+              <a href="#navigation">Navigation</a>
+            </ListItem>
+            <ListItem>
+              <a href="#layout">Grid &amp; Layout</a>
+            </ListItem>
+            <ListItem>
+              <a href="#divider">Divider</a>
+            </ListItem>
+          </List>
+        </section>
 
         <Divider />
 
         {/* Typography */}
         <section id="typography">
           <h2>Typography</h2>
-          <p>Typography component with semantic variants and fluid sizing.</p>
-          <Card>
-            <CardBody>
-              <Typography variant="h1">Heading 1</Typography>
-              <Typography variant="h2">Heading 2</Typography>
-              <Typography variant="h3">Heading 3</Typography>
-              <Typography variant="h4">Heading 4</Typography>
-              <Typography variant="h5">Heading 5</Typography>
-              <Typography variant="h6">Heading 6</Typography>
-              <Divider />
-              <Typography variant="body1">Body 1 - Primary body text for main content.</Typography>
-              <Typography variant="body2">Body 2 - Secondary body text for supporting content.</Typography>
-              <Typography variant="caption">Caption - Small text for captions and labels.</Typography>
-              <br />
-              <Typography variant="overline">Overline - Uppercase label text</Typography>
-              <Divider />
-              <h4>Rich Text Elements</h4>
-              <p>
-                This paragraph contains <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <a href="#">links</a>,{" "}
-                <code>inline code</code>, <kbd>Cmd</kbd> + <kbd>K</kbd>, and <abbr title="Abbreviation">abbr</abbr>{" "}
-                elements.
-              </p>
-              <blockquote>This is a blockquote for highlighting important quotes or callouts.</blockquote>
-              <pre>
-                <code>{`const greeting = "Hello, World!";
+          <p>
+            Classless typography styling based on semantic HTML elements. All styles are applied automatically — no
+            classes or data attributes required.
+          </p>
+
+          <Stack>
+            {/* Headings */}
+            <Card>
+              <CardHeader>
+                <h3>Headings</h3>
+              </CardHeader>
+              <CardBody>
+                <h1>Heading 1 — The main title</h1>
+                <h2>Heading 2 — Section heading</h2>
+                <h3>Heading 3 — Subsection heading</h3>
+                <h4>Heading 4 — Minor heading</h4>
+                <h5>Heading 5 — Small heading</h5>
+                <h6>Heading 6 — Smallest heading (uppercase)</h6>
+              </CardBody>
+            </Card>
+
+            {/* Body Text */}
+            <Card>
+              <CardHeader>
+                <h3>Body Text</h3>
+              </CardHeader>
+              <CardBody>
+                <h2>Lead Paragraphs</h2>
+                <p>
+                  Paragraphs immediately following h1 or h2 are automatically styled as lead text — larger and muted for
+                  introductory content.
+                </p>
+                <h4>Regular Paragraph</h4>
+                <p>
+                  This is a regular paragraph with comfortable line-height for readability. Text wraps using{" "}
+                  <code>text-wrap: pretty</code> for better typography.
+                </p>
+              </CardBody>
+            </Card>
+
+            {/* Inline Elements */}
+            <Card>
+              <CardHeader>
+                <h3>Inline Elements</h3>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  <strong>Strong text</strong> for importance, <em>emphasized text</em> for stress, and{" "}
+                  <u>underlined text</u> for annotations.
+                </p>
+                <p>
+                  <s>Strikethrough</s> for deleted content, <del>deleted text</del>, and <ins>inserted text</ins> with
+                  highlight.
+                </p>
+                <p>
+                  <small>Small text</small> for fine print and secondary information.
+                </p>
+              </CardBody>
+            </Card>
+
+            {/* Links */}
+            <Card>
+              <CardHeader>
+                <h3>Links</h3>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  <a href="#">Standard link</a> — styled with primary color, underline, and hover effects. Links have
+                  smooth transitions and distinct visited states.
+                </p>
+              </CardBody>
+            </Card>
+
+            {/* Code Elements */}
+            <Card>
+              <CardHeader>
+                <h3>Code &amp; Preformatted</h3>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  Inline <code>code</code> with background, <kbd>Cmd</kbd> + <kbd>K</kbd> keyboard keys,{" "}
+                  <samp>sample output</samp>, and <var>variables</var>.
+                </p>
+                <pre>
+                  <code>{`// Code block with syntax preservation
+const greeting = "Hello, World!";
 console.log(greeting);`}</code>
-              </pre>
-            </CardBody>
-          </Card>
+                </pre>
+              </CardBody>
+            </Card>
+
+            {/* Blockquotes */}
+            <Card>
+              <CardHeader>
+                <h3>Blockquotes</h3>
+              </CardHeader>
+              <CardBody>
+                <blockquote>
+                  <p>
+                    Typography is the craft of endowing human language with a durable visual form, and thus with an
+                    independent existence.
+                  </p>
+                  <cite>Robert Bringhurst</cite>
+                </blockquote>
+              </CardBody>
+            </Card>
+
+            {/* Abbreviations & Definitions */}
+            <Card>
+              <CardHeader>
+                <h3>Abbreviations &amp; Definitions</h3>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  The <abbr title="World Wide Web Consortium">W3C</abbr> maintains web standards. Hover for the full
+                  title.
+                </p>
+                <p>
+                  A <dfn>design token</dfn> is a named value that represents a design decision.
+                </p>
+              </CardBody>
+            </Card>
+
+            {/* Subscript & Superscript */}
+            <Card>
+              <CardHeader>
+                <h3>Subscript &amp; Superscript</h3>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  Chemical formulas: H<sub>2</sub>O, CO<sub>2</sub>
+                </p>
+                <p>
+                  Mathematical expressions: x<sup>2</sup> + y<sup>2</sup> = z<sup>2</sup>
+                </p>
+                <p>
+                  Footnotes<sup>1</sup> and ordinals: 1<sup>st</sup>, 2<sup>nd</sup>, 3<sup>rd</sup>
+                </p>
+              </CardBody>
+            </Card>
+
+            {/* Address */}
+            <Card>
+              <CardHeader>
+                <h3>Address</h3>
+              </CardHeader>
+              <CardBody>
+                <address>
+                  Acme Corporation
+                  <br />
+                  123 Main Street
+                  <br />
+                  Anytown, ST 12345
+                  <br />
+                  <a href="mailto:info@example.com">info@example.com</a>
+                </address>
+              </CardBody>
+            </Card>
+
+            {/* Time & Data */}
+            <Card>
+              <CardHeader>
+                <h3>Time &amp; Data</h3>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  Published on <time dateTime="2025-12-26">December 26, 2025</time>
+                </p>
+                <p>
+                  Price: <data value="99.99">$99.99</data>
+                </p>
+              </CardBody>
+            </Card>
+
+            {/* Figures */}
+            <Card>
+              <CardHeader>
+                <h3>Figures &amp; Captions</h3>
+              </CardHeader>
+              <CardBody>
+                <figure>
+                  <div
+                    style={{
+                      background: "var(--color-bg-subtle)",
+                      padding: "var(--space-2xl)",
+                      textAlign: "center",
+                      borderRadius: "var(--radius-md)",
+                    }}
+                  >
+                    [Image Placeholder]
+                  </div>
+                  <figcaption>Figure 1: An example figure with a centered caption below.</figcaption>
+                </figure>
+              </CardBody>
+            </Card>
+
+            {/* Horizontal Rules */}
+            <Card>
+              <CardHeader>
+                <h3>Horizontal Rules</h3>
+              </CardHeader>
+              <CardBody>
+                <p>Standard section break:</p>
+                <hr />
+                <p>Decorative variant with dots:</p>
+                <hr data-decorative />
+                <p>Content continues after the break.</p>
+              </CardBody>
+            </Card>
+
+            {/* Component Variants */}
+            <Card>
+              <CardHeader>
+                <h3>Typography Component Variants</h3>
+              </CardHeader>
+              <CardBody>
+                <p>
+                  The <code>Typography</code> component provides additional variants for specific use cases:
+                </p>
+                <Divider />
+                <Typography variant="body1">Body 1 — Primary body text for main content.</Typography>
+                <Typography variant="body2">Body 2 — Secondary body text for supporting content.</Typography>
+                <Typography variant="caption">Caption — Small text for captions and labels.</Typography>
+                <br />
+                <Typography variant="overline">Overline — Uppercase label text</Typography>
+              </CardBody>
+            </Card>
+          </Stack>
         </section>
 
         <Divider />
@@ -684,19 +878,18 @@ console.log(greeting);`}</code>
           <Card>
             <CardBody>
               <p>
-                <small>
-                  Note: Snackbars are positioned fixed at the bottom of the viewport when displayed. The example below
-                  shows the snackbar inline for demonstration.
-                </small>
+                <small>Note: Snackbars are positioned fixed at the bottom of the viewport when displayed.</small>
               </p>
-              <div style={{ position: "relative", height: "4rem" }}>
-                <Snackbar variant="info" open>
-                  This is an info snackbar
-                </Snackbar>
-              </div>
             </CardBody>
           </Card>
         </section>
+
+        {/* Fixed snackbar at bottom of page */}
+        <Snackbar variant="info" open>
+          <a href="#toc" style={{ color: "inherit", textDecoration: "none" }}>
+            ↑ Back to TOC
+          </a>
+        </Snackbar>
 
         <Divider />
 

@@ -6,6 +6,21 @@
   gap: var(--space-md);
 }
 
+/* Stack - vertical flex container with spacing */
+[data-stack] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+[data-stack="sm"] {
+  gap: var(--space-sm);
+}
+
+[data-stack="lg"] {
+  gap: var(--space-lg);
+}
+
 [data-container] {
   width: 100%;
   max-width: var(--max-w-6xl);

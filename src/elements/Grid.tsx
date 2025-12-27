@@ -38,3 +38,17 @@ export const Container = ({ children, class: className }: ContainerProps) => {
     </main>
   );
 };
+
+type StackProps = {
+  children: Child;
+  gap?: "sm" | "md" | "lg";
+  class?: string;
+};
+
+export const Stack = ({ children, gap, class: className }: StackProps) => {
+  return (
+    <div data-stack={gap || true} class={className}>
+      {children}
+    </div>
+  );
+};
