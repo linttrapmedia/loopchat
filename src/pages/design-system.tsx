@@ -22,6 +22,7 @@ import {
   DialogFooter,
   DialogHeader,
   Divider,
+  Fieldset,
   Grid,
   Group,
   IconButton,
@@ -74,13 +75,10 @@ export const DesignSystem = () => {
               <a href="#typography">Typography</a>
             </ListItem>
             <ListItem>
-              <a href="#buttons">Buttons</a>
+              <a href="#form-example">Form Example</a>
             </ListItem>
             <ListItem>
-              <a href="#cards">Cards</a>
-            </ListItem>
-            <ListItem>
-              <a href="#inputs">Form Inputs</a>
+              <a href="#inputs">Text Inputs</a>
             </ListItem>
             <ListItem>
               <a href="#select">Select</a>
@@ -89,10 +87,13 @@ export const DesignSystem = () => {
               <a href="#textarea">Textarea</a>
             </ListItem>
             <ListItem>
-              <a href="#form-controls">Form Controls</a>
+              <a href="#form-controls">Checkbox, Radio & Switch</a>
             </ListItem>
             <ListItem>
               <a href="#range">Range</a>
+            </ListItem>
+            <ListItem>
+              <a href="#buttons">Buttons</a>
             </ListItem>
             <ListItem>
               <a href="#badges">Badges &amp; Chips</a>
@@ -114,6 +115,9 @@ export const DesignSystem = () => {
             </ListItem>
             <ListItem>
               <a href="#definition-list">Definition List</a>
+            </ListItem>
+            <ListItem>
+              <a href="#cards">Cards</a>
             </ListItem>
             <ListItem>
               <a href="#accordion">Accordion</a>
@@ -153,7 +157,6 @@ export const DesignSystem = () => {
           </p>
 
           <Stack>
-            {/* Headings */}
             <Card>
               <CardHeader>
                 <h3>Headings</h3>
@@ -377,97 +380,33 @@ console.log(greeting);`}</code>
           </Stack>
         </section>
 
+        {/* Form Example */}
         <Divider />
-
-        {/* Buttons */}
-        <section id="buttons">
-          <h2>Buttons</h2>
-          <p>
-            Button component with variants: <code>primary</code>, <code>secondary</code>, <code>contrast</code>,{" "}
-            <code>outline</code>. Sizes: <code>small</code>, <code>medium</code>, <code>large</code>.
-          </p>
+        <section id="form-example">
+          <h2>Form Example</h2>
+          <p>A fully accessible, semantic form using all form elements and grouping.</p>
           <Card>
             <CardBody>
-              <h4>Variants</h4>
-              <Group>
-                <Button variant="primary">Primary</Button>
-                <Button variant="secondary">Secondary</Button>
-                <Button variant="contrast">Contrast</Button>
-                <Button variant="outline">Outline</Button>
-              </Group>
-
-              <h4>Sizes</h4>
-              <Group>
-                <Button size="small">Small</Button>
-                <Button size="medium">Medium</Button>
-                <Button size="large">Large</Button>
-              </Group>
-
-              <h4>States</h4>
-              <Group>
-                <Button disabled>Disabled</Button>
-              </Group>
-
-              <h4>Button Group</h4>
-              <ButtonGroup>
-                <Button variant="outline">Left</Button>
-                <Button variant="outline">Center</Button>
-                <Button variant="outline">Right</Button>
-              </ButtonGroup>
-
-              <h4>Icon Buttons</h4>
-              <Group>
-                <IconButton label="Settings" variant="default">
-                  ⚙️
-                </IconButton>
-                <IconButton label="Edit" variant="primary">
-                  ✏️
-                </IconButton>
-                <IconButton label="Delete" variant="secondary">
-                  🗑️
-                </IconButton>
-              </Group>
-
-              <h4>Toggle Button Group</h4>
-              <ToggleButtonGroup>
-                <ToggleButton value="left" selected>
-                  Left
-                </ToggleButton>
-                <ToggleButton value="center">Center</ToggleButton>
-                <ToggleButton value="right">Right</ToggleButton>
-              </ToggleButtonGroup>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <Fieldset legend="Personal Information">
+                  <Input name="name" label="Full Name" placeholder="Jane Doe" required />
+                  <Input name="email" label="Email" type="email" placeholder="jane@example.com" required />
+                </Fieldset>
+                <Fieldset legend="Preferences">
+                  <Group>
+                    <Checkbox name="newsletter" label="Subscribe to newsletter" />
+                    <Switch name="darkmode" label="Enable dark mode" />
+                  </Group>
+                  <Radio name="plan" value="free" label="Free Plan" checked />
+                  <Radio name="plan" value="pro" label="Pro Plan" />
+                </Fieldset>
+                <Fieldset legend="Message">
+                  <Textarea name="message" label="Message" placeholder="Type your message..." rows={4} />
+                </Fieldset>
+                <Button type="submit">Submit</Button>
+              </form>
             </CardBody>
           </Card>
-        </section>
-
-        <Divider />
-
-        {/* Cards */}
-        <section id="cards">
-          <h2>Cards</h2>
-          <p>Card component with header, body, and footer sections.</p>
-          <Grid>
-            <Card>
-              <CardHeader>
-                <h3>Card Title</h3>
-              </CardHeader>
-              <CardBody>
-                <p>This is the card body content. Cards are great for grouping related information.</p>
-              </CardBody>
-              <CardFooter>
-                <Button variant="outline" size="small">
-                  Cancel
-                </Button>
-                <Button size="small">Action</Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardBody>
-                <h4>Simple Card</h4>
-                <p>A card with just a body section, no header or footer.</p>
-              </CardBody>
-            </Card>
-          </Grid>
         </section>
 
         <Divider />
@@ -478,22 +417,16 @@ console.log(greeting);`}</code>
           <p>Text inputs with labels, placeholders, helper text, and validation states.</p>
           <Card>
             <CardBody>
-              <Grid>
+              <Stack gap="md">
                 <Input name="text" label="Text Input" placeholder="Enter text..." />
                 <Input name="email" label="Email" type="email" placeholder="email@example.com" />
-              </Grid>
-              <Grid>
                 <Input name="password" label="Password" type="password" placeholder="Enter password" />
                 <Input name="search" label="Search" type="search" placeholder="Search..." />
-              </Grid>
-              <Grid>
                 <Input name="disabled" label="Disabled" disabled value="Disabled input" />
                 <Input name="readonly" label="Read Only" readonly value="Read only input" />
-              </Grid>
-              <Grid>
                 <Input name="invalid" label="Invalid" invalid helperText="This field has an error" />
                 <Input name="helper" label="With Helper" helperText="This is helper text" />
-              </Grid>
+              </Stack>
             </CardBody>
           </Card>
         </section>
@@ -556,30 +489,30 @@ console.log(greeting);`}</code>
         <section id="form-controls">
           <h2>Form Controls</h2>
           <p>Checkbox, Radio, and Switch components.</p>
-          <Card>
-            <CardBody>
-              <h4>Checkboxes</h4>
-              <Group>
-                <Checkbox name="check1" label="Option 1" checked />
-                <Checkbox name="check2" label="Option 2" />
-                <Checkbox name="check3" label="Disabled" disabled />
-              </Group>
-
-              <h4>Radio Buttons</h4>
-              <Group>
-                <Radio name="radio" value="1" label="Option A" checked />
-                <Radio name="radio" value="2" label="Option B" />
-                <Radio name="radio" value="3" label="Option C" />
-              </Group>
-
-              <h4>Switches</h4>
-              <Group>
-                <Switch name="switch1" label="Enable notifications" checked />
-                <Switch name="switch2" label="Dark mode" />
-                <Switch name="switch3" label="Disabled" disabled />
-              </Group>
-            </CardBody>
-          </Card>
+          <Fieldset>
+            <label>Checkboxes</label>
+            <Group>
+              <Checkbox name="check1" label="Option 1" checked />
+              <Checkbox name="check2" label="Option 2" />
+              <Checkbox name="check3" label="Disabled" disabled />
+            </Group>
+          </Fieldset>
+          <Fieldset>
+            <label>Radio Buttons</label>
+            <Group>
+              <Radio name="radio" value="1" label="Option A" checked />
+              <Radio name="radio" value="2" label="Option B" />
+              <Radio name="radio" value="3" label="Option C" />
+            </Group>
+          </Fieldset>
+          <Fieldset>
+            <label>Switches</label>
+            <Group>
+              <Switch name="switch1" label="Enable notifications" checked />
+              <Switch name="switch2" label="Dark mode" />
+              <Switch name="switch3" label="Disabled" disabled />
+            </Group>
+          </Fieldset>
         </section>
 
         <Divider />
@@ -599,26 +532,103 @@ console.log(greeting);`}</code>
 
         <Divider />
 
+        {/* Buttons */}
+        <section id="buttons">
+          <h2>Buttons</h2>
+          <p>
+            Button component with variants: <code>primary</code>, <code>secondary</code>, <code>contrast</code>,{" "}
+            <code>outline</code>. Sizes: <code>small</code>, <code>medium</code>, <code>large</code>.
+          </p>
+          <Card>
+            <CardBody>
+              <Stack gap="lg">
+                <div>
+                  <h4>Variants</h4>
+                  <Group>
+                    <Button variant="primary">Primary</Button>
+                    <Button variant="secondary">Secondary</Button>
+                    <Button variant="contrast">Contrast</Button>
+                    <Button variant="outline">Outline</Button>
+                  </Group>
+                </div>
+                <div>
+                  <h4>Sizes</h4>
+                  <Group>
+                    <Button size="small">Small</Button>
+                    <Button size="medium">Medium</Button>
+                    <Button size="large">Large</Button>
+                  </Group>
+                </div>
+                <div>
+                  <h4>States</h4>
+                  <Group>
+                    <Button disabled>Disabled</Button>
+                  </Group>
+                </div>
+                <div>
+                  <h4>Button Group</h4>
+                  <ButtonGroup>
+                    <Button variant="outline">Left</Button>
+                    <Button variant="outline">Center</Button>
+                    <Button variant="outline">Right</Button>
+                  </ButtonGroup>
+                </div>
+                <div>
+                  <h4>Icon Buttons</h4>
+                  <Group>
+                    <IconButton label="Settings" variant="default">
+                      ⚙️
+                    </IconButton>
+                    <IconButton label="Edit" variant="primary">
+                      ✏️
+                    </IconButton>
+                    <IconButton label="Delete" variant="secondary">
+                      🗑️
+                    </IconButton>
+                  </Group>
+                </div>
+                <div>
+                  <h4>Toggle Button Group</h4>
+                  <ToggleButtonGroup>
+                    <ToggleButton value="left" selected>
+                      Left
+                    </ToggleButton>
+                    <ToggleButton value="center">Center</ToggleButton>
+                    <ToggleButton value="right">Right</ToggleButton>
+                  </ToggleButtonGroup>
+                </div>
+              </Stack>
+            </CardBody>
+          </Card>
+        </section>
+
+        <Divider />
+
         {/* Badges & Chips */}
         <section id="badges">
           <h2>Badges &amp; Chips</h2>
           <p>Small labels for status indicators and interactive tags.</p>
           <Card>
             <CardBody>
-              <h4>Badges</h4>
-              <Group>
-                <Badge>Primary</Badge>
-                <Badge variant="secondary">Secondary</Badge>
-                <Badge variant="contrast">Contrast</Badge>
-              </Group>
-
-              <h4>Chips</h4>
-              <Group>
-                <Chip>Default Chip</Chip>
-                <Chip variant="primary">Primary</Chip>
-                <Chip variant="secondary">Secondary</Chip>
-                <Chip removable>Removable</Chip>
-              </Group>
+              <Stack>
+                <div>
+                  <h4>Badges</h4>
+                  <Group>
+                    <Badge>Primary</Badge>
+                    <Badge variant="secondary">Secondary</Badge>
+                    <Badge variant="contrast">Contrast</Badge>
+                  </Group>
+                </div>
+                <div>
+                  <h4>Chips</h4>
+                  <Group>
+                    <Chip>Default Chip</Chip>
+                    <Chip variant="primary">Primary</Chip>
+                    <Chip variant="secondary">Secondary</Chip>
+                    <Chip removable>Removable</Chip>
+                  </Group>
+                </div>
+              </Stack>
             </CardBody>
           </Card>
         </section>
@@ -778,6 +788,36 @@ console.log(greeting);`}</code>
               </DefinitionList>
             </CardBody>
           </Card>
+        </section>
+
+        <Divider />
+
+        {/* Cards */}
+        <section id="cards">
+          <h2>Cards</h2>
+          <p>Card component with header, body, and footer sections.</p>
+          <Grid>
+            <Card>
+              <CardHeader>
+                <h3>Card Title</h3>
+              </CardHeader>
+              <CardBody>
+                <p>This is the card body content. Cards are great for grouping related information.</p>
+              </CardBody>
+              <CardFooter>
+                <Button variant="outline" size="small">
+                  Cancel
+                </Button>
+                <Button size="small">Action</Button>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardBody>
+                <h4>Simple Card</h4>
+                <p>A card with just a body section, no header or footer.</p>
+              </CardBody>
+            </Card>
+          </Grid>
         </section>
 
         <Divider />

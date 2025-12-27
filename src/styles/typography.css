@@ -11,7 +11,7 @@ h4,
 h5,
 h6 {
   margin-block-start: 0;
-  margin-block-end: var(--space-md);
+  margin-block-end: var(--space-sm);
   font-family: var(--font-sans);
   font-weight: var(--weight-bold);
   color: var(--color-text);

@@ -45,3 +45,6 @@ export { Typography } from "./Typography";
 
 // Layout Utilities
 export { Container, Grid, Group, Stack } from "./Grid";
+
+// Fieldset
+export { Fieldset, Legend } from "./Fieldset";
