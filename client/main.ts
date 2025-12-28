@@ -1,5 +1,5 @@
-import { UI } from "@/app";
-import { fsm } from "@/fsm";
+import { UI } from "@/client/app";
+import { fsm } from "@/client/fsm";
 
 document.addEventListener("DOMContentLoaded", function () {
   const root = document.getElementById("root");

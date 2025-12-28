@@ -1,5 +1,5 @@
-import { INDEXEDDB } from "@/constants";
-import type { ObjectType } from "@/types";
+import { INDEXEDDB } from "@/client/constants";
+import type { ObjectType } from "@/client/types";
 
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {

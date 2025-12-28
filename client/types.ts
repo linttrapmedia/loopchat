@@ -1,5 +1,5 @@
-import type { VIEWS } from "@/constants";
-import type { icons } from "@/icons";
+import type { VIEWS } from "@/client/constants";
+import type { icons } from "@/client/icons";
 
 export type Actions =
   | [action: "INIT"]
@@ -9,13 +9,24 @@ export type Actions =
   | [action: "SWITCH_MODE_TO_COMMAND"]
   | [action: "NEXT_SUGGESTED_OBJECT_INDEX"]
   | [action: "PREV_SUGGESTED_OBJECT_INDEX"]
-  | [action: "ON_CHAT_INPUT", input: string];
+  | [action: "ON_CHAT_INPUT", input: string]
+  | [action: "SHOW_HELP"];
 
-export type IndexedDBType = { version: number; stores: Record<string, { name: string; keyPath: string }> };
+export type Command = {
+  command: string;
+  description: string;
+  action: Actions;
+  options?: {
+    option: string;
+    description: string;
+  }[];
+};
+
+export type IndexedDB = { version: number; stores: Record<string, { name: string; keyPath: string }> };
 
 export type Mode = "normal" | "command";
 
-export type ThemeType = "light" | "dark";
+export type Theme = "light" | "dark";
 
 export type ObjectType = {
   id: string;
@@ -26,7 +37,7 @@ export type ObjectType = {
 
 export type ViewNames = "Objects" | "Notifications" | "Agents" | "Tasks" | "Logs" | "Settings";
 
-export type ViewType = {
+export type View = {
   label: string;
   description: string;
   icon: keyof typeof icons;

@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import homepage from "./server.html";
+import Doc from "./doc.html";
 
 serve({
   development: {
@@ -9,10 +9,10 @@ serve({
     hmr: true,
   },
   routes: {
-    "/": homepage,
+    "/": Doc,
     "/assets/:file": (req) => {
       const { file } = req.params;
-      const asset = Bun.file(`./dev/assets/${file}`);
+      const asset = Bun.file(`./server/assets/${file}`);
       return new Response(asset);
     },
   },

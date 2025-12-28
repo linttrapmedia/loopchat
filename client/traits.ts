@@ -1,18 +1,26 @@
-import {
-  extractConditions,
-  extractStates,
-  Template,
-  useInputEventTrait,
-  useInputValueTrait,
-  type Condition,
-  type StateType,
-} from "@linttrap/oem";
-import {
-  useAttributeTrait,
-  useEventTrait,
-  useInnerHTMLTrait,
-  useStyleTrait,
-} from "node_modules/@linttrap/oem/src/registry";
+import { tag, trait } from "@/client/template";
+import { extractConditions, extractStates, type Condition, type StateType } from "@linttrap/oem";
+
+export function useAutoResizeTextareaTrait(el: HTMLTextAreaElement, ...rest: (StateType<any> | Condition)[]) {
+  const states = extractStates(...rest);
+  const conditions = extractConditions(...rest);
+
+  el.style.overflowY = "hidden";
+  el.style.resize = "none";
+  el.style.boxSizing = "border-box";
+
+  const resize = () => {
+    const applies = conditions.every((i) => (typeof i === "function" ? i() : i));
+    if (!applies) return;
+    el.style.height = "auto";
+    const style = getComputedStyle(el);
+    const border = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+    el.style.height = `${el.scrollHeight + border}px`;
+  };
+  const unsubs = states.map((state) => state.sub(resize));
+  requestAnimationFrame(resize);
+  return () => unsubs.forEach((unsub) => unsub());
+}
 
 export function useStyleOnEventTrait(
   el: HTMLElement,
@@ -199,18 +207,3 @@ export const useScrollintoViewTrait = (el: HTMLElement, ...rest: (StateType<any>
   const unsubs = states.map((state) => state.sub(apply));
   return () => unsubs.forEach((unsub) => unsub());
 };
-
-export const [tag, trait] = Template({
-  attr: useAttributeTrait,
-  event: useEventTrait,
-  html: useInnerHTMLTrait,
-  style: useStyleTrait,
-  styleOnEvt: useStyleOnEventTrait,
-  input: useInputEventTrait,
-  value: useInputValueTrait,
-  placeholderColor: usePlaceholderColorTrait,
-  trigger: useTriggerTrait,
-  fatCaret: useCustomCaretForContentEditable,
-  tooltip: useToolTipTrait,
-  scrollIntoView: useScrollintoViewTrait,
-});

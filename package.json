@@ -9,7 +9,7 @@
   },
   "private": true,
   "scripts": {
-    "dev": "bun run dev/server.ts --hot"
+    "dev": "bun run server/serve.ts --hot"
   },
   "type": "module",
   "dependencies": {

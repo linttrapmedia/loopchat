@@ -1,4 +1,4 @@
-import { tag, trait } from "@/template";
+import { tag, trait } from "@/client/template";
 
 function box(color: string = "currentColor", size: number = 24) {
   return tag.svg(
@@ -92,6 +92,28 @@ function envelope(color: string = "currentColor", size: number = 24) {
         trait.attr("stroke", color),
         trait.attr("stroke-width", "1")
       )
+    )
+  );
+}
+
+function downArrow(color: string = "currentColor", size: number = 24) {
+  return tag.svg(
+    trait.attr("viewBox", "0 0 24 24"),
+    trait.attr("width", size),
+    trait.attr("height", size),
+    trait.attr("xmlns", "http://www.w3.org/2000/svg"),
+    tag.g(
+      // Arrow line
+      tag.line(
+        trait.attr("x1", "12"),
+        trait.attr("y1", "4"),
+        trait.attr("x2", "12"),
+        trait.attr("y2", "16"),
+        trait.attr("stroke", color),
+        trait.attr("stroke-width", "2")
+      ),
+      // Arrow head
+      tag.polygon(trait.attr("points", "6,12 12,18 18,12"), trait.attr("fill", color))
     )
   );
 }
@@ -208,6 +230,7 @@ function robot(color: string = "currentColor", size: number = 24) {
 export const icons = {
   box,
   clipboard,
+  downArrow,
   envelope,
   gear,
   list,
