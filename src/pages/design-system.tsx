@@ -657,24 +657,27 @@ console.log(greeting);`}</code>
           <p>Progress bars and loading indicators.</p>
           <Card>
             <CardBody>
-              <h4>Progress Bar</h4>
-              <Progress value={25} />
-              <Progress value={50} />
-              <Progress value={75} />
-              <Progress />
+              <Stack gap="lg">
+                <h4>Progress Bar</h4>
+                <Group>
+                  <Progress value={25} />
+                  <Progress value={50} />
+                  <Progress value={75} />
+                </Group>
+                <Progress />
+                <h4>Loading Indicator</h4>
+                <Group>
+                  <Loading />
+                  <span>Loading...</span>
+                </Group>
 
-              <h4>Loading Indicator</h4>
-              <Group>
-                <Loading />
-                <span>Loading...</span>
-              </Group>
-
-              <h4>Spinner Sizes</h4>
-              <Group>
-                <Spinner size="small" />
-                <Spinner size="medium" />
-                <Spinner size="large" />
-              </Group>
+                <h4>Spinner Sizes</h4>
+                <Group>
+                  <Spinner size="small" />
+                  <Spinner size="medium" />
+                  <Spinner size="large" />
+                </Group>
+              </Stack>
             </CardBody>
           </Card>
         </section>

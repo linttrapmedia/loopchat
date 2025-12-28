@@ -53,4 +53,5 @@ mark[data-chip] > button {
 
 mark[data-chip] > button:hover {
   opacity: 1;
+  color: white;
 }

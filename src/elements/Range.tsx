@@ -21,7 +21,7 @@ export const Range = ({
 }: RangeProps) => {
   return (
     <label class={`range ${className ?? ""}`}>
-      {label && <span class="range__label">{label}</span>}
+      {label && label}
       <input type="range" name={name} min={min} max={max} step={step} value={value} disabled={disabled} />
     </label>
   );

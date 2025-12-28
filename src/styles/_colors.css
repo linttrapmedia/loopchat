@@ -20,48 +20,48 @@
    * BASE COLORS
    * ========================================================================== */
 
-  /* Primary - Main brand/action color */
-  --color-primary: oklch(55% 0.2 250);
+  /* Primary - Main brand/action color (gray) */
+  --color-primary: oklch(55% 0 0);
 
-  /* Secondary - Supporting color */
-  --color-secondary: oklch(55% 0.15 280);
+  /* Secondary - Supporting color (gray) */
+  --color-secondary: oklch(45% 0 0);
 
-  /* Accent - Highlight/call-to-action */
-  --color-accent: oklch(65% 0.25 150);
+  /* Accent - Highlight/call-to-action (gray) */
+  --color-accent: oklch(65% 0 0);
 
   /* ==========================================================================
    * SEMANTIC COLORS
    * ========================================================================== */
 
-  /* Success */
-  --color-success: oklch(60% 0.18 145);
+  /* Success (gray) */
+  --color-success: oklch(80.211% 0.16111 158.158);
 
-  /* Warning */
-  --color-warning: oklch(75% 0.18 85);
+  /* Warning (gray) */
+  --color-warning: oklch(95.866% 0.15879 106.365);
 
-  /* Error/Danger */
-  --color-error: oklch(55% 0.22 25);
+  /* Error/Danger (gray) */
+  --color-error: oklch(75.799% 0.14469 21.019);
 
-  /* Info */
-  --color-info: oklch(60% 0.15 230);
+  /* Info (gray) */
+  --color-info: oklch(85.238% 0.11832 215.322);
 
   /* ==========================================================================
    * NEUTRAL COLORS
    * ========================================================================== */
 
-  /* Text colors */
-  --color-text: oklch(20% 0.02 250);
-  --color-text-muted: oklch(45% 0.02 250);
+  /* Text colors (gray) */
+  --color-text: oklch(20% 0 0);
+  --color-text-muted: oklch(45% 0 0);
 
-  /* Background colors */
-  --color-bg: oklch(99% 0.005 250);
-  --color-bg-subtle: oklch(96% 0.01 250);
+  /* Background colors (gray) */
+  --color-bg: oklch(92.797% 0.00011 271.152);
+  --color-bg-subtle: oklch(96% 0 0);
 
-  /* Border color */
-  --color-border: oklch(85% 0.02 250);
+  /* Border color (gray) */
+  --color-border: oklch(85% 0 0);
 
-  /* Surface (cards, panels) */
-  --color-surface: oklch(100% 0 0);
+  /* Surface (cards, panels) (gray) */
+  --color-surface: oklch(96.416% 0.00011 271.152);
 }
 
 /* ==========================================================================
@@ -69,26 +69,26 @@
  * ========================================================================== */
 
 [data-theme="dark"] {
-  /* Primary - slightly lighter for dark bg */
-  --color-primary: oklch(65% 0.2 250);
+  /* Primary - lighter for dark bg (gray) */
+  --color-primary: oklch(80% 0 0);
 
-  /* Secondary */
-  --color-secondary: oklch(65% 0.15 280);
+  /* Secondary (gray) */
+  --color-secondary: oklch(60% 0 0);
 
-  /* Accent */
-  --color-accent: oklch(70% 0.25 150);
+  /* Accent (gray) */
+  --color-accent: oklch(90% 0 0);
 
-  /* Semantic - brighter for dark bg */
-  --color-success: oklch(70% 0.18 145);
-  --color-warning: oklch(80% 0.18 85);
-  --color-error: oklch(65% 0.22 25);
-  --color-info: oklch(70% 0.15 230);
+  /* Semantic - brighter for dark bg (gray) */
+  --color-success: oklch(85% 0 0);
+  --color-warning: oklch(70% 0 0);
+  --color-error: oklch(40% 0 0);
+  --color-info: oklch(95% 0 0);
 
-  /* Neutrals inverted */
-  --color-text: oklch(95% 0.02 250);
-  --color-text-muted: oklch(65% 0.02 250);
-  --color-bg: oklch(15% 0.02 250);
-  --color-bg-subtle: oklch(20% 0.02 250);
-  --color-border: oklch(30% 0.02 250);
-  --color-surface: oklch(18% 0.02 250);
+  /* Neutrals inverted (gray) */
+  --color-text: oklch(95% 0 0);
+  --color-text-muted: oklch(65% 0 0);
+  --color-bg: oklch(15% 0 0);
+  --color-bg-subtle: oklch(20% 0 0);
+  --color-border: oklch(30% 0 0);
+  --color-surface: oklch(18% 0 0);
 }

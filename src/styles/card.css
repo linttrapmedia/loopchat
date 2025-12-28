@@ -9,7 +9,7 @@ article {
 }
 
 article > header {
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--space-md);
   border-block-end: var(--border-thin) solid var(--color-border);
   background: var(--color-bg-subtle);
 }
@@ -25,15 +25,13 @@ article > header > h6 {
 
 article > div,
 article > section {
-  padding: var(--space-lg);
+  padding: var(--space-md);
 }
 
 article > footer {
   padding: var(--space-md) var(--space-lg);
-  border-block-start: var(--border-thin) solid var(--color-border);
-  background: var(--color-bg-subtle);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--space-sm);
+  gap: var(--space-md);
 }

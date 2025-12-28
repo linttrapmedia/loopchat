@@ -22,7 +22,7 @@ h1 {
   font-size: var(--text-4xl);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
-  margin-block-end: var(--space-lg);
+  margin-block-end: var(--space-sm);
 }
 
 h2 {
