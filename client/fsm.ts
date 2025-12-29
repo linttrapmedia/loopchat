@@ -1,18 +1,21 @@
 import { VIEWS } from "@/client/constants";
 import { store } from "@/client/state";
-import { type Actions } from "@/client/types";
+import { type Actions, type Command } from "@/client/types";
 
 function keyFsm(e: KeyboardEvent) {
   switch (e.type) {
     case "keydown":
       switch (store.data.mode.val()) {
         case "normal":
+          // if (e.ctrlKey) store.data.showCommands.set(true);
+          // if (e.altKey) store.data.showCommands.set(true);
           if (e.key === "/") {
             e.preventDefault();
             fsm("SWITCH_MODE", "command");
           }
           if (e.key === "Escape") {
             e.preventDefault();
+            // store.data.showCommands.set(false);
           }
           if (e.key === "ArrowDown" || e.key === "j") {
             const menuLabels = Object.keys(VIEWS);
@@ -35,6 +38,10 @@ function keyFsm(e: KeyboardEvent) {
           break;
         case "command":
           if (e.key === "Escape") fsm("SWITCH_MODE", "normal");
+          if (e.key === "Enter") {
+            e.preventDefault();
+            console.log("Executing command:", store.data.chat.val());
+          }
           if (e.key === "Tab") {
             e.preventDefault();
             console.log("asdf");
@@ -52,6 +59,8 @@ function keyFsm(e: KeyboardEvent) {
     case "keyup":
       switch (store.data.mode.val()) {
         case "normal":
+          // if (!e.ctrlKey) store.data.showCommands.set(false);
+          // if (!e.altKey) store.data.showCommands.set(false);
           break;
       }
       break;
@@ -68,6 +77,13 @@ export function fsm<T extends Actions>(...args: T) {
           store.data.ui_state.set("ready");
           document.addEventListener("keydown", keyFsm);
           document.addEventListener("keyup", keyFsm);
+          // TODO: use idb to persist large sets of objects
+          // idb.addItem("objects", { id: "1", name: "Kevin", noun: "person" });
+          // idb.addItem("objects", { id: "2", name: "LintTrap", noun: "thing" });
+          // idb.addItem("objects", { id: "3", name: "LoopChat", noun: "thing" });
+          // idb.addItem("objects", { id: "4", name: "OpenAI", noun: "thing" });
+          // idb.addItem("objects", { id: "5", name: "ChatGPT", noun: "thing" });
+          // idb.addItem("objects", { id: "6", name: "JavaScript", noun: "thing" });
           break;
       }
       break;
@@ -91,7 +107,14 @@ export function fsm<T extends Actions>(...args: T) {
           console.log("SWITCH_MODE_TO_COMMAND");
           break;
         case "ON_CHAT_INPUT":
-          store.data.chat.set(payload);
+          const rawInput = payload;
+          const filteredInput = rawInput.replace(/[^a-zA-Z0-9 /-_]/g, "");
+          store.data.chat.set(filteredInput);
+          store.data.commmands_filtered.set(
+            store.data.commands
+              .val()
+              .filter((c: Command) => `${c.command}`.toUpperCase().startsWith(store.data.chat.val().toUpperCase()))
+          );
           break;
       }
       break;

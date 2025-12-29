@@ -1,28 +1,5 @@
 import type { Command, IndexedDB, View, ViewNames } from "@/client/types";
 
-export const COMMANDS: Command[] = [
-  {
-    command: "/help",
-    description: "Show help information",
-    action: ["INIT"],
-  },
-  {
-    command: "/mode [normal|command]",
-    description: "Switch between normal and command modes",
-    action: ["SWITCH_MODE", "normal"],
-    options: [
-      {
-        option: "normal",
-        description: "Switch to normal mode",
-      },
-      {
-        option: "command",
-        description: "Switch to command mode",
-      },
-    ],
-  },
-];
-
 export const HEX = {
   black: "#121316",
   white: "#aaaaaa",
@@ -80,3 +57,54 @@ export const INDEXEDDB: IndexedDB = {
     },
   },
 };
+
+export const SYS_COMMANDS: Command[] = [
+  {
+    command: "/clear",
+    description: "Clear the chat history",
+    action: ["ON_CHAT_INPUT", ""],
+  },
+  {
+    command: "/help",
+    description: "Show help information",
+    action: ["INIT"],
+  },
+  {
+    command: "/mode",
+    description: "Switch between normal and command modes",
+    action: ["SWITCH_MODE", "normal"],
+    options: [
+      {
+        name: "normal",
+        description: "Switch to normal mode",
+        short_flag: "-n",
+        long_flag: "--normal",
+      },
+      {
+        name: "command",
+        description: "Switch to command mode",
+        short_flag: "-c",
+        long_flag: "--command",
+      },
+    ],
+  },
+  {
+    command: "/theme",
+    description: "Switch between light and dark themes",
+    action: ["SWITCH_MODE", "normal"],
+    options: [
+      {
+        name: "light",
+        description: "Switch to light theme",
+        short_flag: "-l",
+        long_flag: "--light",
+      },
+      {
+        name: "dark",
+        description: "Switch to dark theme",
+        short_flag: "-d",
+        long_flag: "--dark",
+      },
+    ],
+  },
+];

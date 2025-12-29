@@ -17,8 +17,11 @@ export type Command = {
   description: string;
   action: Actions;
   options?: {
-    option: string;
+    short_flag?: string;
+    long_flag?: string;
+    name: string;
     description: string;
+    value?: { name: string; description: string };
   }[];
 };
 
