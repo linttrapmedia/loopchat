@@ -10,7 +10,7 @@ export const store = Storage({
     commands: [State<Command[]>(SYS_COMMANDS), "localStorage"],
     commands_filter: [State<Command[]>([]), "localStorage"],
     commands_filter_idx: [State<number>(-1), "localStorage"],
-    command_mode: [State<CommandMode>(undefined), "localStorage"],
+    command_mode: [State<CommandMode | null>(null), "localStorage"],
     command_curr: [State<string | null>(null), "localStorage"],
     debug: [State<boolean>(true), "memory"],
     mode: [State<Mode>("normal"), "localStorage"],

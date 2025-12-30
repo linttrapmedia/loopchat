@@ -136,20 +136,35 @@ export const UI = tag.div(
     trait.style("height", "100%"),
     trait.style("fontSize", "14px"),
     tag.div(
-      trait.style("display", "none", store.data.chat.$test(/^.+$/)),
-      trait.style("display", "flex", store.data.chat.$test("")),
+      trait.style(
+        "display",
+        "flex",
+        store.data.commands_filter.$test((f) => f.length === 0)
+      ),
+      trait.style(
+        "display",
+        "none",
+        store.data.commands_filter.$test((f) => f.length > 0)
+      ),
       trait.style("borderRadius", "5px"),
       trait.style("backgroundColor", util.alpha(HEX.white, 0.05)),
       trait.style("padding", "20px"),
       "canvas"
     ),
     tag.div(
-      trait.style("display", "flex", store.data.chat.$test(/^.+$/)),
-      trait.style("display", "none", store.data.chat.$test("")),
+      trait.style(
+        "display",
+        "none",
+        store.data.commands_filter.$test((f) => f.length === 0)
+      ),
+      trait.style(
+        "display",
+        "flex",
+        store.data.commands_filter.$test((f) => f.length > 0)
+      ),
       trait.style("flexDirection", "column"),
       trait.style("gap", "5px"),
       trait.style("borderRadius", "5px"),
-      // trait.style("backgroundColor", util.alpha(HEX.white, 0.05)),
       trait.style("color", HEX.white),
       trait.style("padding", "20px"),
       trait.html(
@@ -187,17 +202,18 @@ export const UI = tag.div(
     trait.style("gap", "10px"),
     ...Object.entries(store.data)
       .filter(([key, _]) =>
-        ["chat", "command_curr", "command_mode", "caret_pos", "commands_filter_idx", "mode"].includes(key)
+        [
+          "chat",
+          "command_curr",
+          "command_mode",
+          "caret_pos",
+          "commands_filter_idx",
+          "mode",
+          "commands_filter",
+        ].includes(key)
       )
       .map(([key, _]) =>
         tag.div(tag.span(trait.style("opacity", 0.75), key, ":"), store.data[key as keyof typeof store.data].$val)
       )
-    // tag.span(trait.style("opacity", 0.5), "DEBUG: "),
-    // tag.span("chat:", store.data.chat.$val),
-    // tag.span("caret:", store.data.caret_pos.$val),
-    // tag.span("command", store.data.command_curr.$val),
-    // tag.span("mode:", store.data.mode.$val),
-    // tag.span("ui_state:", store.data.ui_state.$val),
-    // tag.span("view:", store.data.view.$val)
   )
 );

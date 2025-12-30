@@ -4,6 +4,7 @@ import type { icons } from "@/client/icons";
 export type Actions =
   | [action: "INIT"]
   | [action: "ACTIVE_MENU_ITEM", id: keyof typeof VIEWS]
+  | [action: "EXECUTE_COMMAND", command: string]
   | [action: "SWITCH_MODE", mode: Mode]
   | [action: "SWITCH_MODE_TO_NORMAL"]
   | [action: "SWITCH_MODE_TO_COMMAND"]

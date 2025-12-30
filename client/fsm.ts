@@ -38,11 +38,21 @@ function keyFsm(e: KeyboardEvent) {
           }
           break;
         case "command":
+          if (e.key === "Backspace") {
+            // XXX: not sure if this belongs in the main fsm CHAT_INPUT event but it seems to work here as an edge case. if the chat only had one character left, reset command mode
+            const chatVal = store.data.chat.val();
+            if (chatVal.length <= 1) {
+              store.data.command_mode.set(null);
+              store.data.commands_filter.set([]);
+              store.data.chat.set("");
+            }
+          }
           if (e.key === "Escape") {
             // if cycling through commands, reset index
+            store.data.mode.set("normal");
+            store.data.command_mode.set(null);
             if (store.data.commands_filter_idx.val() > -1) {
               store.data.commands_filter_idx.set(-1);
-              store.data.mode.set("normal");
               return;
             }
             //  fsm("SWITCH_MODE", "normal");
@@ -57,9 +67,12 @@ function keyFsm(e: KeyboardEvent) {
               const command = store.data.commands_filter.val()[cmdIdx];
               if (command) {
                 fsm("AUTO_COMPLETE_COMMAND", command.command);
-                return;
               }
             }
+
+            // now show which command needs to be executed
+            const chatVal = store.data.chat.val();
+            console.log("EXECUTE COMMAND FOR CHAT INPUT:", chatVal);
           }
           if (e.key === "Tab") {
             e.preventDefault();
@@ -123,7 +136,7 @@ export function fsm<T extends Actions>(...args: T) {
             store.data.chat.set(newChatVal);
             const newCaretPos = commandStartIdx + commandStr.length + 1;
             store.data.caret_pos.set(newCaretPos);
-            store.data.command_curr.set(null);
+            store.data.command_curr.set(payload);
             store.data.commands_filter.set([]);
             store.data.commands_filter_idx.set(-1);
             store.data.chat_refresh.set(Date.now());
@@ -150,7 +163,9 @@ export function fsm<T extends Actions>(...args: T) {
           break;
         case "SWITCH_MODE_TO_COMMAND":
           store.data.mode.set("command");
-          console.log("SWITCH_MODE_TO_COMMAND");
+          // make sure caret is at end of chat input
+          const chatLen = store.data.chat.val().length;
+          store.data.caret_pos.set(chatLen);
           break;
         case "ON_CHAT_INPUT":
           (() => {
@@ -182,11 +197,16 @@ export function fsm<T extends Actions>(...args: T) {
             console.log("COMMAND NAME:", commandName);
 
             store.data.chat.set(cleanInput);
-            store.data.commands_filter.set(
-              store.data.commands
-                .val()
-                .filter((c: Command) => `${c.command}`.toUpperCase().startsWith((commandName ?? "").toUpperCase()))
-            );
+
+            console.log("isSlashCommand", isSlashCommand, "Filtering commands for:", commandName);
+            if (isSlashCommand) {
+              // filter commands based on current command name
+              store.data.commands_filter.set(
+                store.data.commands
+                  .val()
+                  .filter((c: Command) => `${c.command}`.toUpperCase().startsWith((commandName ?? "").toUpperCase()))
+              );
+            }
           })();
           break;
       }

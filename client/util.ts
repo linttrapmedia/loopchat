@@ -155,7 +155,7 @@ function isCommand(leadChar: string, str: string, caretPos: number): boolean {
   // Extract the word
   const word = str.slice(start, end);
 
-  // Check if the word exists and starts with leadChar
+  // Check if the word exists, starts with leadChar and is at least 2 characters long (the lead character + at least one more)
   return word.length > 0 && word[0] === leadChar;
 }
 
