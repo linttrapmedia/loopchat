@@ -1,5 +1,6 @@
 import {
   useAutoResizeTextareaTrait,
+  useCaretPosition,
   useCustomCaretForContentEditable,
   usePlaceholderColorTrait,
   useScrollintoViewTrait,
@@ -19,6 +20,7 @@ import {
 
 export const [tag, trait] = Template({
   attr: useAttributeTrait,
+  caretPosition: useCaretPosition,
   event: useEventTrait,
   html: useInnerHTMLTrait,
   style: useStyleTrait,

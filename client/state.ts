@@ -1,12 +1,15 @@
 import { SYS_COMMANDS, VIEWS } from "@/client/constants";
 import { State, Storage } from "@linttrap/oem";
-import { type Command, type Mode, type Theme, type View } from "./types";
+import { type Command, type CommandMode, type Mode, type Theme, type View } from "./types";
 
 export const store = Storage({
   data: {
     chat: [State<string>(""), "localStorage"],
+    caret_pos: [State<number>(0), "localStorage"],
     commands: [State<Command[]>(SYS_COMMANDS), "localStorage"],
-    commmands_filtered: [State<Command[]>([]), "localStorage"],
+    commands_filter: [State<Command[]>([]), "localStorage"],
+    command_mode: [State<CommandMode>(undefined), "localStorage"],
+    command_curr: [State<string | undefined>(undefined), "localStorage"],
     debug: [State<boolean>(true), "memory"],
     mode: [State<Mode>("normal"), "localStorage"],
     theme: [State<Theme>("dark"), "localStorage"],

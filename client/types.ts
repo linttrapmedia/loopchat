@@ -25,6 +25,8 @@ export type Command = {
   }[];
 };
 
+export type CommandMode = "at" | "slash" | "dash" | "hash" | undefined;
+
 export type IndexedDB = { version: number; stores: Record<string, { name: string; keyPath: string }> };
 
 export type Mode = "normal" | "command";

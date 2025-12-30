@@ -107,4 +107,9 @@ export const SYS_COMMANDS: Command[] = [
       },
     ],
   },
+  {
+    command: "/thesaurus",
+    description: "Exit command mode and return to normal mode",
+    action: ["SWITCH_MODE_TO_NORMAL"],
+  },
 ];

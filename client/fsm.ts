@@ -1,6 +1,7 @@
 import { VIEWS } from "@/client/constants";
 import { store } from "@/client/state";
 import { type Actions, type Command } from "@/client/types";
+import util from "@/client/util";
 
 function keyFsm(e: KeyboardEvent) {
   switch (e.type) {
@@ -77,13 +78,6 @@ export function fsm<T extends Actions>(...args: T) {
           store.data.ui_state.set("ready");
           document.addEventListener("keydown", keyFsm);
           document.addEventListener("keyup", keyFsm);
-          // TODO: use idb to persist large sets of objects
-          // idb.addItem("objects", { id: "1", name: "Kevin", noun: "person" });
-          // idb.addItem("objects", { id: "2", name: "LintTrap", noun: "thing" });
-          // idb.addItem("objects", { id: "3", name: "LoopChat", noun: "thing" });
-          // idb.addItem("objects", { id: "4", name: "OpenAI", noun: "thing" });
-          // idb.addItem("objects", { id: "5", name: "ChatGPT", noun: "thing" });
-          // idb.addItem("objects", { id: "6", name: "JavaScript", noun: "thing" });
           break;
       }
       break;
@@ -95,7 +89,6 @@ export function fsm<T extends Actions>(...args: T) {
         case "SWITCH_MODE":
           if (payload === "command") {
             // TBD: maybe do this in keyFsm if ctrl?
-            // store.data.chat.set("");
           }
           store.data.mode.set(payload);
           break;
@@ -108,12 +101,37 @@ export function fsm<T extends Actions>(...args: T) {
           break;
         case "ON_CHAT_INPUT":
           const rawInput = payload;
-          const filteredInput = rawInput.replace(/[^a-zA-Z0-9 /-_]/g, "");
-          store.data.chat.set(filteredInput);
-          store.data.commmands_filtered.set(
+          const cleanInput = rawInput.replace(/[^a-zA-Z0-9 -/_]/g, "");
+          const chatVal = store.data.chat.val();
+          const caretPos = store.data.caret_pos.val();
+          const isSlashCommand = util.isCommand("/", chatVal, caretPos);
+          const isAtCommand = util.isCommand("@", chatVal, caretPos);
+          const isHashCommand = util.isCommand("#", chatVal, caretPos);
+          const isDashCommand = util.isCommand("-", chatVal, caretPos);
+          if (isAtCommand) store.data.command_mode.set("at");
+          if (isSlashCommand) store.data.command_mode.set("slash");
+          if (isHashCommand) store.data.command_mode.set("hash");
+          if (isDashCommand) store.data.command_mode.set("dash");
+
+          // get the current command name being typed
+          const commandNameMatch = cleanInput.slice(0, caretPos).match(/([/@#-][a-zA-Z0-9-_]*)$/);
+          const commandName = commandNameMatch ? commandNameMatch[1] : "";
+
+          // if command name matches a known command, set it
+          const knownCommand = store.data.commands.val().find((c: Command) => c.command === commandName);
+          if (knownCommand && commandName) {
+            store.data.command_curr.set(commandName);
+            // store.data.commands_filter.set([]);
+          } else {
+            store.data.command_curr.set(undefined);
+          }
+          console.log("COMMAND NAME:", commandName);
+
+          store.data.chat.set(cleanInput);
+          store.data.commands_filter.set(
             store.data.commands
               .val()
-              .filter((c: Command) => `${c.command}`.toUpperCase().startsWith(store.data.chat.val().toUpperCase()))
+              .filter((c: Command) => `${c.command}`.toUpperCase().startsWith((commandName ?? "").toUpperCase()))
           );
           break;
       }

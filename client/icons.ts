@@ -37,6 +37,24 @@ function box(color: string = "currentColor", size: number = 24) {
   );
 }
 
+function chevronArrowRight(color: string = "currentColor", size: number = 24) {
+  return tag.svg(
+    trait.attr("viewBox", "0 0 24 24"),
+    trait.attr("width", size),
+    trait.attr("height", size),
+    trait.attr("xmlns", "http://www.w3.org/2000/svg"),
+    tag.g(
+      // Chevron right
+      tag.polyline(
+        trait.attr("points", "8,4 16,12 8,20"),
+        trait.attr("fill", "transparent"),
+        trait.style("stroke", color),
+        trait.attr("stroke-width", "2")
+      )
+    )
+  );
+}
+
 function clipboard(color: string = "currentColor", size: number = 24) {
   return tag.svg(
     trait.attr("viewBox", "0 0 24 24"),
@@ -229,6 +247,7 @@ function robot(color: string = "currentColor", size: number = 24) {
 
 export const icons = {
   box,
+  chevronArrowRight,
   clipboard,
   downArrow,
   envelope,

@@ -4,6 +4,7 @@ import { icons } from "@/client/icons";
 import { tag, trait } from "@/client/template";
 import type { View } from "@/client/types";
 import util from "@/client/util";
+import { $test } from "@linttrap/oem";
 import { store } from "./state";
 
 export const UI = tag.div(
@@ -90,15 +91,15 @@ export const UI = tag.div(
     trait.style("gridColumn", "2 / 3"),
     trait.style("gridRow", "2 / -1"),
     trait.style("padding", "10px"),
-    trait.style("borderRadius", "5px"),
-    trait.style("borderBottom", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
     trait.style("borderRight", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
     tag.div(
-      trait.style("border", `1px solid ${util.alpha(HEX.brand, 0.2)}`, store.data.theme.$test("dark")),
+      trait.style("borderBottom", `1px solid ${util.alpha(HEX.brand, 0.2)}`, store.data.theme.$test("dark")),
       trait.style("width", "100%"),
-      trait.style("padding", "10px 5px 10px 10px"),
+      trait.style("padding", "10px 5px 10px 0px"),
+      trait.style("gap", "5px"),
       trait.style("display", "flex"),
       trait.style("justifyContent", "space-between"),
+      tag.div(icons.chevronArrowRight(util.alpha(HEX.brand, 0.5), 16)),
       tag.div(
         trait.attr("contenteditable", "true"),
         trait.attr("id", "chat-input"),
@@ -113,16 +114,12 @@ export const UI = tag.div(
         trait.style("color", util.alpha(HEX.brand, 0.5), store.data.mode.$test("normal")),
         trait.style("width", "100%"),
         trait.style("borderRadius", "5px"),
+        trait.caretPosition((pos) => store.data.caret_pos.set(pos)),
         trait.event("click", $fsm("SWITCH_MODE_TO_COMMAND")),
         trait.placeholderColor(util.alpha(HEX.brand, 0.5)),
         trait.trigger("focus", store.data.mode.$test("command")),
         trait.trigger("blur", store.data.mode.$test("normal")),
-        trait.event("input", (evt) => {
-          const rawInput = (evt!.target as HTMLDivElement).innerText;
-          // only allow alpha, numeric, space, slash, dash, underscore
-          const filteredInput = rawInput.replace(/[^a-zA-Z0-9 /-_]/g, "");
-          fsm("ON_CHAT_INPUT", filteredInput);
-        }),
+        trait.event("input", (evt) => fsm("ON_CHAT_INPUT", (evt!.target as HTMLDivElement).innerText)),
         trait.html(store.data.chat.val)
       )
     )
@@ -156,30 +153,23 @@ export const UI = tag.div(
       trait.style("color", HEX.white),
       trait.style("padding", "20px"),
       trait.html(
-        store.data.commmands_filtered.$call("map", (cmd) =>
+        store.data.commands_filter.$call("map", (cmd, i) =>
           tag.div(
             trait.style("display", "flex"),
             trait.style("flexDirection", "column"),
             trait.style("gap", "2px"),
+            trait.style("padding", "3px"),
+            trait.style("margin", "-3px"),
+            trait.style("color", HEX.black, $test(i === 0)),
+            trait.style("color", util.alpha(HEX.brand, 0.5), $test(i !== 0)),
+            trait.style("backgroundColor", util.alpha(HEX.white, 1), $test(i === 0)),
+            trait.style("backgroundColor", "transparent", $test(i !== 0)),
             // Command Entry
             tag.div(
               trait.style("display", "flex"),
               trait.style("gap", "10px"),
               tag.span(cmd.command),
               tag.span(trait.style("opacity", 0.5), cmd.description)
-            ),
-            // Options
-            ...((cmd.options as any[]) || []).map((opt) =>
-              tag.div(
-                trait.style("display", "flex"),
-                trait.style("gap", "10px"),
-                trait.style("paddingLeft", "20px"),
-                tag.span(
-                  trait.style("color", util.alpha(HEX.brand, 0.7)),
-                  `${opt.short_flag || ""} ${opt.long_flag || ""}`.trim()
-                ),
-                tag.span(trait.style("opacity", 0.5), opt.description)
-              )
             )
           )
         )
@@ -193,8 +183,19 @@ export const UI = tag.div(
     trait.style("gridRow", `-1 / -1`),
     trait.style("padding", "10px"),
     trait.style("borderTop", `1px solid ${util.alpha(HEX.brand, 0.2)}`),
-    trait.style("textTransform", "uppercase"),
-    tag.span(trait.style("opacity", 0.5), "MODE: "),
-    store.data.mode.$val
+    trait.style("display", "flex"),
+    trait.style("gap", "10px"),
+    ...Object.entries(store.data)
+      .filter(([key, _]) => ["chat", "command_curr", "command_mode", "caret_pos"].includes(key))
+      .map(([key, _]) =>
+        tag.div(tag.span(trait.style("opacity", 0.75), key, ":"), store.data[key as keyof typeof store.data].$val)
+      )
+    // tag.span(trait.style("opacity", 0.5), "DEBUG: "),
+    // tag.span("chat:", store.data.chat.$val),
+    // tag.span("caret:", store.data.caret_pos.$val),
+    // tag.span("command", store.data.command_curr.$val),
+    // tag.span("mode:", store.data.mode.$val),
+    // tag.span("ui_state:", store.data.ui_state.$val),
+    // tag.span("view:", store.data.view.$val)
   )
 );

@@ -135,4 +135,28 @@ function alpha(hex: string, alpha: number) {
   return `rgba(${Math.round(rgb.r * 255)} ${Math.round(rgb.g * 255)} ${Math.round(rgb.b * 255)} / ${clamp01(alpha)})`;
 }
 
-export default { darken, debounce, alpha, lighten };
+// strings
+function isCommand(leadChar: string, str: string, caretPos: number): boolean {
+  // Edge case: empty string or caret out of bounds
+  if (!str || caretPos < 0 || caretPos > str.length) return false;
+
+  // Find the start of the word
+  let start = caretPos;
+  while (start > 0 && /\S/.test(str[start - 1] ?? "")) {
+    start--;
+  }
+
+  // Find the end of the word
+  let end = caretPos;
+  while (end < str.length && /\S/.test(str[end] ?? "")) {
+    end++;
+  }
+
+  // Extract the word
+  const word = str.slice(start, end);
+
+  // Check if the word exists and starts with leadChar
+  return word.length > 0 && word[0] === leadChar;
+}
+
+export default { darken, debounce, alpha, lighten, isCommand };

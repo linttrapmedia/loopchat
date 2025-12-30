@@ -22,6 +22,30 @@ export function useAutoResizeTextareaTrait(el: HTMLTextAreaElement, ...rest: (St
   return () => unsubs.forEach((unsub) => unsub());
 }
 
+export function useCaretPosition(el: HTMLElement, callback: (pos: number) => void) {
+  const updateCaret = () => {
+    let pos = 0;
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(el);
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+      pos = preCaretRange.toString().length;
+    }
+    // console.log("Caret position:", pos);
+    callback(pos);
+  };
+
+  el.addEventListener("keyup", updateCaret);
+  el.addEventListener("click", updateCaret);
+
+  return () => {
+    el.removeEventListener("keyup", updateCaret);
+    el.removeEventListener("click", updateCaret);
+  };
+}
+
 export function useStyleOnEventTrait(
   el: HTMLElement,
   evt: "click" | "mouseover" | "mouseout" | "focus" | "blur",
