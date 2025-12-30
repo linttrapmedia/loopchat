@@ -159,4 +159,14 @@ function isCommand(leadChar: string, str: string, caretPos: number): boolean {
   return word.length > 0 && word[0] === leadChar;
 }
 
-export default { darken, debounce, alpha, lighten, isCommand };
+// inputs
+function setCaretPosition(el: HTMLElement, pos: number) {
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.setStart(el.childNodes[0] || el, pos);
+  range.collapse(true);
+  sel?.removeAllRanges();
+  sel?.addRange(range);
+}
+
+export default { darken, debounce, alpha, lighten, isCommand, setCaretPosition };

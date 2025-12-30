@@ -3,6 +3,7 @@ import {
   useCaretPosition,
   useCustomCaretForContentEditable,
   usePlaceholderColorTrait,
+  useRefreshInput,
   useScrollintoViewTrait,
   useStyleOnEventTrait,
   useToolTipTrait,
@@ -33,4 +34,5 @@ export const [tag, trait] = Template({
   tooltip: useToolTipTrait,
   scrollIntoView: useScrollintoViewTrait,
   autoResizeTextArea: useAutoResizeTextareaTrait,
+  refreshInput: useRefreshInput,
 });

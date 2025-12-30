@@ -1,4 +1,5 @@
 import { tag, trait } from "@/client/template";
+import util from "@/client/util";
 import { extractConditions, extractStates, type Condition, type StateType } from "@linttrap/oem";
 
 export function useAutoResizeTextareaTrait(el: HTMLTextAreaElement, ...rest: (StateType<any> | Condition)[]) {
@@ -110,6 +111,18 @@ export function useCustomCaretForContentEditable(el: HTMLElement, caretColor: st
   el.addEventListener("blur", () => {});
   el.addEventListener("input", (e) => {});
   return () => {};
+}
+
+export function useRefreshInput(
+  el: HTMLElement,
+  stateWatchObj: StateType<any>,
+  value: () => string,
+  caretPos: () => number
+) {
+  stateWatchObj.sub(() => {
+    (el as HTMLDivElement).textContent = value();
+    util.setCaretPosition(el as HTMLDivElement, caretPos());
+  });
 }
 
 export const useTriggerTrait = (

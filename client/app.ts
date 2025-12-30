@@ -4,7 +4,6 @@ import { icons } from "@/client/icons";
 import { tag, trait } from "@/client/template";
 import type { View } from "@/client/types";
 import util from "@/client/util";
-import { $test } from "@linttrap/oem";
 import { store } from "./state";
 
 export const UI = tag.div(
@@ -114,13 +113,14 @@ export const UI = tag.div(
         trait.style("color", util.alpha(HEX.brand, 0.5), store.data.mode.$test("normal")),
         trait.style("width", "100%"),
         trait.style("borderRadius", "5px"),
-        trait.caretPosition((pos) => store.data.caret_pos.set(pos)),
         trait.event("click", $fsm("SWITCH_MODE_TO_COMMAND")),
         trait.placeholderColor(util.alpha(HEX.brand, 0.5)),
         trait.trigger("focus", store.data.mode.$test("command")),
         trait.trigger("blur", store.data.mode.$test("normal")),
         trait.event("input", (evt) => fsm("ON_CHAT_INPUT", (evt!.target as HTMLDivElement).innerText)),
-        trait.html(store.data.chat.val)
+        trait.html(store.data.chat.val),
+        trait.caretPosition((pos) => store.data.caret_pos.set(pos)),
+        trait.refreshInput(store.data.chat_refresh, store.data.chat.val, store.data.caret_pos.val)
       )
     )
   ),
@@ -160,10 +160,10 @@ export const UI = tag.div(
             trait.style("gap", "2px"),
             trait.style("padding", "3px"),
             trait.style("margin", "-3px"),
-            trait.style("color", HEX.black, $test(i === 0)),
-            trait.style("color", util.alpha(HEX.brand, 0.5), $test(i !== 0)),
-            trait.style("backgroundColor", util.alpha(HEX.white, 1), $test(i === 0)),
-            trait.style("backgroundColor", "transparent", $test(i !== 0)),
+            trait.style("color", HEX.black, store.data.commands_filter_idx.$test(i)),
+            trait.style("color", util.alpha(HEX.brand, 0.5), store.data.commands_filter_idx.$test(i, false)),
+            trait.style("backgroundColor", util.alpha(HEX.white, 1), store.data.commands_filter_idx.$test(i)),
+            trait.style("backgroundColor", "transparent", store.data.commands_filter_idx.$test(i, false)),
             // Command Entry
             tag.div(
               trait.style("display", "flex"),
@@ -186,7 +186,9 @@ export const UI = tag.div(
     trait.style("display", "flex"),
     trait.style("gap", "10px"),
     ...Object.entries(store.data)
-      .filter(([key, _]) => ["chat", "command_curr", "command_mode", "caret_pos"].includes(key))
+      .filter(([key, _]) =>
+        ["chat", "command_curr", "command_mode", "caret_pos", "commands_filter_idx", "mode"].includes(key)
+      )
       .map(([key, _]) =>
         tag.div(tag.span(trait.style("opacity", 0.75), key, ":"), store.data[key as keyof typeof store.data].$val)
       )

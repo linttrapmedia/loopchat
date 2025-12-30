@@ -5,11 +5,13 @@ import { type Command, type CommandMode, type Mode, type Theme, type View } from
 export const store = Storage({
   data: {
     chat: [State<string>(""), "localStorage"],
+    chat_refresh: [State<number>(0), "localStorage"],
     caret_pos: [State<number>(0), "localStorage"],
     commands: [State<Command[]>(SYS_COMMANDS), "localStorage"],
     commands_filter: [State<Command[]>([]), "localStorage"],
+    commands_filter_idx: [State<number>(-1), "localStorage"],
     command_mode: [State<CommandMode>(undefined), "localStorage"],
-    command_curr: [State<string | undefined>(undefined), "localStorage"],
+    command_curr: [State<string | null>(null), "localStorage"],
     debug: [State<boolean>(true), "memory"],
     mode: [State<Mode>("normal"), "localStorage"],
     theme: [State<Theme>("dark"), "localStorage"],

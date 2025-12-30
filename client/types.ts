@@ -7,10 +7,11 @@ export type Actions =
   | [action: "SWITCH_MODE", mode: Mode]
   | [action: "SWITCH_MODE_TO_NORMAL"]
   | [action: "SWITCH_MODE_TO_COMMAND"]
-  | [action: "NEXT_SUGGESTED_OBJECT_INDEX"]
-  | [action: "PREV_SUGGESTED_OBJECT_INDEX"]
+  | [action: "NEXT_CMD_INDEX"]
+  | [action: "PREV_CMD_INDEX"]
   | [action: "ON_CHAT_INPUT", input: string]
-  | [action: "SHOW_HELP"];
+  | [action: "SHOW_HELP"]
+  | [action: "AUTO_COMPLETE_COMMAND", command: string];
 
 export type Command = {
   command: string;
